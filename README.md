@@ -1,5 +1,6 @@
 # Sunrinlife REST API
-REST API for SunrinLife
+REST API for SunrinLife <br>
+SunrinLife is Sunrin Internet High School's intranet made by their students
 
 ## 🛠️ Installation
 
