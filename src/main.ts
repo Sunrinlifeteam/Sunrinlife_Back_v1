@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import { createConnection } from 'typeorm';
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
 
 createConnection()
@@ -19,9 +19,9 @@ app.use(
         extended: false,
     })
 );
-app.use(morgan('common'));
+app.use(morgan(process.env.NODE_ENV == 'production' ? 'combined' : 'dev'));
 
 app.listen(process.env.PORT || 3000, () => {
-    console.log(process.env.DB_PORT)
+    console.log(process.env.DB_PORT);
     console.log('Server is listening port 3000!');
 });
