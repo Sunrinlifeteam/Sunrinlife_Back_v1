@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import { createConnection } from 'typeorm';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import router from './api/route';
 
 class App {
     app: express.Application;
@@ -27,7 +28,9 @@ class App {
             .catch((error) => console.error(error));
     }
 
-    initRouter() {}
+    initRouter() {
+        this.app.use(router);
+    }
     initPort() {
         this.app.set('port', process.env.PORT || 3000);
     }
