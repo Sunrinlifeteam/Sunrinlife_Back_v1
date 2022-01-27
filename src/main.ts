@@ -3,8 +3,9 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import { createConnection } from 'typeorm';
 import dotenv from 'dotenv';
-dotenv.config();
+import cors from 'cors';
 
+dotenv.config();
 createConnection()
     .then(() => {
         console.log('Database Connected');
@@ -20,6 +21,13 @@ app.use(
     })
 );
 app.use(morgan(process.env.NODE_ENV == 'production' ? 'combined' : 'dev'));
+app.use(
+    cors({
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true,
+    })
+);
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(process.env.DB_PORT);
