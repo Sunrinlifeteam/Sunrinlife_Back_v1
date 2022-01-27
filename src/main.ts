@@ -1,35 +1,5 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import morgan from 'morgan';
-import { createConnection } from 'typeorm';
-import dotenv from 'dotenv';
-import cors from 'cors';
-
-dotenv.config();
-createConnection()
-    .then(() => {
-        console.log('Database Connected');
-    })
-    .catch((error) => console.error(error));
-
-const app = express();
-
-app.use(bodyParser.json());
-app.use(
-    bodyParser.urlencoded({
-        extended: false,
-    })
-);
-app.use(morgan(process.env.NODE_ENV == 'production' ? 'combined' : 'dev'));
-app.use(
-    cors({
-        origin: '*',
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        credentials: true,
-    })
-);
-
-app.listen(process.env.PORT || 3000, () => {
-    console.log(process.env.DB_PORT);
-    console.log('Server is listening port 3000!');
+import App from './app';
+const { app } = new App();
+app.listen(app.get('port'), () => {
+    console.log('Server is listening port ' + app.get('port').toString());
 });
