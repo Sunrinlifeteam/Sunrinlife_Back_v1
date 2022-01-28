@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import { createConnection } from 'typeorm';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import router from './api/route';
+import router from './route';
 
 class App {
     app: express.Application;
