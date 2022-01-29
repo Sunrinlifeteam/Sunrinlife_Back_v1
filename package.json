@@ -45,6 +45,8 @@
       "typescript": "3.3.3333"
    },
    "dependencies": {
+      "@decorators/di": "^1.0.3",
+      "@decorators/express": "^2.6.0",
       "body-parser": "^1.19.1",
       "celebrate": "^15.0.0",
       "cors": "^2.8.5",
