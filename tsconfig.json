@@ -10,7 +10,8 @@
       "outDir": "./dist",
       "esModuleInterop": true,
       "forceConsistentCasingInFileNames": true,
-      "strict": true
+      "strict": true,
+      "strictPropertyInitialization": false
    },
    "exclude": ["node_modules/"]
 }
