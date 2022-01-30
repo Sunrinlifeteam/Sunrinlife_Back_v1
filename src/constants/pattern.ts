@@ -3,7 +3,7 @@ export const SUNRIN_EMAIL_PATTERN = new RegExp(
 );
 
 export const SUNRIN_STUDENT_EMAIL_PATTERN = new RegExp(
-    '^\\d{2}sunrin\\d{3}@sunrint.hs.kr'
+    '^\\d{2}sunrin\\d{3}@sunrint.hs.kr$'
 );
 
 export const SEOUL_EDU_EMAIL_PATTERN = new RegExp(
