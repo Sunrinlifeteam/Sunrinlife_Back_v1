@@ -8,9 +8,6 @@ export class User extends BaseEntity {
     @Column({ type: 'string', nullable: false, unique: true })
     email: string;
 
-    @Column({ type: 'string', nullable: true, unique: true })
-    teacherEmail: string;
-
     @Column({ type: 'string', nullable: false })
     password: string;
 
@@ -31,4 +28,10 @@ export class User extends BaseEntity {
 
     @Column({ type: 'int', default: 0, nullable: false })
     accountType: number;
+
+    @Column({ type: 'string', nullable: true, name: 'dd' })
+    libraryId: string;
+
+    @Column({ type: 'string', nullable: true, unique: true })
+    teacherEmail: string;
 }
