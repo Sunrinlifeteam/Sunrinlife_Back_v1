@@ -29,7 +29,7 @@ export class User extends BaseEntity {
     @Column({ type: 'int', default: 0, nullable: false })
     accountType: number;
 
-    @Column({ type: 'string', nullable: true, name: 'dd' })
+    @Column({ type: 'string', nullable: true })
     libraryId: string;
 
     @Column({ type: 'string', nullable: true, unique: true })
