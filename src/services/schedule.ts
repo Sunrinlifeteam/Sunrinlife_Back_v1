@@ -15,32 +15,8 @@ export class Attachment implements IAttachment {
         this.data = data;
         this.mimetype = mimetype;
     }
-
-    toObject(): IAttachment {
-        return {
-            filename: this.filename,
-            data: this.data,
-            mimetype: this.mimetype,
-        };
-    }
-    toJSON(): string {
-        return JSON.stringify({
-            filename: this.filename,
-            data: this.data.toString('base64'),
-            mimetype: this.mimetype,
-        });
-    }
-
     static fromObject(data: IAttachment) {
         return new Attachment(data.filename, data.data, data.mimetype);
-    }
-    static fromJSON(data: string): Attachment {
-        let object = JSON.parse(data);
-        return Attachment.fromObject({
-            filename: object['filename'],
-            data: Buffer.from(object['data'], 'base64'),
-            mimetype: object['mimetype']
-        });
     }
 }
 
@@ -90,7 +66,9 @@ export class Schedule implements ISchedule {
             date: new Date(object['date'].toString()),
             title: object['title'].toString(),
             body: object['body'].toString(),
-            attachment: object['attachment'].map((x: string) => Attachment.fromJSON(x)),
+            attachment: object['attachment'].map((x: IAttachment) =>
+                Attachment.fromObject(x)
+            ),
         });
     }
 }
