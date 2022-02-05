@@ -1,16 +1,25 @@
 /* eslint-disable no-unused-vars */
-import { Entity, Column, BaseEntity, OneToMany, ManyToMany } from 'typeorm';
+import {
+    Entity,
+    Column,
+    BaseEntity,
+    ManyToMany,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Attachment } from './Attachment';
 
 @Entity()
 export class Schedule extends BaseEntity {
-    @Column({ type: 'string', nullable: false })
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ type: 'date', nullable: false })
     date: string;
 
-    @Column({ type: 'string', nullable: false })
+    @Column({ nullable: false })
     title: string;
 
-    @Column({ type: 'string', nullable: false })
+    @Column({ nullable: false })
     body: string;
 
     // eslint-disable-next-line prettier/prettier

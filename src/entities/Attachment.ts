@@ -1,19 +1,19 @@
-import { Entity, Column, BaseEntity } from 'typeorm';
+import { Entity, Column, BaseEntity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class Attachment extends BaseEntity {
-    @Column({ type: 'string', nullable: false })
+    @Column({ nullable: false })
     filename: string;
 
-    @Column({ type: 'string', nullable: false })
-    path: string; // 파일이 저장된 경로
+    @Column({ nullable: false })
+    path: string; // 파일이 저장된 경로 (노출 금지)
 
-    @Column({ type: 'string', nullable: false, unique: true })
+    @PrimaryColumn({ nullable: false, unique: true })
     sha1hash: string;
 
-    @Column({ type: 'string', nullable: false, unique: true })
-    md5: string;
+    @PrimaryColumn({ nullable: false, unique: true })
+    md5hash: string;
 
-    @Column({ type: 'string', nullable: false })
+    @Column({ nullable: false })
     mimetype: string;
 }
