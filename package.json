@@ -7,7 +7,7 @@
       "test": "jest",
       "start": "cross-env NODE_ENV=production node dist/index.js",
       "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
-      "build": "npx tsc",
+      "build": "tsc",
       "format": "prettier --write \"src/**/*.ts\"",
       "lint": "eslint \"src/**/*.ts\" --fix",
       "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
@@ -26,6 +26,8 @@
       "@babel/plugin-proposal-decorators": "^7.17.0",
       "@babel/preset-env": "^7.16.11",
       "@babel/preset-typescript": "^7.16.7",
+      "@types/babel__core": "^7.1.18",
+      "@types/babel__traverse": "^7.14.2",
       "@types/cors": "^2.8.12",
       "@types/express": "^4.17.13",
       "@types/helmet": "^4.0.0",
@@ -46,8 +48,8 @@
       "jest": "^27.4.7",
       "nodemon": "^2.0.15",
       "prettier": "^2.5.1",
-      "ts-node": "3.3.0",
-      "typescript": "3.3.3333"
+      "ts-node": "^3.3.0",
+      "typescript": ">=3.8"
    },
    "dependencies": {
       "@decorators/di": "^1.0.3",
