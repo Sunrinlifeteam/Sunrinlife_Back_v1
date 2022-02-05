@@ -5,16 +5,16 @@ export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'string', nullable: false, unique: true })
+    @Column({ nullable: false, unique: true })
     email: string;
 
-    @Column({ type: 'string', nullable: false })
+    @Column({ nullable: false })
     password: string;
 
-    @Column({ type: 'string', nullable: false, unique: true, length: 10 })
+    @Column({ nullable: false, unique: true, length: 10 })
     username: string;
 
-    @Column({ type: 'string', nullable: false })
+    @Column({ nullable: false })
     department: string;
 
     @Column({ type: 'int', nullable: true })
@@ -29,9 +29,9 @@ export class User extends BaseEntity {
     @Column({ type: 'int', default: 0, nullable: false })
     accountType: number;
 
-    @Column({ type: 'string', nullable: true })
+    @Column({ nullable: true })
     libraryId: string;
 
-    @Column({ type: 'string', nullable: true, unique: true })
+    @Column({ nullable: true, unique: true })
     teacherEmail: string;
 }
