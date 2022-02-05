@@ -11,14 +11,14 @@ import {
 import { Attachment } from './Attachment';
 
 @Entity()
-export class Schedule extends BaseEntity {
+export class Notice extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'string', nullable: false })
+    @Column({ nullable: false })
     title: string;
 
-    @Column({ type: 'string', nullable: false })
+    @Column({ nullable: false })
     content: string;
 
     @CreateDateColumn()
