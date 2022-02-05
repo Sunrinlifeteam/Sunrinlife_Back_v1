@@ -1330,7 +1330,7 @@
   "resolved" "https://registry.npmjs.org/@tsconfig/node16/-/node16-1.0.2.tgz"
   "version" "1.0.2"
 
-"@types/babel__core@^7.0.0", "@types/babel__core@^7.1.14":
+"@types/babel__core@^7.0.0", "@types/babel__core@^7.1.14", "@types/babel__core@^7.1.18":
   "integrity" "sha512-S7unDjm/C7z2A2R9NzfKCK1I+BAALDtxEmsJBwlB3EzNfb929ykjL++1CK9LO++EIp2fQrC8O+BwjKvz6UeDyQ=="
   "resolved" "https://registry.npmjs.org/@types/babel__core/-/babel__core-7.1.18.tgz"
   "version" "7.1.18"
@@ -1356,7 +1356,7 @@
     "@babel/parser" "^7.1.0"
     "@babel/types" "^7.0.0"
 
-"@types/babel__traverse@*", "@types/babel__traverse@^7.0.4", "@types/babel__traverse@^7.0.6":
+"@types/babel__traverse@*", "@types/babel__traverse@^7.0.4", "@types/babel__traverse@^7.0.6", "@types/babel__traverse@^7.14.2":
   "integrity" "sha512-K2waXdXBi2302XUdcHcR1jCeU0LL4TD9HRs/gk0N2Xvrht+G/BfJa4QObBQZfhMdxiCpV3COl5Nfq4uKTeTnJA=="
   "resolved" "https://registry.npmjs.org/@types/babel__traverse/-/babel__traverse-7.14.2.tgz"
   "version" "7.14.2"
@@ -5441,6 +5441,22 @@
   dependencies:
     "punycode" "^2.1.1"
 
+"ts-node@^3.3.0":
+  "integrity" "sha1-wTxqMCTjC+EYDdUwOPwgkonUv2k="
+  "resolved" "https://registry.npmjs.org/ts-node/-/ts-node-3.3.0.tgz"
+  "version" "3.3.0"
+  dependencies:
+    "arrify" "^1.0.0"
+    "chalk" "^2.0.0"
+    "diff" "^3.1.0"
+    "make-error" "^1.1.1"
+    "minimist" "^1.2.0"
+    "mkdirp" "^0.5.1"
+    "source-map-support" "^0.4.0"
+    "tsconfig" "^6.0.0"
+    "v8flags" "^3.0.0"
+    "yn" "^2.0.0"
+
 "ts-node@>=9.0.0":
   "integrity" "sha512-g0FlPvvCXSIO1JDF6S232P5jPYqBkRL9qly81ZgAOSU7rwI0stphCgd2kLiCrU9DjQCrJMWEqcNSjQL02s6d8A=="
   "resolved" "https://registry.npmjs.org/ts-node/-/ts-node-10.4.0.tgz"
@@ -5458,22 +5474,6 @@
     "diff" "^4.0.1"
     "make-error" "^1.1.1"
     "yn" "3.1.1"
-
-"ts-node@3.3.0":
-  "integrity" "sha1-wTxqMCTjC+EYDdUwOPwgkonUv2k="
-  "resolved" "https://registry.npmjs.org/ts-node/-/ts-node-3.3.0.tgz"
-  "version" "3.3.0"
-  dependencies:
-    "arrify" "^1.0.0"
-    "chalk" "^2.0.0"
-    "diff" "^3.1.0"
-    "make-error" "^1.1.1"
-    "minimist" "^1.2.0"
-    "mkdirp" "^0.5.1"
-    "source-map-support" "^0.4.0"
-    "tsconfig" "^6.0.0"
-    "v8flags" "^3.0.0"
-    "yn" "^2.0.0"
 
 "tsconfig-paths@^3.12.0":
   "integrity" "sha512-e5adrnOYT6zqVnWqZu7i/BQ3BnhzvGbjEjejFXO20lKIKpwTaupkCPgEfv4GZK1IBciJUEhYs3J3p75FdaTFVg=="
@@ -5576,10 +5576,10 @@
     "yargs" "^17.0.1"
     "zen-observable-ts" "^1.0.0"
 
-"typescript@>=2.7", "typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta", "typescript@3.3.3333":
-  "integrity" "sha512-JjSKsAfuHBE/fB2oZ8NxtRTk5iGcg6hkYXMnZ3Wc+b2RSqejEqTaem11mHASMnFilHrax3sLK0GDzcJrekZYLw=="
-  "resolved" "https://registry.npmjs.org/typescript/-/typescript-3.3.3333.tgz"
-  "version" "3.3.3333"
+"typescript@>=2.7", "typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta", "typescript@>=3.8":
+  "integrity" "sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA=="
+  "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.5.5.tgz"
+  "version" "4.5.5"
 
 "unbox-primitive@^1.0.1":
   "integrity" "sha512-tZU/3NqK3dA5gpE1KtyiJUrEB0lxnGkMFHptJ7q6ewdZ8s12QrODwNbhIJStmJkd1QDXa1NRA8aF2A1zk/Ypyw=="
