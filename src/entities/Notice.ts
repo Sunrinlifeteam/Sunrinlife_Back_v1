@@ -28,6 +28,6 @@ export class Notice extends BaseEntity {
     updated: Date;
 
     // eslint-disable-next-line prettier/prettier
-    @ManyToMany(type => Attachment)
+    @ManyToMany((type) => Attachment)
     attachment: Attachment[];
 }

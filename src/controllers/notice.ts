@@ -1,5 +1,4 @@
-import { Response as IResponse } from 'express';
-import { Response, Controller, Get } from '@decorators/express';
+import { Controller } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import { NoticeService } from '../services/notice';
 
@@ -10,5 +9,4 @@ export class ScheduleController {
     constructor(private readonly scheduleService: NoticeService) {}
 
     // TODO
-    
 }

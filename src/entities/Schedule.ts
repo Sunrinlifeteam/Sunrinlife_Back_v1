@@ -23,6 +23,6 @@ export class Schedule extends BaseEntity {
     body: string;
 
     // eslint-disable-next-line prettier/prettier
-    @ManyToMany(type => Attachment)
+    @ManyToMany((type) => Attachment)
     attachment: Attachment[];
 }
