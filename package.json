@@ -12,6 +12,19 @@
       "lint": "eslint \"src/**/*.ts\" --fix",
       "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
    },
+   "husky": {
+      "hooks": {
+         "pre-commit": "lint-staged",
+         "pre-push": "npm test"
+      }
+   },
+   "lint-staged": {
+      "*.ts": [
+         "prettier --write",
+         "eslint --fix",
+         "git add"
+      ]
+   },
    "repository": {
       "type": "git",
       "url": "git+https://github.com/Sunrinlifeteam/Sunrinlife_Back.git"
@@ -45,7 +58,9 @@
       "eslint-plugin-node": "^11.1.0",
       "eslint-plugin-prettier": "^4.0.0",
       "eslint-plugin-promise": "^5.2.0",
+      "husky": "^7.0.4",
       "jest": "^27.4.7",
+      "lint-staged": "^12.3.3",
       "nodemon": "^2.0.15",
       "prettier": "^2.5.1",
       "ts-node": "^3.3.0",
