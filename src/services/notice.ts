@@ -26,7 +26,7 @@ export interface INotice {
     content: string;
     created: Date;
     updated: Date;
-    attachment: Array<IAttachment>
+    attachment: Array<IAttachment>;
 }
 
 export class Notice implements INotice {
@@ -35,9 +35,9 @@ export class Notice implements INotice {
     content: string;
     created: Date;
     updated: Date;
-    attachment: IAttachment[]
+    attachment: IAttachment[];
 
-    constructor (
+    constructor(
         id: number,
         title: string,
         content: string,
@@ -60,7 +60,7 @@ export class Notice implements INotice {
             content: this.content,
             created: this.created,
             updated: this.updated,
-            attachment: this.attachment
+            attachment: this.attachment,
         };
     }
     toJSON(): string {
@@ -68,7 +68,14 @@ export class Notice implements INotice {
     }
 
     static fromObject(data: INotice): Notice {
-        return new Notice(data.id, data.title, data.content, data.created, data.updated, data.attachment);
+        return new Notice(
+            data.id,
+            data.title,
+            data.content,
+            data.created,
+            data.updated,
+            data.attachment
+        );
     }
     static fromJSON(data: string): Notice {
         let object = JSON.parse(data);
@@ -90,5 +97,4 @@ export class NoticeService {
     constructor() {}
 
     // TODO
-
 }

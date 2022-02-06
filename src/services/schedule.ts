@@ -39,7 +39,7 @@ export class Attachment implements IAttachment {
         return Attachment.fromObject({
             filename: object['filename'],
             data: Buffer.from(object['data'], 'base64'),
-            mimetype: object['mimetype']
+            mimetype: object['mimetype'],
         });
     }
 }
@@ -90,7 +90,9 @@ export class Schedule implements ISchedule {
             date: new Date(object['date'].toString()),
             title: object['title'].toString(),
             body: object['body'].toString(),
-            attachment: object['attachment'].map((x: string) => Attachment.fromJSON(x)),
+            attachment: object['attachment'].map((x: string) =>
+                Attachment.fromJSON(x)
+            ),
         });
     }
 }
