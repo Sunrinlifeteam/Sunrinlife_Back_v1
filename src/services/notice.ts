@@ -95,6 +95,18 @@ export class Notice implements INotice {
 @Injectable()
 export class NoticeService {
     constructor() {}
+    
+    list(): { id: number; title: string; created: Date; updated: Date; }[] {
+        // TODO
+        return [];
+    }
 
-    // TODO
+    get(): Notice[] {
+        // TODO
+        return [];
+    }
+
+    add(): void {
+        // TODO
+    }
 }
