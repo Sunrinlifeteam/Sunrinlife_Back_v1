@@ -20,7 +20,7 @@ export class Attachment implements IAttachment {
     }
 }
 
-export interface INotice {
+export interface IIntranetNotice {
     id: number;
     title: string;
     content: string;
@@ -29,7 +29,7 @@ export interface INotice {
     attachment: Array<IAttachment>;
 }
 
-export class Notice implements INotice {
+export class IntranetNotice implements IIntranetNotice {
     id: number;
     title: string;
     content: string;
@@ -53,7 +53,7 @@ export class Notice implements INotice {
         this.attachment = attachment;
     }
 
-    toObject(): INotice {
+    toObject(): IIntranetNotice {
         return {
             id: this.id,
             title: this.title,
@@ -67,8 +67,8 @@ export class Notice implements INotice {
         return JSON.stringify(this.toObject());
     }
 
-    static fromObject(data: INotice): Notice {
-        return new Notice(
+    static fromObject(data: IIntranetNotice): IntranetNotice {
+        return new IntranetNotice(
             data.id,
             data.title,
             data.content,
@@ -77,9 +77,9 @@ export class Notice implements INotice {
             data.attachment
         );
     }
-    static fromJSON(data: string): Notice {
+    static fromJSON(data: string): IntranetNotice {
         let object = JSON.parse(data);
-        return Notice.fromObject({
+        return IntranetNotice.fromObject({
             id: +object['id'],
             title: object['title'].toString(),
             content: object['content'].toString(),
@@ -93,7 +93,7 @@ export class Notice implements INotice {
 }
 
 @Injectable()
-export class NoticeService {
+export class IntranetNoticeService {
     constructor() {}
     
     list(): { id: number; title: string; created: Date; updated: Date; }[] {
@@ -101,7 +101,7 @@ export class NoticeService {
         return [];
     }
 
-    get(): Notice[] {
+    get(): IntranetNotice[] {
         // TODO
         return [];
     }

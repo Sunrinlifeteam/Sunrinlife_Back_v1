@@ -1,13 +1,13 @@
 import { Response as IResponse, Request as IRequest } from 'express';
 import { Response, Request, Controller, Get, Post } from '@decorators/express';
 import { Injectable } from '@decorators/di';
-import { NoticeService } from '../services/notice';
+import { IntranetNoticeService } from '../services/intranetNotice';
 
-@Controller('/notice')
+@Controller('/notice/intranet')
 @Injectable()
-export class NoticeController {
+export class IntranetNoticeController {
     // eslint-disable-next-line no-unused-vars
-    constructor(private readonly noticeService: NoticeService) {}
+    constructor(private readonly noticeService: IntranetNoticeService) {}
 
     @Get('/')
     list(@Response() res: IResponse) {

@@ -1,4 +1,4 @@
-import { Attachment, Notice } from '../../src/services/notice'
+import { Attachment, IntranetNotice } from '../../src/services/intranetNotice'
 
 test.each([
     [1,'notice title','notice content',new Date(),new Date(),[]],
@@ -6,7 +6,7 @@ test.each([
     [3,'notice titleee','notice contenteee',new Date(2005, 1, 21),new Date(2005, 1, 21),[new Attachment("notice.txt", Buffer.from("Testt"), "text/plain")]]
 ])("", (id, title, content, created, updated, attachment) => {
     const original = { id, title, content, created, updated, attachment };
-    const obj = new Notice(id, title, content, created, updated, attachment)
+    const obj = new IntranetNotice(id, title, content, created, updated, attachment)
     expect(obj.id).toBe(id)
     expect(obj.title).toBe(title)
     expect(obj.content).toBe(content)
@@ -15,6 +15,6 @@ test.each([
     expect(obj.attachment).toBe(attachment)
     expect(obj.toObject()).toEqual(original)
     expect(obj.toJSON()).toBe(JSON.stringify(original))
-    expect(Notice.fromObject(original)).toEqual(original)
-    expect(Notice.fromJSON(JSON.stringify(original))).toEqual(original)
+    expect(IntranetNotice.fromObject(original)).toEqual(original)
+    expect(IntranetNotice.fromJSON(JSON.stringify(original))).toEqual(original)
 })

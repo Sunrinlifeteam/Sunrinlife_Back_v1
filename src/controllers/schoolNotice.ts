@@ -3,7 +3,7 @@ import { Response, Request, Controller, Get, Post } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import { SchoolNoticeService } from '../services/schoolNotice';
 
-@Controller('/s-notice')
+@Controller('/notice/school')
 @Injectable()
 export class SchoolNoticeController {
     // eslint-disable-next-line no-unused-vars
