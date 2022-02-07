@@ -11,7 +11,7 @@ import {
 import { Attachment } from './Attachment';
 
 @Entity()
-export class Notice extends BaseEntity {
+export class IntranetNotice extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
