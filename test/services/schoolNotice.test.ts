@@ -1,7 +1,7 @@
 import { Attachment, SchoolNotice } from '../../src/services/schoolNotice'
 
 test.each([
-    [1,'notice title','notice content',new Date(),new Date(),[]],
+    [1,'notice title','notice content',new Date(),[]],
     [2,'notice titlee','notice contentee',new Date(2022, 2, 3),[]],
     [3,'notice titleee','notice contenteee',new Date(2005, 1, 21),[new Attachment("notice.txt", Buffer.from("Testt"), "text/plain")]]
 ])("", (id, title, content, created, attachment) => {
@@ -14,6 +14,6 @@ test.each([
     expect(obj.attachment).toBe(attachment)
     expect(obj.toObject()).toEqual(original)
     expect(obj.toJSON()).toBe(JSON.stringify(original))
-    expect(Notice.fromObject(original)).toEqual(original)
-    expect(Notice.fromJSON(JSON.stringify(original))).toEqual(original)
+    expect(SchoolNotice.fromObject(original)).toEqual(original)
+    expect(SchoolNotice.fromJSON(JSON.stringify(original))).toEqual(original)
 })
