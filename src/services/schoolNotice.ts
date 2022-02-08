@@ -89,17 +89,27 @@ export class SchoolNotice implements ISchoolNotice {
 export class SchoolNoticeService {
     constructor() {}
     
-    list(): { id: number; title: string; created: Date; }[] {
+    list(): { id: number; title: string; created: Date;}[] {
         // TODO
         return [];
     }
 
-    get(): SchoolNotice[] {
+    get( id: number ): SchoolNotice[] {
         // TODO
         return [];
     }
 
-    add(): void {
+    add( data: { title: string; content: string; attachment: IAttachment[] } ): { title: string; content: string; attachment: IAttachment[] } {
         // TODO
+        return {
+            title:data.title,
+            content:data.content,
+            attachment:data.attachment
+        };
+    }
+
+    remove( id: number ): { id: number; title: string; content: string; }[] {
+        // TODO
+        return [];
     }
 }
