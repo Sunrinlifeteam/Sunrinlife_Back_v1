@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Injectable } from '@decorators/di';
 import { Attachment, IAttachment } from '../types/attachment';
 
@@ -75,7 +76,6 @@ export class SchoolNoticeService {
         return [];
     }
 
-    // eslint-disable-next-line no-unused-vars
     get(id: number): SchoolNotice[] {
         // TODO
         return [];
@@ -94,7 +94,26 @@ export class SchoolNoticeService {
         };
     }
 
-    // eslint-disable-next-line no-unused-vars
+    edit(data: {
+        id: number;
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    }): {
+        id: number;
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    } {
+        // TODO
+        return {
+            id: data.id,
+            title: data.title,
+            content: data.content,
+            attachment: data.attachment,
+        };
+    }
+
     remove(id: number): { id: number; title: string; content: string }[] {
         // TODO
         return [];

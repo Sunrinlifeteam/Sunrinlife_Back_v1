@@ -6,6 +6,7 @@ import {
     Get,
     Post,
     Delete,
+    Put,
 } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import { IntranetNoticeService } from '../services/intranetNotice';
@@ -26,13 +27,26 @@ export class IntranetNoticeController {
 
     @Get('/:id')
     get(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = this.intranetNoticeService.get(+req.params.id);
+        const result = this.intranetNoticeService.get(parseInt(req.params.id));
         return res.status(200).json(result);
     }
 
     @Delete('/:id')
     remove(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = this.intranetNoticeService.remove(+req.params.id);
+        const result = this.intranetNoticeService.remove(
+            parseInt(req.params.id)
+        );
+        return res.status(200).json(result);
+    }
+
+    @Put('/:id')
+    edit(@Request() req: IRequest, @Response() res: IResponse) {
+        const result = this.intranetNoticeService.edit({
+            id: parseInt(req.params.id),
+            title: req.body.title.toString(),
+            content: req.body.content.toString(),
+            attachment: req.body.attachment,
+        });
         return res.status(200).json(result);
     }
 

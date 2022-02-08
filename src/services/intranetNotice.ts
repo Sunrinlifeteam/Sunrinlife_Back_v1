@@ -89,12 +89,34 @@ export class IntranetNoticeService {
     }
 
     add(data: { title: string; content: string; attachment: IAttachment[] }): {
+        id: number;
         title: string;
         content: string;
         attachment: IAttachment[];
     } {
         // TODO
         return {
+            id: 0,
+            title: data.title,
+            content: data.content,
+            attachment: data.attachment,
+        };
+    }
+
+    edit(data: {
+        id: number;
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    }): {
+        id: number;
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    } {
+        // TODO
+        return {
+            id: data.id,
             title: data.title,
             content: data.content,
             attachment: data.attachment,

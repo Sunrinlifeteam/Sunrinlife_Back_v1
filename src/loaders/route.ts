@@ -8,6 +8,5 @@ import { IntranetNoticeController } from '../controllers/intranetNotice';
 export default async (app: express.Application) => {
     attachControllers(app, [AuthController]);
     attachControllers(app, [ScheduleController]);
-    attachControllers(app, [SchoolNoticeController]);
-    attachControllers(app, [IntranetNoticeController]);
+    attachControllers(app, [IntranetNoticeController, SchoolNoticeController]);
 };
