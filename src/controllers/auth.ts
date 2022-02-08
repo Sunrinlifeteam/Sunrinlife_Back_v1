@@ -2,7 +2,7 @@ import { Response as IResponse } from 'express';
 import { Response, Controller, Get } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import { AuthService } from '../services/auth';
-import logger from '../module/logger';
+import logger from '../modules/logger';
 
 @Controller('/auth')
 @Injectable()
