@@ -1,58 +1,6 @@
 import { Injectable } from '@decorators/di';
-import { Attachment, IAttachment } from '../types/attachment';
-
-export interface ISchedule {
-    date: Date;
-    title: string;
-    body: string;
-    attachment: Array<IAttachment>;
-}
-
-export class Schedule implements ISchedule {
-    date: Date;
-    title: string;
-    body: string;
-    attachment: IAttachment[];
-
-    constructor(
-        date: Date,
-        title: string,
-        body: string,
-        attachment: IAttachment[]
-    ) {
-        this.date = date;
-        this.title = title;
-        this.body = body;
-        this.attachment = attachment;
-    }
-
-    toObject(): ISchedule {
-        return {
-            date: this.date,
-            title: this.title,
-            body: this.body,
-            attachment: this.attachment,
-        };
-    }
-    toJSON(): string {
-        return JSON.stringify(this.toObject());
-    }
-
-    static fromObject(data: ISchedule): Schedule {
-        return new Schedule(data.date, data.title, data.body, data.attachment);
-    }
-    static fromJSON(data: string): Schedule {
-        let object = JSON.parse(data);
-        return Schedule.fromObject({
-            date: new Date(object['date'].toString()),
-            title: object['title'].toString(),
-            body: object['body'].toString(),
-            attachment: object['attachment'].map((x: string) =>
-                Attachment.fromJSON(x)
-            ),
-        });
-    }
-}
+import { IScheduleBody, Schedule } from '../models/schedule';
+import { Schedule as ScheduleRecord } from '../entities/Schedule';
 
 @Injectable()
 export class ScheduleService {
@@ -63,8 +11,15 @@ export class ScheduleService {
         return [];
     }
 
-    today(): Schedule[] {
-        // TODO
-        return [];
+    async today(): Promise<Schedule | undefined> {
+        let find = await ScheduleRecord.findByDate(new Date());
+        if (find == undefined) return undefined;
+        return Schedule.fromActiveRecord(find);
+    }
+
+    async write(body: IScheduleBody): Promise<Schedule> {
+        let object = await Schedule.fromBody(body);
+        await (await object.toActiveRecord()).save();
+        return object;
     }
 }
