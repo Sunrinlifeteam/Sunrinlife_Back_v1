@@ -66,8 +66,8 @@ export class IntranetNotice implements IIntranetNotice {
             content: object['content'].toString(),
             created: new Date(object['created'].toString()),
             updated: new Date(object['updated'].toString()),
-            attachment: object['attachment'].map((x: IAttachment) =>
-                Attachment.fromObject(x)
+            attachment: object['attachment'].map((x: string) =>
+                Attachment.fromJSON(x)
             ),
         });
     }

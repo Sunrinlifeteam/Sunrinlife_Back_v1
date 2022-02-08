@@ -60,8 +60,8 @@ export class SchoolNotice implements ISchoolNotice {
             title: object['title'].toString(),
             content: object['content'].toString(),
             created: new Date(object['created'].toString()),
-            attachment: object['attachment'].map((x: IAttachment) =>
-                Attachment.fromObject(x)
+            attachment: object['attachment'].map((x: string) =>
+                Attachment.fromJSON(x)
             ),
         });
     }
