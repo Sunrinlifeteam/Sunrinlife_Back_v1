@@ -1,0 +1,16 @@
+module.exports = {
+    BaseEntity: class Mock {},
+    ObjectType: () => jest.fn(),
+    Entity: () => jest.fn(),
+    InputType: () => jest.fn(),
+    Index: () => jest.fn(),
+    PrimaryColumn: () => jest.fn(),
+    PrimaryGeneratedColumn: () => jest.fn(),
+    Column: () => jest.fn(),
+    CreateDateColumn: () => jest.fn(),
+    UpdateDateColumn: () => jest.fn(),
+    OneToMany: () => jest.fn(),
+    ManyToOne: () => jest.fn(),
+    ManyToMany: () => jest.fn(),
+    JoinTable: () => jest.fn(),
+};
