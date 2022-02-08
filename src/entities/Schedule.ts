@@ -5,7 +5,9 @@ import {
     BaseEntity,
     ManyToMany,
     PrimaryGeneratedColumn,
+    JoinTable,
 } from 'typeorm';
+import { DateTime } from 'luxon';
 import { Attachment } from './Attachment';
 
 @Entity()
@@ -24,5 +26,13 @@ export class Schedule extends BaseEntity {
 
     // eslint-disable-next-line prettier/prettier
     @ManyToMany((type) => Attachment)
+    @JoinTable()
     attachment: Attachment[];
+
+    static findByDate(date: Date) {
+        const dateString = DateTime.fromJSDate(date).toFormat('yyyy-MM-dd');
+        return this.createQueryBuilder('schedule')
+            .where('schedule.date = :date', { date: dateString })
+            .getOne();
+    }
 }
