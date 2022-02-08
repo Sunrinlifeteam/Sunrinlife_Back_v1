@@ -8,8 +8,9 @@
       "start": "cross-env NODE_ENV=production node dist/index.js",
       "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
       "build": "tsc",
-      "format": "prettier --write \"src/**/*.ts\"",
-      "lint": "eslint \"src/**/*.ts\" --fix",
+      "fix": "npm run fix:lint && npm run fix:format",
+      "fix:format": "prettier --write \"src/**/*.ts\"",
+      "fix:lint": "eslint \"src/**/*.ts\" --fix",
       "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
    },
    "lint-staged": {
