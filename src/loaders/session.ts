@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { Express } from 'express';
 import session from 'express-session';
-import logger from '../module/logger';
+import logger from '../modules/logger';
 
 const MySQLStore = require('express-mysql-session')(session);
 

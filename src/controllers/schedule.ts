@@ -1,8 +1,11 @@
 import { Response as IResponse } from 'express';
-import { Response, Controller, Get } from '@decorators/express';
+import { Response, Controller, Get, Post, Body } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import { ScheduleService } from '../services/schedule';
-import logger from '../module/logger';
+import logger from '../modules/logger';
+import { IScheduleBody } from '../models/schedule';
+import { writeValidator } from '../validators/schedule';
+import { celebrate } from 'celebrate';
 
 @Controller('/schedule')
 @Injectable()
@@ -21,6 +24,12 @@ export class ScheduleController {
     @Get('/today')
     today(@Response() res: IResponse) {
         const result = this.scheduleService.today();
+        return res.status(200).json(result);
+    }
+
+    @Post('/write', [celebrate(writeValidator) as any])
+    write(@Response() res: IResponse, @Body() body: IScheduleBody) {
+        const result = this.scheduleService.write(body);
         return res.status(200).json(result);
     }
 }
