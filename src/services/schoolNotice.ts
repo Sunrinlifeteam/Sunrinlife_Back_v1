@@ -88,27 +88,33 @@ export class SchoolNotice implements ISchoolNotice {
 @Injectable()
 export class SchoolNoticeService {
     constructor() {}
-    
-    list(): { id: number; title: string; created: Date;}[] {
+
+    list(): { id: number; title: string; created: Date }[] {
         // TODO
         return [];
     }
 
-    get( id: number ): SchoolNotice[] {
+    // eslint-disable-next-line no-unused-vars
+    get(id: number): SchoolNotice[] {
         // TODO
         return [];
     }
 
-    add( data: { title: string; content: string; attachment: IAttachment[] } ): { title: string; content: string; attachment: IAttachment[] } {
+    add(data: { title: string; content: string; attachment: IAttachment[] }): {
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    } {
         // TODO
         return {
-            title:data.title,
-            content:data.content,
-            attachment:data.attachment
+            title: data.title,
+            content: data.content,
+            attachment: data.attachment,
         };
     }
 
-    remove( id: number ): { id: number; title: string; content: string; }[] {
+    // eslint-disable-next-line no-unused-vars
+    remove(id: number): { id: number; title: string; content: string }[] {
         // TODO
         return [];
     }

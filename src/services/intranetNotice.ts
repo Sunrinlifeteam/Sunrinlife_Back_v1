@@ -95,27 +95,33 @@ export class IntranetNotice implements IIntranetNotice {
 @Injectable()
 export class IntranetNoticeService {
     constructor() {}
-    
-    list(): { id: number; title: string; created: Date; updated: Date; }[] {
+
+    list(): { id: number; title: string; created: Date; updated: Date }[] {
         // TODO
         return [];
     }
 
-    get( id: number ): IntranetNotice[] {
+    // eslint-disable-next-line no-unused-vars
+    get(id: number): IntranetNotice[] {
         // TODO
         return [];
     }
 
-    add( data: { title: string; content: string; attachment: IAttachment[] } ): { title: string; content: string; attachment: IAttachment[] } {
+    add(data: { title: string; content: string; attachment: IAttachment[] }): {
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    } {
         // TODO
         return {
-            title:data.title,
-            content:data.content,
-            attachment:data.attachment
+            title: data.title,
+            content: data.content,
+            attachment: data.attachment,
         };
     }
 
-    remove( id: number ): { id: number; title: string; content: string; }[] {
+    // eslint-disable-next-line no-unused-vars
+    remove(id: number): { id: number; title: string; content: string }[] {
         // TODO
         return [];
     }
