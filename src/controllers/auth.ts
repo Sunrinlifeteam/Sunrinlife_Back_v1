@@ -17,4 +17,10 @@ export class AuthController {
         const result = this.authService.hello();
         return res.status(200).json(result);
     }
+
+    @Get('/signup')
+    signup(@Response() res: IResponse) {
+        const result = this.authService.signup();
+        return res.status(200).json(result);
+    }
 }
