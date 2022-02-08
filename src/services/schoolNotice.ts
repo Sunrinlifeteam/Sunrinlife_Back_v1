@@ -108,6 +108,16 @@ export class SchoolNoticeService {
         };
     }
 
+    edit( data: { id: number, title: string; content: string; attachment: IAttachment[] } ): { id:number, title: string; content: string; attachment: IAttachment[] } {
+        // TODO
+        return {
+            id:data.id,
+            title:data.title,
+            content:data.content,
+            attachment:data.attachment
+        };
+    }
+
     remove( id: number ): { id: number; title: string; content: string; }[] {
         // TODO
         return [];
