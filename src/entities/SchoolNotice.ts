@@ -4,14 +4,12 @@ import {
     Column,
     BaseEntity,
     PrimaryGeneratedColumn,
-    CreateDateColumn,
-    UpdateDateColumn,
     ManyToMany,
 } from 'typeorm';
 import { Attachment } from './Attachment';
 
 @Entity()
-export class Notice extends BaseEntity {
+export class SchoolNotice extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -21,11 +19,8 @@ export class Notice extends BaseEntity {
     @Column({ nullable: false })
     content: string;
 
-    @CreateDateColumn()
+    @Column({ nullable: false })
     created: Date;
-
-    @UpdateDateColumn()
-    updated: Date;
 
     // eslint-disable-next-line prettier/prettier
     @ManyToMany((type) => Attachment)
