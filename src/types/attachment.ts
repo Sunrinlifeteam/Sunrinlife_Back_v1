@@ -24,7 +24,7 @@ export class Attachment implements IAttachment {
     toJSON(): string {
         return JSON.stringify({
             filename: this.filename,
-            data: this.data.toString('base64'),
+            data: this.data?.toString('base64'),
             mimetype: this.mimetype,
         });
     }
