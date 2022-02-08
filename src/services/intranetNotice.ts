@@ -101,12 +101,22 @@ export class IntranetNoticeService {
         return [];
     }
 
-    get(): IntranetNotice[] {
+    get( id: number ): IntranetNotice[] {
         // TODO
         return [];
     }
 
-    add(): void {
+    add( data: { title: string; content: string; attachment: IAttachment[] } ): { title: string; content: string; attachment: IAttachment[] } {
         // TODO
+        return {
+            title:data.title,
+            content:data.content,
+            attachment:data.attachment
+        };
+    }
+
+    remove( id: number ): { id: number; title: string; content: string; }[] {
+        // TODO
+        return [];
     }
 }

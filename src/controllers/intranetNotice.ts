@@ -1,5 +1,5 @@
 import { Response as IResponse, Request as IRequest } from 'express';
-import { Response, Request, Controller, Get, Post } from '@decorators/express';
+import { Response, Request, Controller, Get, Post, Delete } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import { IntranetNoticeService } from '../services/intranetNotice';
 
@@ -7,22 +7,33 @@ import { IntranetNoticeService } from '../services/intranetNotice';
 @Injectable()
 export class IntranetNoticeController {
     // eslint-disable-next-line no-unused-vars
-    constructor(private readonly noticeService: IntranetNoticeService) {}
+    constructor(private readonly intranetNoticeService: IntranetNoticeService) {}
 
-    @Get('/')
+    @Get('/list')
     list(@Response() res: IResponse) {
-        const result = this.noticeService.list();
+        const result = this.intranetNoticeService.list();
         return res.status(200).json(result);
     }
 
-    @Get('/get')
-    get(@Response() res: IResponse) {
-        const result = this.noticeService.get();
+    @Get('/:id')
+    get(@Request() req: IRequest, @Response() res: IResponse) {
+        const result = this.intranetNoticeService.get(+req.params.id);
+        return res.status(200).json(result);
+    }
+
+    @Delete('/:id')
+    remove(@Request() req: IRequest, @Response() res: IResponse) {
+        const result = this.intranetNoticeService.remove(+req.params.id);
         return res.status(200).json(result);
     }
 
     @Post('/')
-    add(@Response() res: IResponse ,@Request() req: IRequest) {
-        // TODO
+    add(@Request() req: IRequest, @Response() res: IResponse) {
+        const result = this.intranetNoticeService.add({
+            title: req.body.title.toString(),
+            content: req.body.content.toString(),
+            attachment: req.body.attachment
+        });
+        return res.status(200).json(result);
     }
 }
