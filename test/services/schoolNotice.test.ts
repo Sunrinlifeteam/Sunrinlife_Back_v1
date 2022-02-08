@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { SchoolNotice } from '../../src/services/schoolNotice';
-import { Attachment } from '../../src/types/attachment';
+import { SchoolNotice } from '../../src/models/schoolNotice';
+import { SaveFile } from '../../src/modules/save';
 
 test.each([
     [1, 'notice title', 'notice content', new Date(), []],
@@ -10,7 +10,7 @@ test.each([
         'notice titleee',
         'notice contenteee',
         new Date(2005, 1, 21),
-        [new Attachment('notice.txt', Buffer.from('Testt'), 'text/plain')],
+        [SaveFile('notice.txt', 'Testt', 'text/plain')],
     ],
 ])('', (id, title, content, created, attachment) => {
     const original = { id, title, content, created, attachment };
