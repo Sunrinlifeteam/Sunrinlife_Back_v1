@@ -1,5 +1,13 @@
 import { Response as IResponse, Request as IRequest } from 'express';
-import { Response, Request, Controller, Get, Post, Delete, Put } from '@decorators/express';
+import {
+    Response,
+    Request,
+    Controller,
+    Get,
+    Post,
+    Delete,
+    Put,
+} from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import { SchoolNoticeService } from '../services/schoolNotice';
 
@@ -33,7 +41,7 @@ export class SchoolNoticeController {
             id: parseInt(req.params.id),
             title: req.body.title.toString(),
             content: req.body.content.toString(),
-            attachment: req.body.attachment
+            attachment: req.body.attachment,
         });
         return res.status(200).json(result);
     }
@@ -43,7 +51,7 @@ export class SchoolNoticeController {
         const result = this.schoolNoticeService.add({
             title: req.body.title.toString(),
             content: req.body.content.toString(),
-            attachment: req.body.attachment
+            attachment: req.body.attachment,
         });
         return res.status(200).json(result);
     }

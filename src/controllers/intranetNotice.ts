@@ -1,13 +1,23 @@
 import { Response as IResponse, Request as IRequest } from 'express';
-import { Response, Request, Controller, Get, Post, Delete, Put } from '@decorators/express';
+import {
+    Response,
+    Request,
+    Controller,
+    Get,
+    Post,
+    Delete,
+    Put,
+} from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import { IntranetNoticeService } from '../services/intranetNotice';
 
 @Controller('/notice/intranet')
 @Injectable()
 export class IntranetNoticeController {
-    // eslint-disable-next-line no-unused-vars
-    constructor(private readonly intranetNoticeService: IntranetNoticeService) {}
+    constructor(
+        // eslint-disable-next-line no-unused-vars
+        private readonly intranetNoticeService: IntranetNoticeService
+    ) {}
 
     @Get('/list')
     list(@Response() res: IResponse) {
@@ -23,7 +33,9 @@ export class IntranetNoticeController {
 
     @Delete('/:id')
     remove(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = this.intranetNoticeService.remove(parseInt(req.params.id));
+        const result = this.intranetNoticeService.remove(
+            parseInt(req.params.id)
+        );
         return res.status(200).json(result);
     }
 
@@ -33,7 +45,7 @@ export class IntranetNoticeController {
             id: parseInt(req.params.id),
             title: req.body.title.toString(),
             content: req.body.content.toString(),
-            attachment: req.body.attachment
+            attachment: req.body.attachment,
         });
         return res.status(200).json(result);
     }
@@ -43,7 +55,7 @@ export class IntranetNoticeController {
         const result = this.intranetNoticeService.add({
             title: req.body.title.toString(),
             content: req.body.content.toString(),
-            attachment: req.body.attachment
+            attachment: req.body.attachment,
         });
         return res.status(200).json(result);
     }

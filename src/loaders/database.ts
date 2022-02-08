@@ -1,9 +1,10 @@
 import { createConnection } from 'typeorm';
+import logger from '../module/logger';
 
 export default async () => {
     await createConnection()
         .then(() => {
-            console.log('Database Connected!');
+            logger.log('Database Connected!');
         })
-        .catch((error) => console.error(error));
+        .catch((error) => logger.error(error));
 };

@@ -1,24 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { Injectable } from '@decorators/di';
-
-export interface IAttachment {
-    filename: string; // ex) test.jpg
-    data: Buffer;
-    mimetype: string; // ex) image/jpeg (more info: https://developer.mozilla.org/ko/docs/Web/HTTP/Basics_of_HTTP/MIME_types)
-}
-
-export class Attachment implements IAttachment {
-    filename: string;
-    data: Buffer;
-    mimetype: string;
-    constructor(filename: string, data: Buffer, mimetype: string) {
-        this.filename = filename;
-        this.data = data;
-        this.mimetype = mimetype;
-    }
-    static fromObject(data: IAttachment) {
-        return new Attachment(data.filename, data.data, data.mimetype);
-    }
-}
+import { Attachment, IAttachment } from '../types/attachment';
 
 export interface ISchoolNotice {
     id: number;
@@ -78,8 +60,8 @@ export class SchoolNotice implements ISchoolNotice {
             title: object['title'].toString(),
             content: object['content'].toString(),
             created: new Date(object['created'].toString()),
-            attachment: object['attachment'].map((x: IAttachment) =>
-                Attachment.fromObject(x)
+            attachment: object['attachment'].map((x: string) =>
+                Attachment.fromJSON(x)
             ),
         });
     }
@@ -88,37 +70,51 @@ export class SchoolNotice implements ISchoolNotice {
 @Injectable()
 export class SchoolNoticeService {
     constructor() {}
-    
-    list(): { id: number; title: string; created: Date;}[] {
+
+    list(): { id: number; title: string; created: Date }[] {
         // TODO
         return [];
     }
 
-    get( id: number ): SchoolNotice[] {
+    get(id: number): SchoolNotice[] {
         // TODO
         return [];
     }
 
-    add( data: { title: string; content: string; attachment: IAttachment[] } ): { title: string; content: string; attachment: IAttachment[] } {
+    add(data: { title: string; content: string; attachment: IAttachment[] }): {
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    } {
         // TODO
         return {
-            title:data.title,
-            content:data.content,
-            attachment:data.attachment
+            title: data.title,
+            content: data.content,
+            attachment: data.attachment,
         };
     }
 
-    edit( data: { id: number, title: string; content: string; attachment: IAttachment[] } ): { id:number, title: string; content: string; attachment: IAttachment[] } {
+    edit(data: {
+        id: number;
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    }): {
+        id: number;
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    } {
         // TODO
         return {
-            id:data.id,
-            title:data.title,
-            content:data.content,
-            attachment:data.attachment
+            id: data.id,
+            title: data.title,
+            content: data.content,
+            attachment: data.attachment,
         };
     }
 
-    remove( id: number ): { id: number; title: string; content: string; }[] {
+    remove(id: number): { id: number; title: string; content: string }[] {
         // TODO
         return [];
     }

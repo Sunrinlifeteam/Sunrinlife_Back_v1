@@ -1,24 +1,5 @@
 import { Injectable } from '@decorators/di';
-
-export interface IAttachment {
-    filename: string; // ex) test.jpg
-    data: Buffer;
-    mimetype: string; // ex) image/jpeg (more info: https://developer.mozilla.org/ko/docs/Web/HTTP/Basics_of_HTTP/MIME_types)
-}
-
-export class Attachment implements IAttachment {
-    filename: string;
-    data: Buffer;
-    mimetype: string;
-    constructor(filename: string, data: Buffer, mimetype: string) {
-        this.filename = filename;
-        this.data = data;
-        this.mimetype = mimetype;
-    }
-    static fromObject(data: IAttachment) {
-        return new Attachment(data.filename, data.data, data.mimetype);
-    }
-}
+import { Attachment, IAttachment } from '../types/attachment';
 
 export interface IIntranetNotice {
     id: number;
@@ -85,8 +66,8 @@ export class IntranetNotice implements IIntranetNotice {
             content: object['content'].toString(),
             created: new Date(object['created'].toString()),
             updated: new Date(object['updated'].toString()),
-            attachment: object['attachment'].map((x: IAttachment) =>
-                Attachment.fromObject(x)
+            attachment: object['attachment'].map((x: string) =>
+                Attachment.fromJSON(x)
             ),
         });
     }
@@ -95,38 +76,55 @@ export class IntranetNotice implements IIntranetNotice {
 @Injectable()
 export class IntranetNoticeService {
     constructor() {}
-    
-    list(): { id: number; title: string; created: Date; updated: Date; }[] {
+
+    list(): { id: number; title: string; created: Date; updated: Date }[] {
         // TODO
         return [];
     }
 
-    get( id: number ): IntranetNotice[] {
+    // eslint-disable-next-line no-unused-vars
+    get(id: number): IntranetNotice[] {
         // TODO
         return [];
     }
 
-    add( data: { title: string; content: string; attachment: IAttachment[] } ): { id:number, title: string; content: string; attachment: IAttachment[] } {
+    add(data: { title: string; content: string; attachment: IAttachment[] }): {
+        id: number;
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    } {
         // TODO
         return {
-            id:0,
-            title:data.title,
-            content:data.content,
-            attachment:data.attachment
+            id: 0,
+            title: data.title,
+            content: data.content,
+            attachment: data.attachment,
         };
     }
 
-    edit( data: { id: number, title: string; content: string; attachment: IAttachment[] } ): { id:number, title: string; content: string; attachment: IAttachment[] } {
+    edit(data: {
+        id: number;
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    }): {
+        id: number;
+        title: string;
+        content: string;
+        attachment: IAttachment[];
+    } {
         // TODO
         return {
-            id:data.id,
-            title:data.title,
-            content:data.content,
-            attachment:data.attachment
+            id: data.id,
+            title: data.title,
+            content: data.content,
+            attachment: data.attachment,
         };
     }
 
-    remove( id: number ): { id: number; title: string; content: string; }[] {
+    // eslint-disable-next-line no-unused-vars
+    remove(id: number): { id: number; title: string; content: string }[] {
         // TODO
         return [];
     }

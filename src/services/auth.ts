@@ -7,4 +7,8 @@ export class AuthService {
     hello(): string {
         return 'hello';
     }
+
+    signup(): any {
+        return {};
+    }
 }
