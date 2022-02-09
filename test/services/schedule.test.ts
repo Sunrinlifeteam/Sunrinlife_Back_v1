@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { Schedule } from '../../src/services/schedule';
-import { Attachment } from '../../src/types/attachment';
+import { Schedule } from '../../src/models/schedule';
+import { SaveFile } from '../../src/modules/save';
 
 test.each([
     [new Date(), 'today schedule', 'nothing', []],
@@ -9,13 +9,7 @@ test.each([
         new Date(1999, 12, 30),
         'schedule 2',
         'attachment',
-        [
-            new Attachment(
-                'school.txt',
-                Buffer.from('Sunrin Internet High School'),
-                'text/plain'
-            ),
-        ],
+        [SaveFile('school.txt', 'Sunrin Internet High School', 'text/plain')],
     ],
 ])('', (date, title, body, attachment) => {
     const original = { date, title, body, attachment };
@@ -25,7 +19,7 @@ test.each([
     expect(obj.body).toBe(body);
     expect(obj.attachment).toBe(attachment);
     expect(obj.toObject()).toEqual(original);
-    expect(obj.toJSON()).toBe(JSON.stringify(original));
+    expect(JSON.stringify(obj)).toBe(JSON.stringify(original));
     expect(Schedule.fromObject(original)).toEqual(original);
     expect(Schedule.fromJSON(JSON.stringify(original))).toEqual(original);
 });

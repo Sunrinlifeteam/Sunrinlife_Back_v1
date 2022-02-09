@@ -1,70 +1,34 @@
 import { Injectable } from '@decorators/di';
-import { Attachment, IAttachment } from '../types/attachment';
-
-export interface ISchedule {
-    date: Date;
-    title: string;
-    body: string;
-    attachment: Array<IAttachment>;
-}
-
-export class Schedule implements ISchedule {
-    date: Date;
-    title: string;
-    body: string;
-    attachment: IAttachment[];
-
-    constructor(
-        date: Date,
-        title: string,
-        body: string,
-        attachment: IAttachment[]
-    ) {
-        this.date = date;
-        this.title = title;
-        this.body = body;
-        this.attachment = attachment;
-    }
-
-    toObject(): ISchedule {
-        return {
-            date: this.date,
-            title: this.title,
-            body: this.body,
-            attachment: this.attachment,
-        };
-    }
-    toJSON(): string {
-        return JSON.stringify(this.toObject());
-    }
-
-    static fromObject(data: ISchedule): Schedule {
-        return new Schedule(data.date, data.title, data.body, data.attachment);
-    }
-    static fromJSON(data: string): Schedule {
-        let object = JSON.parse(data);
-        return Schedule.fromObject({
-            date: new Date(object['date'].toString()),
-            title: object['title'].toString(),
-            body: object['body'].toString(),
-            attachment: object['attachment'].map((x: string) =>
-                Attachment.fromJSON(x)
-            ),
-        });
-    }
-}
+import { IScheduleBody, Schedule } from '../models/schedule';
+import { Schedule as ScheduleRecord } from '../entities/Schedule';
+import logger from '../modules/logger';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class ScheduleService {
     constructor() {}
 
-    list(): { date: string; body: Schedule[] }[] {
-        // TODO
-        return [];
+    async list(): Promise<Schedule[]> {
+        let find = await ScheduleRecord.findByDates(
+            DateTime.now(),
+            DateTime.now().plus({ days: 7 })
+        );
+        logger.debug('services.schedule.list', find);
+        return (find || []).map((x) => Schedule.fromActiveRecord(x));
     }
 
-    today(): Schedule[] {
-        // TODO
-        return [];
+    async today(): Promise<Schedule | undefined> {
+        let find = await ScheduleRecord.findByDate(new Date());
+        if (find == undefined) return undefined;
+        logger.debug('services.schedule.today', find);
+        return Schedule.fromActiveRecord(find);
+    }
+
+    async write(body: IScheduleBody): Promise<any> {
+        let object = await Schedule.fromBody(body);
+        let record = await object.toActiveRecord();
+        await record.save();
+        logger.debug('services.schedule.write', record);
+        return { isError: false, id: record.id, data: object };
     }
 }

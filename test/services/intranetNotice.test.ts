@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { IntranetNotice } from '../../src/services/intranetNotice';
-import { Attachment } from '../../src/types/attachment';
+import { SaveFile } from '../../src/modules/save';
+import { IntranetNotice } from '../../src/models/intranetNotice';
 
 test.each([
     [1, 'notice title', 'notice content', new Date(), new Date(), []],
@@ -18,7 +18,7 @@ test.each([
         'notice contenteee',
         new Date(2005, 1, 21),
         new Date(2005, 1, 21),
-        [new Attachment('notice.txt', Buffer.from('Testt'), 'text/plain')],
+        [SaveFile('notice.txt', 'Testt', 'text/plain')],
     ],
 ])('', (id, title, content, created, updated, attachment) => {
     const original = { id, title, content, created, updated, attachment };

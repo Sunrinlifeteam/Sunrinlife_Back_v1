@@ -5,6 +5,7 @@ import {
     BaseEntity,
     PrimaryGeneratedColumn,
     ManyToMany,
+    JoinTable,
 } from 'typeorm';
 import { Attachment } from './Attachment';
 
@@ -24,5 +25,6 @@ export class SchoolNotice extends BaseEntity {
 
     // eslint-disable-next-line prettier/prettier
     @ManyToMany((type) => Attachment)
+    @JoinTable()
     attachment: Attachment[];
 }
