@@ -89,8 +89,8 @@ export class Schedule implements ISchedule {
             date: new Date(object['date'].toString()),
             title: object['title'].toString(),
             body: object['body'].toString(),
-            attachment: object['attachment'].map((x: string) =>
-                Attachment.fromJSON(x)
+            attachment: object['attachment'].map((x: IAttachment) =>
+                Attachment.fromObject(x)
             ),
         });
     }
