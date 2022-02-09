@@ -3,7 +3,7 @@ import { IUploadBody } from '../models/upload';
 import { Attachment as AttachmentRecord } from '../entities/Attachment';
 import { readFile, rename } from 'fs';
 import path from 'path';
-import { MD5, SHA256 } from '../modules/hash';
+import { MD5, SHA1 } from '../modules/hash';
 import { Attachment } from '../models/attachment';
 
 @Injectable()
@@ -21,6 +21,13 @@ export class UploadService {
         return Attachment.fromActiveRecord(record);
     }
 
+    async delete(id: number) {
+        const record = await AttachmentRecord.findById(id);
+        if (record == undefined) return undefined;
+        record.remove();
+        return Attachment.fromActiveRecord(record);
+    }
+
     // eslint-disable-next-line no-undef
     async upload(file: Express.Multer.File, body: IUploadBody) {
         const UPLOAD_PATH = process.env.UPLOAD_PATH || './data';
@@ -29,14 +36,14 @@ export class UploadService {
                 if (err) return reject(err);
                 rename(
                     file.path,
-                    path.resolve(UPLOAD_PATH, SHA256(data)),
+                    path.resolve(UPLOAD_PATH, SHA1(data)),
                     async (err) => {
                         if (err) return reject(err);
                         let obj = Attachment.fromObject({
                             filename: file.originalname,
                             path: UPLOAD_PATH,
                             mimetype: body.mimetype,
-                            sha1hash: SHA256(data),
+                            sha1hash: SHA1(data),
                             md5hash: MD5(data),
                         });
                         let record = await obj.toActiveRecord();

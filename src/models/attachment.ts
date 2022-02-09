@@ -1,4 +1,5 @@
 import { Attachment as AttachmentRecord } from '../entities/Attachment';
+import path from 'path';
 
 export interface IAttachment {
     filename: string; // ex) test.jpg
@@ -26,6 +27,10 @@ export class Attachment implements IAttachment {
         this.sha1hash = sha1hash;
         this.md5hash = md5hash;
         this.mimetype = mimetype;
+    }
+
+    getPath(): string {
+        return path.resolve(process.cwd(), this.path, this.sha1hash);
     }
 
     toObject(): IAttachment {
