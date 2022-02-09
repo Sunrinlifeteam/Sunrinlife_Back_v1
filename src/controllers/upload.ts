@@ -7,6 +7,7 @@ import {
     Post,
     Body,
     Params,
+    Delete,
 } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import logger from '../modules/logger';
@@ -16,6 +17,7 @@ import upload from '../modules/upload';
 import HttpStatusCode from '../constants/HttpStatusCode';
 import { celebrate } from 'celebrate';
 import { uploadValidator } from '../validators/upload';
+import { createReadStream } from 'fs';
 
 @Controller('/upload')
 @Injectable()
@@ -34,7 +36,34 @@ export class UploadController {
     @Get('/:id')
     async GetById(@Response() res: IResponse, @Params('id') id: number) {
         const result = await this.uploadService.info(id);
+        if (result == undefined)
+            return res.sendStatus(HttpStatusCode.NOT_FOUND);
         return res.status(HttpStatusCode.OK).json(result);
+    }
+
+    @Get('/download/:id')
+    async DownloadById(@Response() res: IResponse, @Params('id') id: number) {
+        const result = await this.uploadService.info(id);
+        if (result == undefined)
+            return res.sendStatus(HttpStatusCode.NOT_FOUND);
+        return res.status(HttpStatusCode.OK).download(result.getPath());
+    }
+
+    @Get('/view/:id')
+    async ViewById(@Response() res: IResponse, @Params('id') id: number) {
+        const result = await this.uploadService.info(id);
+        if (result == undefined)
+            return res.sendStatus(HttpStatusCode.NOT_FOUND);
+        res.status(HttpStatusCode.OK).header('Content-Type', result.mimetype);
+        return createReadStream(result.getPath()).pipe(res);
+    }
+
+    @Delete('/:id')
+    async DeleteById(@Response() res: IResponse, @Params('id') id: number) {
+        const result = await this.uploadService.delete(id);
+        if (result == undefined)
+            return res.sendStatus(HttpStatusCode.NOT_FOUND);
+        return res.status(HttpStatusCode.NO_CONTENT);
     }
 
     @Post('/', [upload.single('file'), celebrate(uploadValidator)] as any[])
