@@ -26,9 +26,9 @@ export class Attachment extends BaseEntity {
     @Column({ nullable: false })
     mimetype: string;
 
-    // static findById(id: string) {
-    //     return this.createQueryBuilder('attachment')
-    //         .where('attachment.id = :id', { id: id })
-    //         .getOne();
-    // }
+    static findById(id: number) {
+        return this.createQueryBuilder('attachment')
+            .where('attachment.id = :id', { id: id })
+            .getOne();
+    }
 }
