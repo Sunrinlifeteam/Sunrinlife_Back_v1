@@ -43,8 +43,9 @@ export class Schedule implements ISchedule {
             attachment: this.attachment,
         };
     }
-    toJSON(): string {
-        return JSON.stringify(this.toObject());
+    toJSON(): any {
+        return this.toObject();
+        //return JSON.stringify(this.toObject());
     }
     async toActiveRecord(): Promise<ScheduleRecord> {
         let record = new ScheduleRecord();
@@ -64,7 +65,7 @@ export class Schedule implements ISchedule {
             date: new Date(record.date),
             title: record.title,
             body: record.body,
-            attachment: record.attachment.map((x) =>
+            attachment: (record.attachment || []).map((x) =>
                 Attachment.fromActiveRecord(x)
             ),
         });

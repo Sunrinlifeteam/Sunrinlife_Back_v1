@@ -16,20 +16,20 @@ export class ScheduleController {
     }
 
     @Get('/')
-    list(@Response() res: IResponse) {
-        const result = this.scheduleService.list();
+    async list(@Response() res: IResponse) {
+        const result = await this.scheduleService.list();
         return res.status(200).json(result);
     }
 
     @Get('/today')
-    today(@Response() res: IResponse) {
-        const result = this.scheduleService.today();
+    async today(@Response() res: IResponse) {
+        const result = await this.scheduleService.today();
         return res.status(200).json(result);
     }
 
     @Post('/write', [celebrate(writeValidator) as any])
-    write(@Response() res: IResponse, @Body() body: IScheduleBody) {
-        const result = this.scheduleService.write(body);
+    async write(@Response() res: IResponse, @Body() body: IScheduleBody) {
+        const result = await this.scheduleService.write(body);
         return res.status(200).json(result);
     }
 }

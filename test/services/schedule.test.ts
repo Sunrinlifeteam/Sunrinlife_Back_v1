@@ -19,7 +19,7 @@ test.each([
     expect(obj.body).toBe(body);
     expect(obj.attachment).toBe(attachment);
     expect(obj.toObject()).toEqual(original);
-    expect(obj.toJSON()).toBe(JSON.stringify(original));
+    expect(JSON.stringify(obj)).toBe(JSON.stringify(original));
     expect(Schedule.fromObject(original)).toEqual(original);
     expect(Schedule.fromJSON(JSON.stringify(original))).toEqual(original);
 });
