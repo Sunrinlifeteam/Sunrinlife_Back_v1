@@ -37,20 +37,16 @@ export class Attachment implements IAttachment {
             md5hash: this.md5hash,
         };
     }
-    toJSON(): string {
-        return JSON.stringify({
-            filename: this.filename,
-            path: this.path,
-            sha1hash: this.sha1hash,
-            md5hash: this.md5hash,
-            mimetype: this.mimetype,
-        });
+    toJSON(): any {
+        return this.toObject();
     }
 
     async toActiveRecord(): Promise<AttachmentRecord> {
         let record = new AttachmentRecord();
         record.filename = this.filename;
         record.path = this.path;
+        record.sha1hash = this.sha1hash;
+        record.md5hash = this.md5hash;
         record.mimetype = this.mimetype;
         return await record.save();
     }
