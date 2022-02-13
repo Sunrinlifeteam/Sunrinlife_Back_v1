@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { SchoolNotice } from '../../src/models/schoolNotice';
-import { SaveFile } from '../../src/modules/save';
+import { SaveFile } from '../save';
 
 test.each([
     [1, 'notice title', 'notice content', new Date(), []],

@@ -1,11 +1,10 @@
 import { Joi, Segments } from 'celebrate';
-import { DATE_PATTERN } from '../constants';
+import { DateTime } from 'luxon';
 
-export const writeValidator = {
-    [Segments.BODY]: Joi.object({
-        date: Joi.string().regex(DATE_PATTERN).required(),
-        title: Joi.string().required(),
-        body: Joi.string().required(),
-        attachment: Joi.array().items(Joi.number()).required(),
+export const DateValidator = {
+    [Segments.QUERY]: Joi.object({
+        year: Joi.number().default(DateTime.now().setZone('Asia/Seoul').year),
+        month: Joi.number().default(DateTime.now().setZone('Asia/Seoul').month),
+        day: Joi.number().default(DateTime.now().setZone('Asia/Seoul').day),
     }),
 };

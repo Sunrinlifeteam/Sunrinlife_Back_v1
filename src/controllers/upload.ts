@@ -24,7 +24,7 @@ import { createReadStream } from 'fs';
 export class UploadController {
     // eslint-disable-next-line no-unused-vars
     constructor(private readonly uploadService: UploadService) {
-        logger.debug('UploadController Attached!');
+        logger.log('UploadController Attached!');
     }
 
     @Get('/')

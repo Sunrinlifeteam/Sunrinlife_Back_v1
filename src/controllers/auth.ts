@@ -9,7 +9,7 @@ import logger from '../modules/logger';
 export class AuthController {
     // eslint-disable-next-line no-unused-vars
     constructor(private readonly authService: AuthService) {
-        logger.debug('AuthController Attached!');
+        logger.log('AuthController Attached!');
     }
 
     @Get('/')

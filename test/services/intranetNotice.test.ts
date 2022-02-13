@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { SaveFile } from '../../src/modules/save';
+import { SaveFile } from '../save';
 import { IntranetNotice } from '../../src/models/intranetNotice';
 
 test.each([
