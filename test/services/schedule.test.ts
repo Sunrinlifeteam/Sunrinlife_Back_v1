@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Schedule } from '../../src/models/schedule';
-import { SaveFile } from '../../src/modules/save';
+import { SaveFile } from '../save';
 
 test.each([
     [new Date(), 'today schedule', 'nothing', []],

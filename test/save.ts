@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 import path from 'path';
-import { Attachment } from '../models/attachment';
-import { MD5, SHA1 } from './hash';
+import { Attachment } from '../src/models/attachment';
+import { MD5, SHA1 } from '../src/modules/hash';
 
 export function SaveFile(filename: string, data: string, mimetype: string) {
     const UPLOAD_PATH = process.env.UPLOAD_PATH || '/tmp';

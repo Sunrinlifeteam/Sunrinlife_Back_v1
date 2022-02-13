@@ -1,13 +1,9 @@
 import Joi from 'joi';
-import api from './index';
+import api, { ReturnHead, ReturnRow, SchoolParameter } from './index';
 import { DefaultParameter, DefaultParameterSchema } from '.';
 import { DateTime } from 'luxon';
 
-export interface SchoolScheduleParameter {
-    /**
-     * 시도교육청코드
-     */
-    ATPT_OFCDC_SC_CODE: string;
+export interface SchoolScheduleParameter extends SchoolParameter {
     /**
      * 표준학교코드
      */
@@ -44,7 +40,7 @@ export const SchoolScheduleParameterSchema = Joi.object({
     AA_TO_YMD: Joi.string(),
 });
 
-export interface SchoolScheduleReturn {
+export interface SchoolScheduleReturnItem {
     /**
      * 시도교육청코드
      */
@@ -119,6 +115,10 @@ export interface SchoolScheduleReturn {
     LOAD_DTM: string;
 }
 
+export interface SchoolScheduleReturnWrapper {
+    SchoolSchedule: [ReturnHead, ReturnRow<SchoolScheduleReturnItem>];
+}
+
 export class SchoolSchedule {
     constructor() {}
 
@@ -140,7 +140,7 @@ export class SchoolSchedule {
         if (start instanceof Date) start = DateTime.fromJSDate(start);
         if (end instanceof Date) end = DateTime.fromJSDate(end);
         reqParams.AA_FROM_YMD = start.toFormat('yyyyMM');
-        reqParams.AA_TO_YMD = start.toFormat('yyyyMM');
+        reqParams.AA_TO_YMD = end.toFormat('yyyyMM');
         return await this.fetchJSON(defParams, reqParams);
     }
     /**
@@ -152,7 +152,7 @@ export class SchoolSchedule {
     async fetchJSON(
         defParams: DefaultParameter,
         reqParams: SchoolScheduleParameter
-    ) {
+    ): Promise<SchoolScheduleReturnWrapper> {
         defParams = await DefaultParameterSchema.validateAsync(defParams);
         reqParams = await SchoolScheduleParameterSchema.validateAsync(
             reqParams
