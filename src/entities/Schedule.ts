@@ -8,6 +8,7 @@ import {
     JoinTable,
 } from 'typeorm';
 import { DateTime } from 'luxon';
+import logger from '../modules/logger';
 
 @Entity('schedule')
 export class ScheduleRecord extends BaseEntity {
@@ -30,6 +31,7 @@ export class ScheduleRecord extends BaseEntity {
     grade: number[];
 
     static async findByYear(date: DateTime) {
+        logger.debug('ScheduleRecord.findByYear', 'date: ', date.toString());
         return ScheduleRecord.createQueryBuilder('calendar')
             .where('calendar.date like :date', {
                 date: date.toFormat('yyyy-__-__'),
@@ -38,6 +40,7 @@ export class ScheduleRecord extends BaseEntity {
     }
 
     static async findByMonth(date: DateTime) {
+        logger.debug('ScheduleRecord.findByMonth', 'date: ', date.toString());
         return ScheduleRecord.createQueryBuilder('calendar')
             .where('calendar.date like :date', {
                 date: date.toFormat('yyyy-MM-__'),
@@ -46,6 +49,13 @@ export class ScheduleRecord extends BaseEntity {
     }
 
     static async findByMonthRange(start: DateTime, end: DateTime) {
+        logger.debug(
+            'ScheduleRecord.findByMonthRange',
+            'start: ',
+            start.toString(),
+            'end: ',
+            end.toString()
+        );
         return ScheduleRecord.createQueryBuilder('calendar')
             .where('calendar.date >= :start')
             .andWhere('calendar.date <= :end')
@@ -58,14 +68,22 @@ export class ScheduleRecord extends BaseEntity {
     }
 
     static async findByDay(date: DateTime) {
+        logger.debug('ScheduleRecord.findByDay', 'date: ', date.toString());
         return ScheduleRecord.createQueryBuilder('calendar')
-            .where('calendar.date like :date', {
+            .where('calendar.date = :date', {
                 date: date.toFormat('yyyy-MM-dd'),
             })
             .getMany();
     }
 
     static async findByDayRange(start: DateTime, end: DateTime) {
+        logger.debug(
+            'ScheduleRecord.findByDayRange',
+            'start: ',
+            start.toString(),
+            'end: ',
+            end.toString()
+        );
         return ScheduleRecord.createQueryBuilder('calendar')
             .where('calendar.date >= :start')
             .andWhere('calendar.date <= :end')

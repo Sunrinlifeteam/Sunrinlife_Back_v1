@@ -17,6 +17,18 @@ export class ScheduleController {
 
     @Get('/', [celebrate(DateValidator)] as any[])
     async Get(@Response() res: IResponse, @Body() body: IDateBody) {
+        const result = await this.service.getByDay(body);
+        return res.status(200).json(result);
+    }
+
+    @Get('/week', [celebrate(DateValidator)] as any[])
+    async GetWeek(@Response() res: IResponse, @Body() body: IDateBody) {
+        const result = await this.service.getByMonth(body);
+        return res.status(200).json(result);
+    }
+
+    @Get('/month', [celebrate(DateValidator)] as any[])
+    async GetMonth(@Response() res: IResponse, @Body() body: IDateBody) {
         const result = await this.service.getByMonth(body);
         return res.status(200).json(result);
     }
