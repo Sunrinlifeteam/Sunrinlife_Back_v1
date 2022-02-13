@@ -1,46 +1,51 @@
 import { DateTime } from 'luxon';
-import { Attachment, IAttachment } from '../models/attachment';
-import { Attachment as AttachmentRecord } from '../entities/Attachment';
-import { Schedule as ScheduleRecord } from '../entities/Schedule';
+import { ScheduleRecord } from '../entities/Schedule';
 
-export interface IScheduleBody {
-    date: string;
-    title: string;
-    body: string;
-    attachment: Array<string>;
+export interface IDateBody {
+    year: number;
+    month: number;
+    day: number;
 }
 
 export interface ISchedule {
-    date: Date;
-    title: string;
-    body: string;
-    attachment: Array<IAttachment>;
+    date: DateTime;
+    type: string;
+    name: string;
+    content: string;
+    grade: number[];
 }
 
 export class Schedule implements ISchedule {
-    date: Date;
-    title: string;
-    body: string;
-    attachment: IAttachment[];
+    id?: number;
+    date: DateTime;
+    type: string;
+    name: string;
+    content: string;
+    grade: number[];
 
     constructor(
-        date: Date,
-        title: string,
-        body: string,
-        attachment: IAttachment[]
+        date: DateTime,
+        type: string,
+        name: string,
+        content: string,
+        grade: number[],
+        id?: number
     ) {
         this.date = date;
-        this.title = title;
-        this.body = body;
-        this.attachment = attachment;
+        this.type = type;
+        this.name = name;
+        this.content = content;
+        this.grade = grade;
+        this.id = id;
     }
 
     toObject(): ISchedule {
         return {
             date: this.date,
-            title: this.title,
-            body: this.body,
-            attachment: this.attachment,
+            type: this.type,
+            name: this.name,
+            content: this.content,
+            grade: this.grade,
         };
     }
     toJSON(): any {
@@ -49,49 +54,42 @@ export class Schedule implements ISchedule {
     }
     async toActiveRecord(): Promise<ScheduleRecord> {
         let record = new ScheduleRecord();
-        record.date = DateTime.fromJSDate(this.date).toFormat('yyyy-MM-dd');
-        record.title = this.title;
-        record.body = this.body;
-        record.attachment = await Promise.all(
-            this.attachment.map((x) =>
-                Attachment.fromObject(x).toActiveRecord()
-            )
-        );
+        if (this.id) record.id = this.id;
+        record.date = this.date.toFormat('yyyy-MM-dd');
+        record.type = this.type;
+        record.name = this.name;
+        record.content = this.content;
+        record.grade = this.grade;
         return await record.save();
     }
 
     static fromActiveRecord(record: ScheduleRecord): Schedule {
-        return Schedule.fromObject({
-            date: new Date(record.date),
-            title: record.title,
-            body: record.body,
-            attachment: (record.attachment || []).map((x) =>
-                Attachment.fromActiveRecord(x)
-            ),
-        });
-    }
-    static async fromBody(data: IScheduleBody): Promise<Schedule> {
-        return Schedule.fromObject({
-            date: new Date(data.date),
-            title: data.title,
-            body: data.body,
-            attachment: (await AttachmentRecord.findByIds(data.attachment)).map(
-                (x) => Attachment.fromActiveRecord(x)
-            ),
-        });
+        return new Schedule(
+            DateTime.fromFormat('yyyy-MM-dd', record.date),
+            record.type,
+            record.name,
+            record.content,
+            record.grade,
+            record.id
+        );
     }
     static fromObject(data: ISchedule): Schedule {
-        return new Schedule(data.date, data.title, data.body, data.attachment);
+        return new Schedule(
+            data.date,
+            data.type,
+            data.name,
+            data.content,
+            data.grade
+        );
     }
     static fromJSON(data: string): Schedule {
         let object = JSON.parse(data);
         return Schedule.fromObject({
-            date: new Date(object['date'].toString()),
-            title: object['title'].toString(),
-            body: object['body'].toString(),
-            attachment: object['attachment'].map((x: IAttachment) =>
-                Attachment.fromObject(x)
-            ),
+            date: DateTime.fromJSDate(new Date(object['date'].toString())),
+            type: object['type'],
+            name: object['name'],
+            content: object['content'],
+            grade: object['grade'],
         });
     }
 }

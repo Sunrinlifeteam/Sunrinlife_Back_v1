@@ -4,7 +4,7 @@ import {
     DefaultParameterPreset,
     SchoolParameterPreset,
 } from '../constants/neis';
-import { CalendarRecord } from '../entities/Calendar';
+import { ScheduleRecord } from '../entities/Schedule';
 import logger from './logger';
 import { SchoolSchedule } from './neis';
 
@@ -20,10 +20,10 @@ export class NeisOpenAPI {
             start,
             end
         );
-        const old_records = await CalendarRecord.find();
+        const old_records = await ScheduleRecord.find();
         const records = [];
         for (let row of result.SchoolSchedule[1].row) {
-            let obj = new CalendarRecord();
+            let obj = new ScheduleRecord();
             obj.date = row.AA_YMD.replace(
                 /([0-9]{4})([0-9]{2})([0-9]{2})/,
                 '$1-$2-$3'

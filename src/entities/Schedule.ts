@@ -8,10 +8,9 @@ import {
     JoinTable,
 } from 'typeorm';
 import { DateTime } from 'luxon';
-import { Attachment } from './Attachment';
 
-@Entity()
-export class Schedule extends BaseEntity {
+@Entity('schedule')
+export class ScheduleRecord extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -19,30 +18,59 @@ export class Schedule extends BaseEntity {
     date: string;
 
     @Column({ nullable: false })
-    title: string;
+    type: string;
 
     @Column({ nullable: false })
-    body: string;
+    name: string;
 
-    // eslint-disable-next-line prettier/prettier
-    @ManyToMany((type) => Attachment)
-    @JoinTable()
-    attachment: Attachment[];
+    @Column({ nullable: true })
+    content: string;
 
-    static findByDates(start: DateTime, end: DateTime) {
-        const startString = start.toFormat('yyyy-MM-dd');
-        const endString = end.toFormat('yyyy-MM-dd');
-        return this.createQueryBuilder('schedule')
-            .where('schedule.date >= :start')
-            .andWhere('schedule.date <= :end')
-            .setParameter('start', startString)
-            .setParameter('end', endString)
+    @Column('simple-array', { nullable: false })
+    grade: number[];
+
+    static async findByYear(date: DateTime) {
+        return ScheduleRecord.createQueryBuilder('calendar')
+            .where('calendar.date like :date', {
+                date: date.toFormat('yyyy-__-__'),
+            })
             .getMany();
     }
-    static findByDate(date: Date) {
-        const dateString = DateTime.fromJSDate(date).toFormat('yyyy-MM-dd');
-        return this.createQueryBuilder('schedule')
-            .where('schedule.date = :date', { date: dateString })
-            .getOne();
+
+    static async findByMonth(date: DateTime) {
+        return ScheduleRecord.createQueryBuilder('calendar')
+            .where('calendar.date like :date', {
+                date: date.toFormat('yyyy-MM-__'),
+            })
+            .getMany();
+    }
+
+    static async findByMonthRange(start: DateTime, end: DateTime) {
+        return ScheduleRecord.createQueryBuilder('calendar')
+            .where('calendar.date >= :start')
+            .andWhere('calendar.date <= :end')
+            .setParameter(
+                'start',
+                start.startOf('month').toFormat('yyyy-MM-dd')
+            )
+            .setParameter('end', end.endOf('month').toFormat('yyyy-MM-dd'))
+            .getMany();
+    }
+
+    static async findByDay(date: DateTime) {
+        return ScheduleRecord.createQueryBuilder('calendar')
+            .where('calendar.date like :date', {
+                date: date.toFormat('yyyy-MM-dd'),
+            })
+            .getMany();
+    }
+
+    static async findByDayRange(start: DateTime, end: DateTime) {
+        return ScheduleRecord.createQueryBuilder('calendar')
+            .where('calendar.date >= :start')
+            .andWhere('calendar.date <= :end')
+            .setParameter('start', start.toFormat('yyyy-MM-dd'))
+            .setParameter('end', end.toFormat('yyyy-MM-dd'))
+            .getMany();
     }
 }
