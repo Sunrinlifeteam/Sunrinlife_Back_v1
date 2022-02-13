@@ -6,9 +6,11 @@ import {
     ManyToMany,
     PrimaryGeneratedColumn,
     JoinTable,
+    ManyToOne,
 } from 'typeorm';
 import { DateTime } from 'luxon';
 import { Attachment } from './Attachment';
+import { User } from './User';
 
 @Entity('myschedule')
 export class MyScheduleRecord extends BaseEntity {
@@ -21,8 +23,11 @@ export class MyScheduleRecord extends BaseEntity {
     @Column({ nullable: false })
     title: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     body: string;
+
+    @ManyToOne((type) => User)
+    owner: User;
 
     // eslint-disable-next-line prettier/prettier
     @ManyToMany((type) => Attachment)
