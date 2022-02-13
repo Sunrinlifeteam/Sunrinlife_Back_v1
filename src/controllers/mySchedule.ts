@@ -1,7 +1,7 @@
 import { Response as IResponse } from 'express';
 import { Response, Controller, Get } from '@decorators/express';
 import { Injectable } from '@decorators/di';
-import { MyScheduleService } from '../services/myschedule';
+import { MyScheduleService } from '../services/mySchedule';
 import logger from '../modules/logger';
 
 @Controller('/me/schedule')

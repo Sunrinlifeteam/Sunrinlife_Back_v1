@@ -1,5 +1,5 @@
 import { Injectable } from '@decorators/di';
-import { IMyScheduleBody, MySchedule } from '../models/myschedule';
+import { IMyScheduleBody, MySchedule } from '../models/mySchedule';
 import { MyScheduleRecord } from '../entities/MySchedule';
 import logger from '../modules/logger';
 import { DateTime } from 'luxon';
