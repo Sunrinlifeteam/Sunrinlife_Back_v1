@@ -7,9 +7,10 @@ import {
     PrimaryGeneratedColumn,
     JoinTable,
     ManyToOne,
+    getConnection,
 } from 'typeorm';
 import { DateTime } from 'luxon';
-import { Attachment } from './Attachment';
+import { AttachmentRecord } from './Attachment';
 import { User } from './User';
 
 @Entity('myschedule')
@@ -30,23 +31,27 @@ export class MyScheduleRecord extends BaseEntity {
     owner: User;
 
     // eslint-disable-next-line prettier/prettier
-    @ManyToMany((type) => Attachment)
+    @ManyToMany((type) => AttachmentRecord)
     @JoinTable()
-    attachment: Attachment[];
+    attachment: AttachmentRecord[];
 
-    static findByDates(start: DateTime, end: DateTime) {
+    static async findByDates(start: DateTime, end: DateTime) {
         const startString = start.toFormat('yyyy-MM-dd');
         const endString = end.toFormat('yyyy-MM-dd');
-        return this.createQueryBuilder('schedule')
+        return getConnection()
+            .getRepository(MyScheduleRecord)
+            .createQueryBuilder('schedule')
             .where('schedule.date >= :start')
             .andWhere('schedule.date <= :end')
             .setParameter('start', startString)
             .setParameter('end', endString)
             .getMany();
     }
-    static findByDate(date: Date) {
+    static async findByDate(date: Date) {
         const dateString = DateTime.fromJSDate(date).toFormat('yyyy-MM-dd');
-        return this.createQueryBuilder('schedule')
+        return getConnection()
+            .getRepository(MyScheduleRecord)
+            .createQueryBuilder('schedule')
             .where('schedule.date = :date', { date: dateString })
             .getOne();
     }

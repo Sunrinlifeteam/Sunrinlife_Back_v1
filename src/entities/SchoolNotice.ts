@@ -7,7 +7,7 @@ import {
     ManyToMany,
     JoinTable,
 } from 'typeorm';
-import { Attachment } from './Attachment';
+import { AttachmentRecord } from './Attachment';
 
 @Entity()
 export class SchoolNotice extends BaseEntity {
@@ -24,7 +24,7 @@ export class SchoolNotice extends BaseEntity {
     created: Date;
 
     // eslint-disable-next-line prettier/prettier
-    @ManyToMany((type) => Attachment)
+    @ManyToMany((type) => AttachmentRecord)
     @JoinTable()
-    attachment: Attachment[];
+    attachment: AttachmentRecord[];
 }

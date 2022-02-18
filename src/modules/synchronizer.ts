@@ -20,7 +20,7 @@ export class NeisOpenAPI {
             start,
             end
         );
-        const old_records = await ScheduleRecord.find();
+        const old_records = await getConnection().manager.find(ScheduleRecord);
         const records = [];
         for (let row of result.SchoolSchedule[1].row) {
             let obj = new ScheduleRecord();

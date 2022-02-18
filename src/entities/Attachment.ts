@@ -4,10 +4,11 @@ import {
     BaseEntity,
     PrimaryColumn,
     PrimaryGeneratedColumn,
+    getConnection,
 } from 'typeorm';
 
-@Entity()
-export class Attachment extends BaseEntity {
+@Entity('attachment')
+export class AttachmentRecord extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -26,8 +27,10 @@ export class Attachment extends BaseEntity {
     @Column({ nullable: false })
     mimetype: string;
 
-    static findById(id: number) {
-        return this.createQueryBuilder('attachment')
+    static async findById(id: number) {
+        return getConnection()
+            .getRepository(AttachmentRecord)
+            .createQueryBuilder('attachment')
             .where('attachment.id = :id', { id: id })
             .getOne();
     }

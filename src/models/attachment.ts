@@ -1,5 +1,6 @@
-import { Attachment as AttachmentRecord } from '../entities/Attachment';
+import { AttachmentRecord as AttachmentRecord } from '../entities/Attachment';
 import path from 'path';
+import { getConnection } from 'typeorm';
 
 export interface IAttachment {
     filename: string; // ex) test.jpg
@@ -53,7 +54,7 @@ export class Attachment implements IAttachment {
         record.sha1hash = this.sha1hash;
         record.md5hash = this.md5hash;
         record.mimetype = this.mimetype;
-        return await record.save();
+        return await getConnection().manager.save(record);
     }
     static fromActiveRecord(record: AttachmentRecord): Attachment {
         return Attachment.fromObject({
