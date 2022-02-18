@@ -2,6 +2,9 @@ import { SchoolSchedule } from '../../src/modules/neis';
 import { DefaultParameterPreset } from '../../src/constants/neis';
 import { DateTime } from 'luxon';
 import { writeFileSync } from 'fs';
+
+jest.setTimeout(10000);
+
 test.each([['B10', '7010536', []]])(
     '',
     async (ATPT_OFCDC_SC_CODE, SD_SCHUL_CODE) => {
