@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { getConnection } from 'typeorm';
 import { ScheduleRecord } from '../entities/Schedule';
 
 export interface IDateBody {
@@ -60,7 +61,7 @@ export class Schedule implements ISchedule {
         record.name = this.name;
         record.content = this.content;
         record.grade = this.grade;
-        return await record.save();
+        return await getConnection().manager.save(record);
     }
 
     static fromActiveRecord(record: ScheduleRecord): Schedule {

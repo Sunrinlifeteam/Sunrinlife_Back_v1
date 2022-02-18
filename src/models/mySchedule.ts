@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon';
 import { Attachment, IAttachment } from './attachment';
-import { Attachment as AttachmentRecord } from '../entities/Attachment';
+import { AttachmentRecord as AttachmentRecord } from '../entities/Attachment';
 import { MyScheduleRecord } from '../entities/MySchedule';
+import { getConnection } from 'typeorm';
 
 export interface IMyScheduleBody {
     date: string;
@@ -57,7 +58,7 @@ export class MySchedule implements IMySchedule {
                 Attachment.fromObject(x).toActiveRecord()
             )
         );
-        return await record.save();
+        return await getConnection().manager.save(record);
     }
 
     static fromActiveRecord(record: MyScheduleRecord): MySchedule {
@@ -75,9 +76,12 @@ export class MySchedule implements IMySchedule {
             date: new Date(data.date),
             title: data.title,
             body: data.body,
-            attachment: (await AttachmentRecord.findByIds(data.attachment)).map(
-                (x) => Attachment.fromActiveRecord(x)
-            ),
+            attachment: (
+                await getConnection().manager.findByIds(
+                    AttachmentRecord,
+                    data.attachment
+                )
+            ).map((x) => Attachment.fromActiveRecord(x)),
         });
     }
     static fromObject(data: IMySchedule): MySchedule {

@@ -1,17 +1,18 @@
 import { Injectable } from '@decorators/di';
 import { IUploadBody } from '../models/upload';
-import { Attachment as AttachmentRecord } from '../entities/Attachment';
+import { AttachmentRecord as AttachmentRecord } from '../entities/Attachment';
 import { readFile, rename } from 'fs';
 import path from 'path';
 import { MD5, SHA1 } from '../modules/hash';
-import { Attachment } from '../models/attachment';
+import { Attachment, IAttachment } from '../models/attachment';
+import { getConnection } from 'typeorm';
 
 @Injectable()
 export class UploadService {
     constructor() {}
 
     async list() {
-        const records = await AttachmentRecord.find();
+        const records = await getConnection().manager.find(AttachmentRecord);
         return (records || []).map((x) => Attachment.fromActiveRecord(x));
     }
 
@@ -24,12 +25,15 @@ export class UploadService {
     async delete(id: number) {
         const record = await AttachmentRecord.findById(id);
         if (record == undefined) return undefined;
-        record.remove();
+        await getConnection().manager.remove(record);
         return Attachment.fromActiveRecord(record);
     }
 
-    // eslint-disable-next-line no-undef
-    async upload(file: Express.Multer.File, body: IUploadBody) {
+    async upload(
+        // eslint-disable-next-line no-undef
+        file: Express.Multer.File,
+        body: IUploadBody
+    ): Promise<IAttachment & { id: number }> {
         const UPLOAD_PATH = process.env.UPLOAD_PATH || './data';
         return new Promise((resolve, reject) =>
             readFile(path.resolve(process.cwd(), file.path), (err, data) => {

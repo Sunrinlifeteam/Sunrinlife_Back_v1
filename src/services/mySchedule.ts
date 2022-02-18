@@ -3,6 +3,7 @@ import { IMyScheduleBody, MySchedule } from '../models/mySchedule';
 import { MyScheduleRecord } from '../entities/MySchedule';
 import logger from '../modules/logger';
 import { DateTime } from 'luxon';
+import { getConnection } from 'typeorm';
 
 @Injectable()
 export class MyScheduleService {
@@ -27,7 +28,7 @@ export class MyScheduleService {
     async write(body: IMyScheduleBody): Promise<any> {
         let object = await MySchedule.fromBody(body);
         let record = await object.toActiveRecord();
-        await record.save();
+        await getConnection().manager.save(record);
         logger.debug('services.schedule.write', record);
         return { isError: false, id: record.id, data: object };
     }

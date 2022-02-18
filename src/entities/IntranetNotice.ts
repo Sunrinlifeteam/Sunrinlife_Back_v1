@@ -9,7 +9,7 @@ import {
     ManyToMany,
     JoinTable,
 } from 'typeorm';
-import { Attachment } from './Attachment';
+import { AttachmentRecord } from './Attachment';
 
 @Entity()
 export class IntranetNotice extends BaseEntity {
@@ -29,7 +29,7 @@ export class IntranetNotice extends BaseEntity {
     updated: Date;
 
     // eslint-disable-next-line prettier/prettier
-    @ManyToMany((type) => Attachment)
+    @ManyToMany((type) => AttachmentRecord)
     @JoinTable()
-    attachment: Attachment[];
+    attachment: AttachmentRecord[];
 }
