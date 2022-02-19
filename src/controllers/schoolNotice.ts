@@ -7,9 +7,13 @@ import {
     Post,
     Delete,
     Put,
+    Body,
 } from '@decorators/express';
+import { celebrate } from 'celebrate';
 import { Injectable } from '@decorators/di';
+import { INoticeBody } from '../models/schoolNotice';
 import { SchoolNoticeService } from '../services/schoolNotice';
+import { schoolNoticeValidator } from '../validators/schoolNotice';
 
 @Controller('/notice/school')
 @Injectable()
@@ -35,24 +39,20 @@ export class SchoolNoticeController {
         return res.status(200).json(result);
     }
 
-    @Put('/:id')
-    edit(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = this.schoolNoticeService.edit({
-            id: parseInt(req.params.id),
-            title: req.body.title.toString(),
-            content: req.body.content.toString(),
-            attachment: req.body.attachment,
-        });
+    @Put('/:id',[celebrate(schoolNoticeValidator)] as any[])
+    edit(@Request() req: IRequest, @Response() res: IResponse, @Body() body: INoticeBody) {
+        const result = this.schoolNoticeService.edit(
+            Object.assign(
+                {id: parseInt(req.params.id)},
+                body
+            )
+        );
         return res.status(200).json(result);
     }
 
-    @Post('/')
-    add(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = this.schoolNoticeService.add({
-            title: req.body.title.toString(),
-            content: req.body.content.toString(),
-            attachment: req.body.attachment,
-        });
+    @Post('/',[celebrate(schoolNoticeValidator)] as any[])
+    add(@Response() res: IResponse, @Body() body: INoticeBody) {
+        const result = this.schoolNoticeService.add(body);
         return res.status(200).json(result);
     }
 }

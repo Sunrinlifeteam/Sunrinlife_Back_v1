@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { AttachmentRecord } from './Attachment';
 
-@Entity()
+@Entity('interaction_notice')
 export class IntranetNotice extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;

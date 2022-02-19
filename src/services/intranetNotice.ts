@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Injectable } from '@decorators/di';
-import { IAttachment } from '../models/attachment';
 import { IntranetNotice } from '../models/intranetNotice';
+import { INoticeBody, INoticeBodyWithID } from '../models/intranetNotice';
 
 @Injectable()
 export class IntranetNoticeService {
@@ -17,12 +17,7 @@ export class IntranetNoticeService {
         return [];
     }
 
-    add(data: { title: string; content: string; attachment: IAttachment[] }): {
-        id: number;
-        title: string;
-        content: string;
-        attachment: IAttachment[];
-    } {
+    add(data: INoticeBody): INoticeBodyWithID {
         // TODO
         return {
             id: 0,
@@ -32,17 +27,7 @@ export class IntranetNoticeService {
         };
     }
 
-    edit(data: {
-        id: number;
-        title: string;
-        content: string;
-        attachment: IAttachment[];
-    }): {
-        id: number;
-        title: string;
-        content: string;
-        attachment: IAttachment[];
-    } {
+    edit(data: INoticeBodyWithID): INoticeBodyWithID {
         // TODO
         return {
             id: data.id,
@@ -52,7 +37,7 @@ export class IntranetNoticeService {
         };
     }
 
-    remove(id: number): { id: number; title: string; content: string }[] {
+    remove(id: number): INoticeBodyWithID[] {
         // TODO
         return [];
     }
