@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { AttachmentRecord } from './Attachment';
 
-@Entity()
+@Entity('school_notice')
 export class SchoolNotice extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;

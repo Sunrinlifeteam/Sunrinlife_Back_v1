@@ -7,9 +7,13 @@ import {
     Post,
     Delete,
     Put,
+    Body,
 } from '@decorators/express';
+import { celebrate } from 'celebrate';
 import { Injectable } from '@decorators/di';
+import { INoticeBody } from '../models/intranetNotice';
 import { IntranetNoticeService } from '../services/intranetNotice';
+import { intranetNoticeValidator } from '../validators/intranetNotice';
 
 @Controller('/notice/intranet')
 @Injectable()
@@ -39,24 +43,20 @@ export class IntranetNoticeController {
         return res.status(200).json(result);
     }
 
-    @Put('/:id')
-    edit(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = this.intranetNoticeService.edit({
-            id: parseInt(req.params.id),
-            title: req.body.title.toString(),
-            content: req.body.content.toString(),
-            attachment: req.body.attachment,
-        });
+    @Put('/:id',[celebrate(intranetNoticeValidator)] as any[])
+    edit(@Request() req: IRequest, @Response() res: IResponse, @Body() body: INoticeBody) {
+        const result = this.intranetNoticeService.edit(
+            Object.assign(
+                {id: parseInt(req.params.id)},
+                body
+            )
+        );
         return res.status(200).json(result);
     }
 
-    @Post('/')
-    add(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = this.intranetNoticeService.add({
-            title: req.body.title.toString(),
-            content: req.body.content.toString(),
-            attachment: req.body.attachment,
-        });
+    @Post('/',[celebrate(intranetNoticeValidator)] as any[])
+    add(@Response() res: IResponse, @Body() body: INoticeBody) {
+        const result = this.intranetNoticeService.add(body);
         return res.status(200).json(result);
     }
 }
