@@ -3,6 +3,7 @@ import { Response, Controller, Get } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import { AuthService } from '../services/auth';
 import logger from '../modules/logger';
+import passport from 'passport';
 
 @Controller('/auth')
 @Injectable()
@@ -23,4 +24,19 @@ export class AuthController {
         const result = this.authService.signup();
         return res.status(200).json(result);
     }
+
+    @Get(
+        '/google',
+        passport.authenticate('google', { scope: ['email', 'profile'] })
+    )
+    googleLogin() {}
+
+    @Get(
+        '/google/callback',
+        passport.authenticate('google', {
+            successRedirect: '/',
+            failureRedirect: '/',
+        })
+    )
+    googleCallback() {}
 }

@@ -4,10 +4,12 @@ import databaseLoader from './database';
 import sessionLoader from './session';
 import routeLoader from './route';
 import neisSyncer from './neisSyncer';
+// import passportLoader from './passport';
 
 export default async ({ app }: { app: Express }) => {
     await databaseLoader();
     await expressLoader(app);
+    // await passportLoader(app);
     await sessionLoader(app);
     await routeLoader(app);
     await neisSyncer(60 * 60);
