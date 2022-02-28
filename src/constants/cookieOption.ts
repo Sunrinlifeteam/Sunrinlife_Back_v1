@@ -1,0 +1,10 @@
+import { isProduction } from './isProduction';
+
+export const REFRESH_TOKEN_COOKIE_OPTION = {
+    ...(isProduction ? { domain: process.env.DOMAIN } : {}),
+    httpOnly: isProduction,
+    secure: isProduction,
+    maxAge: 2592000000,
+};
+
+export const REFRESH_TOKEN_COOKIE_KEY = 'Refresh';

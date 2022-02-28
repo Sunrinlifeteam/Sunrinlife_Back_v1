@@ -5,6 +5,12 @@ import passport from 'passport';
 import { AuthService } from '../services/auth';
 import logger from '../modules/logger';
 import HttpStatusCode from '../constants/HttpStatusCode';
+import { IRequestIncludeUser } from '../types/user';
+import { accessTokenGuard, refreshTokenGuard } from '../modules/passport';
+import {
+    REFRESH_TOKEN_COOKIE_KEY,
+    REFRESH_TOKEN_COOKIE_OPTION,
+} from '../constants';
 
 @Controller('/auth')
 @Injectable()
@@ -13,10 +19,23 @@ export class AuthController {
         logger.log('AuthController Attached!');
     }
 
-    @Get('/')
-    async hello(@Response() res: IResponse) {
-        const result = await this.authService.hello();
-        return res.status(HttpStatusCode.OK).json(result);
+    @Get('/refresh', [refreshTokenGuard])
+    async refreshAccessToken(@Request() req: any, @Response() res: IResponse) {
+        const { id } = req.user;
+        if (!id)
+            return res.status(HttpStatusCode.UNAUTHORIZED).json('Unauthorized');
+        const accessToken = this.authService.createAccessTokenByUserId(id);
+        return res.status(HttpStatusCode.OK).json({ accessToken });
+    }
+
+    @Get('/valid', [accessTokenGuard])
+    async checkAccessTokenIsValid(@Response() res: IResponse) {
+        return res.status(HttpStatusCode.OK).json('valid');
+    }
+
+    @Get('/user', [accessTokenGuard])
+    async getUser(@Request() req: any, @Response() res: IResponse) {
+        return res.status(HttpStatusCode.OK).json(req.user);
     }
 
     @Get('/google', [
@@ -24,12 +43,27 @@ export class AuthController {
     ])
     googleLogin() {}
 
-    @Get('/google/redirect', [passport.authenticate('google')])
-    async googleRedirect(@Request() req: any, @Response() res: IResponse) {
-        const { user } = req;
+    @Get('/google/callback', [
+        passport.authenticate('google', { failureRedirect: '/auth/google' }),
+    ])
+    async googleRedirect(
+        @Request() req: IRequestIncludeUser,
+        @Response() res: IResponse
+    ) {
+        let { user } = req;
         const { email } = user;
-        const userIsExist = !!(await this.authService.getUserByEmail(email));
-        if (!userIsExist) await this.authService.createUser(user);
-        return res.status(200).json(user);
+        let savedUser = await this.authService.getUserByEmail(email);
+        if (!savedUser)
+            savedUser = await this.authService.createAndGetUser(user);
+        const refreshToken =
+            await this.authService.createAndGetRefreshTokenByUserId(
+                savedUser.id
+            );
+        res.cookie(
+            REFRESH_TOKEN_COOKIE_KEY,
+            refreshToken,
+            REFRESH_TOKEN_COOKIE_OPTION
+        );
+        return res.redirect(process.env.FRONTEND_URL!);
     }
 }

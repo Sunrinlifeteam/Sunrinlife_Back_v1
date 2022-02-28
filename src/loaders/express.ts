@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import { isProduction } from '../constants';
 
 export default async (app: Express) => {
@@ -24,6 +25,7 @@ export default async (app: Express) => {
             extended: false,
         })
     );
+    app.use(cookieParser());
     app.get('/', (_req: Request, res: Response) => {
         res.status(200).json('hello');
     });
