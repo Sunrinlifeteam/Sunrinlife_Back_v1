@@ -43,18 +43,19 @@ export class IntranetNoticeController {
         return res.status(200).json(result);
     }
 
-    @Put('/:id',[celebrate(intranetNoticeValidator)] as any[])
-    edit(@Request() req: IRequest, @Response() res: IResponse, @Body() body: INoticeBody) {
+    @Put('/:id', [celebrate(intranetNoticeValidator)] as any[])
+    edit(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Body() body: INoticeBody
+    ) {
         const result = this.intranetNoticeService.edit(
-            Object.assign(
-                {id: parseInt(req.params.id)},
-                body
-            )
+            Object.assign({ id: parseInt(req.params.id) }, body)
         );
         return res.status(200).json(result);
     }
 
-    @Post('/',[celebrate(intranetNoticeValidator)] as any[])
+    @Post('/', [celebrate(intranetNoticeValidator)] as any[])
     add(@Response() res: IResponse, @Body() body: INoticeBody) {
         const result = this.intranetNoticeService.add(body);
         return res.status(200).json(result);

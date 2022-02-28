@@ -1,11 +1,13 @@
 import { Express } from 'express';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { oAuthHandler } from '../modules/passport';
+import { oAuthHandler } from '../modules/oAuthHandler';
 
 export default async (app: Express) => {
     app.use(passport.initialize());
     app.use(passport.session());
+    passport.serializeUser((user: any, done) => done(null, user));
+    passport.deserializeUser((user: any, done) => done(null, user));
     passport.use(
         new GoogleStrategy(
             {

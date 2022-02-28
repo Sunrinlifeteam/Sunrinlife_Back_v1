@@ -1,5 +1,7 @@
+import { Container } from '@decorators/di';
 import { createConnection } from 'typeorm';
 import entities from '../entities';
+import { User } from '../entities/User';
 import logger from '../modules/logger';
 
 export default async () => {
@@ -12,11 +14,14 @@ export default async () => {
         database: process.env.DB_NAME,
         synchronize: true,
         logging: false,
-        entities: entities,
+        entities,
         migrations: [],
         subscribers: [],
     })
-        .then(() => {
+        .then((connection) => {
+            Container.provide([
+                { provide: User, useValue: connection.getRepository(User) },
+            ]);
             logger.log('Database Connected!');
         })
         .catch((error) => logger.error(error));

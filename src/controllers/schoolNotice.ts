@@ -39,18 +39,19 @@ export class SchoolNoticeController {
         return res.status(200).json(result);
     }
 
-    @Put('/:id',[celebrate(schoolNoticeValidator)] as any[])
-    edit(@Request() req: IRequest, @Response() res: IResponse, @Body() body: INoticeBody) {
+    @Put('/:id', [celebrate(schoolNoticeValidator)] as any[])
+    edit(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Body() body: INoticeBody
+    ) {
         const result = this.schoolNoticeService.edit(
-            Object.assign(
-                {id: parseInt(req.params.id)},
-                body
-            )
+            Object.assign({ id: parseInt(req.params.id) }, body)
         );
         return res.status(200).json(result);
     }
 
-    @Post('/',[celebrate(schoolNoticeValidator)] as any[])
+    @Post('/', [celebrate(schoolNoticeValidator)] as any[])
     add(@Response() res: IResponse, @Body() body: INoticeBody) {
         const result = this.schoolNoticeService.add(body);
         return res.status(200).json(result);
