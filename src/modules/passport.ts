@@ -8,7 +8,11 @@ import { User, USER_SELECT } from '../entities/User';
 import { isNumberic } from './isNumberic';
 import { IUser } from '../types/user';
 import { getDepartmentByClass } from './getDepartment';
-import { ACCOUNT_TYPE, REFRESH_TOKEN_COOKIE_KEY } from '../constants';
+import {
+    ACCOUNT_TYPE,
+    REFRESH_TOKEN_COOKIE_KEY,
+    SUNRIN_STUDENT_EMAIL_PATTERN,
+} from '../constants';
 
 export const jwtConfig: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromHeader('authorization'),
@@ -64,17 +68,21 @@ export async function googleOAuthHandler(
     done: any
 ) {
     let { familyName, givenName } = profile.name;
-    if (isNumberic(familyName))
-        givenName = [familyName, (familyName = givenName)][0];
-    const userClass = +givenName.substring(1, 3);
-    const user: IUser = {
-        email: profile.emails[0].value,
-        username: familyName,
-        department: getDepartmentByClass(userClass),
-        grade: +givenName.substring(0, 1),
-        class: userClass,
-        number: +givenName.substring(3, 5),
-        accountType: ACCOUNT_TYPE.STUDENT,
-    };
-    return done(null, user);
+    const email = profile.emails[0].value;
+    if (SUNRIN_STUDENT_EMAIL_PATTERN.test(email)) {
+        if (isNumberic(familyName))
+            givenName = [familyName, (familyName = givenName)][0];
+        const userClass = +givenName.substring(1, 3);
+        const user: IUser = {
+            email,
+            username: familyName,
+            department: getDepartmentByClass(userClass),
+            grade: +givenName.substring(0, 1),
+            class: userClass,
+            number: +givenName.substring(3, 5),
+            accountType: ACCOUNT_TYPE.STUDENT,
+        };
+        return done(null, user);
+    }
+    return done(null, false, { reason: 'Unauthorized' });
 }
