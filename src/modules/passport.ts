@@ -44,12 +44,14 @@ export const jwtRefreshVerify: VerifyCallback = async (req: Request, done) => {
                 }
             )?.id;
             const userRepository = Container.get<Repository<User>>(User);
-            const user = await userRepository.findOne({
+            const user = (await userRepository.findOne({
                 where: { id },
                 select: [...USER_SELECT, 'refreshToken'],
-            });
-            if (user && user.refreshToken === refreshToken)
+            })) as any;
+            if (user && user.refreshToken === refreshToken) {
+                delete user['refreshToken'];
                 return done(null, user);
+            }
         }
         return done(null, false, { reason: 'Unauthorized' });
     } catch (err) {
