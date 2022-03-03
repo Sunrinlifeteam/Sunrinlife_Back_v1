@@ -2,6 +2,7 @@ import { Container } from '@decorators/di';
 import { createConnection } from 'typeorm';
 import entities from '../entities';
 import { User } from '../entities/User';
+import { ClubInfoData } from '../entities/ClubInfo';
 import logger from '../modules/logger';
 
 export default async () => {
@@ -21,6 +22,10 @@ export default async () => {
         .then((connection) => {
             Container.provide([
                 { provide: User, useValue: connection.getRepository(User) },
+                {
+                    provide: ClubInfoData,
+                    useValue: connection.getRepository(ClubInfoData),
+                },
             ]);
             logger.log('Database Connected!');
         })
