@@ -1,10 +1,7 @@
-import { Request, Response, Express } from 'express';
+import express, { Request, Response, Express } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import { isProduction } from '../constants';
 
 export default async (app: Express) => {
     app.set('port', process.env.PORT || 3000);
@@ -19,9 +16,9 @@ export default async (app: Express) => {
             credentials: true,
         })
     );
-    app.use(bodyParser.json());
+    app.use(express.json());
     app.use(
-        bodyParser.urlencoded({
+        express.urlencoded({
             extended: false,
         })
     );
