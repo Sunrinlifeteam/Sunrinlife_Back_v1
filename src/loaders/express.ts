@@ -1,8 +1,7 @@
-import { Request, Response, Express } from 'express';
+import express, { Request, Response, Express } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
-import bodyParser from 'body-parser';
 
 export default async (app: Express) => {
     const isProduction = process.env.NODE_ENV === 'production';
@@ -19,9 +18,9 @@ export default async (app: Express) => {
             credentials: true,
         })
     );
-    app.use(bodyParser.json());
+    app.use(express.json());
     app.use(
-        bodyParser.urlencoded({
+        express.urlencoded({
             extended: false,
         })
     );
