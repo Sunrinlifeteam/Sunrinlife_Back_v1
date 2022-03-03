@@ -8,11 +8,12 @@ import {
     UpdateDateColumn,
     ManyToMany,
     JoinTable,
+    getConnection,
 } from 'typeorm';
 import { AttachmentRecord } from './Attachment';
 
 @Entity('interaction_notice')
-export class IntranetNotice extends BaseEntity {
+export class IntranetNoticeData extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -32,4 +33,19 @@ export class IntranetNotice extends BaseEntity {
     @ManyToMany((type) => AttachmentRecord)
     @JoinTable()
     attachment: AttachmentRecord[];
+
+    static async list() {
+        return getConnection()
+            .getRepository(IntranetNoticeData)
+            .createQueryBuilder('IntranetNotice')
+            .getMany();
+    }
+
+    static async findById(id: number) {
+        return getConnection()
+            .getRepository(IntranetNoticeData)
+            .createQueryBuilder('IntranetNotice')
+            .where('IntranetNotice.id = :id', { id: id })
+            .getOne();
+    }
 }

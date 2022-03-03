@@ -6,11 +6,12 @@ import {
     PrimaryGeneratedColumn,
     ManyToMany,
     JoinTable,
+    getConnection,
 } from 'typeorm';
 import { AttachmentRecord } from './Attachment';
 
 @Entity('school_notice')
-export class SchoolNotice extends BaseEntity {
+export class SchoolNoticeData extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -27,4 +28,19 @@ export class SchoolNotice extends BaseEntity {
     @ManyToMany((type) => AttachmentRecord)
     @JoinTable()
     attachment: AttachmentRecord[];
+
+    static async list() {
+        return getConnection()
+            .getRepository(SchoolNoticeData)
+            .createQueryBuilder('SchoolNotice')
+            .getMany();
+    }
+
+    static async findById(id: number) {
+        return getConnection()
+            .getRepository(SchoolNoticeData)
+            .createQueryBuilder('SchoolNotice')
+            .where('SchoolNotice.id = :id', { id: id })
+            .getOne();
+    }
 }
