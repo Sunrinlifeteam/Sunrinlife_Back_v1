@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { MyScheduleRecord } from '../entities/MySchedule';
 import { getConnection } from 'typeorm';
+import { User } from '../entities/User';
 
 export interface IMyScheduleBody {
     date: string;
@@ -31,10 +32,11 @@ export class MySchedule implements IMySchedule {
         return this.toObject();
         //return JSON.stringify(this.toObject());
     }
-    async toActiveRecord(): Promise<MyScheduleRecord> {
+    async toActiveRecord(owner: User): Promise<MyScheduleRecord> {
         let record = new MyScheduleRecord();
         record.date = DateTime.fromJSDate(this.date).toFormat('yyyy-MM-dd');
         record.body = this.body;
+        record.owner = owner;
         return await getConnection().manager.save(record);
     }
 
