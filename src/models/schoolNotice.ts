@@ -8,6 +8,19 @@ export interface ISchoolNotice {
     attachment: Array<IAttachment>;
 }
 
+export interface INoticeBody {
+    title: string;
+    content: string;
+    attachment: Array<IAttachment>;
+}
+
+export interface INoticeBodyWithID {
+    id: number;
+    title: string;
+    content: string;
+    attachment: Array<IAttachment>;
+}
+
 export class SchoolNotice implements ISchoolNotice {
     id: number;
     title: string;

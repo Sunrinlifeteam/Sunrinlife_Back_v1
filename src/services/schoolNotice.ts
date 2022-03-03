@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { Injectable } from '@decorators/di';
-import { IAttachment } from '../models/attachment';
 import { SchoolNotice } from '../models/schoolNotice';
+import { INoticeBody, INoticeBodyWithID } from '../models/schoolNotice';
 
 @Injectable()
 export class SchoolNoticeService {
     constructor() {}
 
-    list(): { id: number; title: string; created: Date }[] {
+    list(): { id: number; title: string; created: Date; updated: Date }[] {
         // TODO
         return [];
     }
@@ -17,30 +17,17 @@ export class SchoolNoticeService {
         return [];
     }
 
-    add(data: { title: string; content: string; attachment: IAttachment[] }): {
-        title: string;
-        content: string;
-        attachment: IAttachment[];
-    } {
+    add(data: INoticeBody): INoticeBodyWithID {
         // TODO
         return {
+            id: 0,
             title: data.title,
             content: data.content,
             attachment: data.attachment,
         };
     }
 
-    edit(data: {
-        id: number;
-        title: string;
-        content: string;
-        attachment: IAttachment[];
-    }): {
-        id: number;
-        title: string;
-        content: string;
-        attachment: IAttachment[];
-    } {
+    edit(data: INoticeBodyWithID): INoticeBodyWithID {
         // TODO
         return {
             id: data.id,
@@ -50,7 +37,7 @@ export class SchoolNoticeService {
         };
     }
 
-    remove(id: number): { id: number; title: string; content: string }[] {
+    remove(id: number): INoticeBodyWithID[] {
         // TODO
         return [];
     }

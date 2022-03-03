@@ -4,8 +4,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 
 export default async (app: Express) => {
-    const isProduction = process.env.NODE_ENV === 'production';
-
     app.set('port', process.env.PORT || 3000);
     if (isProduction) {
         app.use(helmet());
@@ -24,7 +22,7 @@ export default async (app: Express) => {
             extended: false,
         })
     );
-
+    app.use(cookieParser());
     app.get('/', (_req: Request, res: Response) => {
         res.status(200).json('hello');
     });

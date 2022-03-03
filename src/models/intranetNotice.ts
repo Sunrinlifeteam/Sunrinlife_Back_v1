@@ -9,6 +9,19 @@ export interface IIntranetNotice {
     attachment: Array<IAttachment>;
 }
 
+export interface INoticeBody {
+    title: string;
+    content: string;
+    attachment: Array<IAttachment>;
+}
+
+export interface INoticeBodyWithID {
+    id: number;
+    title: string;
+    content: string;
+    attachment: Array<IAttachment>;
+}
+
 export class IntranetNotice implements IIntranetNotice {
     id: number;
     title: string;
