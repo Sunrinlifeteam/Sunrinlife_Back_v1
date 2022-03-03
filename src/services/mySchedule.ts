@@ -4,32 +4,27 @@ import { MyScheduleRecord } from '../entities/MySchedule';
 import logger from '../modules/logger';
 import { DateTime } from 'luxon';
 import { getConnection } from 'typeorm';
+import { User } from '../entities/User';
 
 @Injectable()
 export class MyScheduleService {
     constructor() {}
 
-    async list(): Promise<MySchedule[]> {
+    async list(user: User): Promise<MySchedule[]> {
         let find = await MyScheduleRecord.findByDates(
+            user,
             DateTime.now(),
             DateTime.now().plus({ days: 7 })
         );
-        logger.debug('services.schedule.list', find);
+        logger.debug('services.mySchedule.list', find);
         return (find || []).map((x) => MySchedule.fromActiveRecord(x));
-    }
-
-    async today(): Promise<MySchedule | undefined> {
-        let find = await MyScheduleRecord.findByDate(new Date());
-        if (find == undefined) return undefined;
-        logger.debug('services.schedule.today', find);
-        return MySchedule.fromActiveRecord(find);
     }
 
     async write(body: IMyScheduleBody): Promise<any> {
         let object = await MySchedule.fromBody(body);
         let record = await object.toActiveRecord();
         await getConnection().manager.save(record);
-        logger.debug('services.schedule.write', record);
+        logger.debug('services.mySchedule.write', record);
         return { isError: false, id: record.id, data: object };
     }
 }
