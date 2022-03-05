@@ -2,6 +2,8 @@ import express, { Request, Response, Express } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+import { isProduction } from '../constants';
 
 export default async (app: Express) => {
     app.set('port', process.env.PORT || 3000);
