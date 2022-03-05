@@ -1,17 +1,17 @@
-import { AttachmentRecord } from './Attachment';
+import { Attachment } from './Attachment';
 import { IntranetNotice } from './IntranetNotice';
 import { Meal } from './Meal';
-import { MyScheduleRecord } from './MySchedule';
-import { ScheduleRecord } from './Schedule';
+import { UserSchedule } from './UserSchedule';
+import { Schedule } from './Schedule';
 import { SchoolNotice } from './SchoolNotice';
 import { User } from './User';
 
 export default [
-    AttachmentRecord,
+    Attachment,
     IntranetNotice,
     Meal,
-    MyScheduleRecord,
-    ScheduleRecord,
+    UserSchedule,
+    Schedule,
     SchoolNotice,
     User,
 ];
