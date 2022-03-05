@@ -6,11 +6,12 @@ import {
     PrimaryGeneratedColumn,
     ManyToMany,
     JoinTable,
+    getConnection,
 } from 'typeorm';
 import { Attachment } from './Attachment';
 
 @Entity('school_notice')
-export class SchoolNotice extends BaseEntity {
+export class SchoolNoticeData extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
