@@ -8,11 +8,12 @@ import {
     UpdateDateColumn,
     ManyToMany,
     JoinTable,
+    getConnection,
 } from 'typeorm';
 import { Attachment } from './Attachment';
 
 @Entity('interaction_notice')
-export class IntranetNotice extends BaseEntity {
+export class IntranetNoticeData extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
