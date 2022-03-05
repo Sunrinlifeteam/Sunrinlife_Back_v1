@@ -95,5 +95,8 @@
       "passport-jwt": "^4.0.0",
       "reflect-metadata": "^0.1.10",
       "typeorm": "0.2.41"
+   },
+   "optionalDependencies": {
+      "fsevents": "^2.3.2"
    }
 }
