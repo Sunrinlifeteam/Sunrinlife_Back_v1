@@ -15,7 +15,7 @@ import { celebrate } from 'celebrate';
 import { User as IUser } from '../types/user';
 import HttpStatusCode from '../constants/HttpStatusCode';
 import { accessTokenGuard } from '../modules/passport';
-import { IUserSchedule } from '../types/userSchedule';
+import { IUserSchedule, IWriteUserScheduleBody } from '../types/userSchedule';
 import { ErrorHandler } from '../modules/ErrorHandler';
 
 @Controller('/me/schedule')
@@ -37,7 +37,7 @@ export class UserScheduleController {
     async write(
         @Request() req: IRequest,
         @Response() res: IResponse,
-        @Body() body: IUserSchedule
+        @Body() body: IWriteUserScheduleBody
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);

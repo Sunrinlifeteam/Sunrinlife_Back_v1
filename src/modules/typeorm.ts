@@ -1,6 +1,10 @@
 import { DateTime } from 'luxon';
 import { Between } from 'typeorm';
 
+export function Today() {
+    return DateTime.now().toFormat('yyyy-MM-dd');
+}
+
 export function Week(start: DateTime) {
     return Between(
         start.toFormat('yyyy-MM-dd'),

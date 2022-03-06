@@ -5,8 +5,8 @@ import { DateTime } from 'luxon';
 import { Repository } from 'typeorm';
 import { IUser } from '../types/user';
 import { User } from '../entities/User';
-import { IUserSchedule } from '../types/userSchedule';
-import { Week } from '../modules/typeorm';
+import { IUserSchedule, IWriteUserScheduleBody } from '../types/userSchedule';
+import { Today, Week } from '../modules/typeorm';
 
 @Injectable()
 export class UserScheduleService {
@@ -28,9 +28,13 @@ export class UserScheduleService {
         return find;
     }
 
-    async write(userData: IUser, body: IUserSchedule): Promise<any> {
-        const user = this.userRepository.find(userData);
-        const newSchedule = this.userScheduleRepository.create(body);
+    async write(userData: IUser, body: IWriteUserScheduleBody): Promise<any> {
+        const user = await this.userRepository.findOne(userData);
+        const newSchedule = this.userScheduleRepository.create({
+            ...body,
+            owner: user,
+            date: Today(),
+        });
         return await this.userScheduleRepository.save(newSchedule);
     }
 }
