@@ -25,6 +25,7 @@ export const CLUB_SELECT: (keyof ClubInfoData)[] = [
     'vleader_sns',
     'department',
     'type',
+    'curriculum',
 ];
 
 @Entity('clubinfo')
@@ -71,4 +72,7 @@ export class ClubInfoData {
 
     @Column({ type: 'int', nullable: false })
     type: number;
+
+    @Column({ type: 'string', nullable: true })
+    curriculum: string;
 }

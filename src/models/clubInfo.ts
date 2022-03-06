@@ -13,6 +13,7 @@ export interface IClubInfo {
     vleader_sns: string;
     department: number;
     type: number;
+    curriculum: string;
 }
 
 export interface IClubInfoBody {
@@ -29,6 +30,7 @@ export interface IClubInfoBody {
     vleader_sns: string;
     department: number;
     type: number;
+    curriculum: string;
 }
 
 export class ClubInfo implements IClubInfo {
@@ -46,7 +48,7 @@ export class ClubInfo implements IClubInfo {
     vleader_sns: string;
     department: number;
     type: number;
-
+    curriculum: string;
     constructor(
         id: number,
         name: string,
@@ -61,7 +63,8 @@ export class ClubInfo implements IClubInfo {
         leader_sns: string,
         vleader_sns: string,
         department: number,
-        type: number
+        type: number,
+        curriculum: string
     ) {
         this.id = id;
         this.name = name;
@@ -77,6 +80,7 @@ export class ClubInfo implements IClubInfo {
         this.vleader_sns = vleader_sns;
         this.department = department;
         this.type = type;
+        this.curriculum = curriculum;
     }
 
     toObject(): IClubInfo {
@@ -95,6 +99,7 @@ export class ClubInfo implements IClubInfo {
             vleader_sns: this.vleader_sns,
             department: this.department,
             type: this.type,
+            curriculum: this.curriculum
         };
     }
 
@@ -117,7 +122,8 @@ export class ClubInfo implements IClubInfo {
             data.leader_sns,
             data.vleader_sns,
             data.department,
-            data.type
+            data.type,
+            data.curriculum
         );
     }
 
@@ -138,6 +144,7 @@ export class ClubInfo implements IClubInfo {
             vleader_sns: object['vleader_sns'],
             department: object['department'],
             type: object['type'],
+            curriculum: object['curriculum']
         });
     }
 }
