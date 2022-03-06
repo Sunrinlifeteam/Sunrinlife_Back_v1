@@ -99,7 +99,7 @@ export class ClubInfo implements IClubInfo {
             vleader_sns: this.vleader_sns,
             department: this.department,
             type: this.type,
-            curriculum: this.curriculum
+            curriculum: this.curriculum,
         };
     }
 
@@ -144,7 +144,7 @@ export class ClubInfo implements IClubInfo {
             vleader_sns: object['vleader_sns'],
             department: object['department'],
             type: object['type'],
-            curriculum: object['curriculum']
+            curriculum: object['curriculum'],
         });
     }
 }

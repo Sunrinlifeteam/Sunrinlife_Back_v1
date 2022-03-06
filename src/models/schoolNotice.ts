@@ -63,7 +63,7 @@ export class SchoolNotice implements ISchoolNotice {
     async toActiveRecord(): Promise<SchoolNoticeData> {
         let record = new SchoolNoticeData();
         record.id = +this.id;
-        record.created = new Date(this.created)
+        record.created = new Date(this.created);
         record.title = this.title;
         record.content = this.content;
         record.attachment = await Promise.all(

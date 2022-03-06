@@ -28,8 +28,14 @@ export default async () => {
                     provide: ClubInfoData,
                     useValue: connection.getRepository(ClubInfoData),
                 },
-                { provide: Schedule, useValue: connection.getRepository(Schedule) },
-                { provide: UserSchedule, useValue: connection.getRepository(UserSchedule) },
+                {
+                    provide: Schedule,
+                    useValue: connection.getRepository(Schedule),
+                },
+                {
+                    provide: UserSchedule,
+                    useValue: connection.getRepository(UserSchedule),
+                },
             ]);
             logger.log('Database Connected!');
         })

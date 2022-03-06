@@ -13,13 +13,13 @@ export class SchoolNoticeService {
     async list(): Promise<SchoolNotice[]> {
         let find = await SchoolNoticeData.list();
         logger.debug('services.IntranetNotice.list', find);
-        return (find || []).map(x => SchoolNotice.fromActiveRecord(x));
+        return (find || []).map((x) => SchoolNotice.fromActiveRecord(x));
     }
 
     async get(id: number): Promise<SchoolNotice | undefined> {
         let find = await SchoolNoticeData.findById(id);
         if (find == undefined) return undefined;
-        logger.debug('services.IntranetNotice.get',find);
+        logger.debug('services.IntranetNotice.get', find);
         return SchoolNotice.fromActiveRecord(find);
     }
 

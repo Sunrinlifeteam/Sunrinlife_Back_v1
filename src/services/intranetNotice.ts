@@ -12,13 +12,13 @@ export class IntranetNoticeService {
     async list(): Promise<IntranetNotice[]> {
         let find = await IntranetNoticeData.list();
         logger.debug('services.IntranetNotice.list', find);
-        return (find || []).map(x => IntranetNotice.fromActiveRecord(x));
+        return (find || []).map((x) => IntranetNotice.fromActiveRecord(x));
     }
 
     async get(id: number): Promise<IntranetNotice | undefined> {
         let find = await IntranetNoticeData.findById(id);
         if (find == undefined) return undefined;
-        logger.debug('services.IntranetNotice.get',find);
+        logger.debug('services.IntranetNotice.get', find);
         return IntranetNotice.fromActiveRecord(find);
     }
 
