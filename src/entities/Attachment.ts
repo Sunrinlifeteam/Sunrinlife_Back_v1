@@ -5,10 +5,13 @@ import {
     PrimaryColumn,
     PrimaryGeneratedColumn,
     getConnection,
+    ManyToOne,
 } from 'typeorm';
+import path from 'path';
+import { User } from './User';
 
 @Entity('attachment')
-export class AttachmentRecord extends BaseEntity {
+export class Attachment {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -27,11 +30,10 @@ export class AttachmentRecord extends BaseEntity {
     @Column({ nullable: false })
     mimetype: string;
 
-    static async findById(id: number) {
-        return getConnection()
-            .getRepository(AttachmentRecord)
-            .createQueryBuilder('attachment')
-            .where('attachment.id = :id', { id: id })
-            .getOne();
+    @ManyToOne((type) => User, (user) => user.id)
+    author: User;
+
+    getPath(): string {
+        return path.resolve(process.cwd(), this.path, this.sha1hash);
     }
 }

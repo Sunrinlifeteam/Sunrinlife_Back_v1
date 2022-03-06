@@ -1,39 +1,53 @@
-import { Injectable } from '@decorators/di';
-import { IUploadBody } from '../models/upload';
-import { AttachmentRecord as AttachmentRecord } from '../entities/Attachment';
+import { Inject, Injectable } from '@decorators/di';
+import { UploadBody } from '../types/upload';
+import { Attachment as Attachment } from '../entities/Attachment';
 import { readFile, rename } from 'fs';
 import path from 'path';
 import { MD5, SHA1 } from '../modules/hash';
-import { Attachment, IAttachment } from '../models/attachment';
-import { getConnection } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
+import { IAttachment } from '../types/attachment';
+import { User } from '../entities/User';
+import { IUser } from '../types/user';
 
 @Injectable()
 export class UploadService {
-    constructor() {}
+    constructor(
+        @Inject(Attachment)
+        private readonly attachmentRepository: Repository<Attachment>,
+        @Inject(User)
+        private readonly userRepository: Repository<User>
+    ) {}
 
-    async list() {
-        const records = await getConnection().manager.find(AttachmentRecord);
-        return (records || []).map((x) => Attachment.fromActiveRecord(x));
+    async list(offset: number = 0, limit: number = 25) {
+        const records = await this.attachmentRepository.find({
+            order: {
+                id: 'ASC',
+            },
+            skip: offset,
+            take: limit,
+        });
+        return records;
     }
 
     async info(id: number) {
-        const record = await AttachmentRecord.findById(id);
-        if (record == undefined) return undefined;
-        return Attachment.fromActiveRecord(record);
+        const record = await this.attachmentRepository.findOne({ id });
+        return record;
     }
 
-    async delete(id: number) {
-        const record = await AttachmentRecord.findById(id);
-        if (record == undefined) return undefined;
-        await getConnection().manager.remove(record);
-        return Attachment.fromActiveRecord(record);
+    async delete(userData: IUser, id: number) {
+        const user = await this.userRepository.findOne(userData);
+        const record = await this.attachmentRepository.findOne({ id });
+        if (record && user && record?.author.id == user?.id)
+            return await this.attachmentRepository.remove(record);
+        return new Error();
     }
 
     async upload(
+        userData: IUser,
         // eslint-disable-next-line no-undef
         file: Express.Multer.File,
-        body: IUploadBody
-    ): Promise<IAttachment & { id: number }> {
+        body: UploadBody
+    ): Promise<Attachment> {
         const UPLOAD_PATH = process.env.UPLOAD_PATH || './data';
         return new Promise((resolve, reject) =>
             readFile(path.resolve(process.cwd(), file.path), (err, data) => {
@@ -43,15 +57,16 @@ export class UploadService {
                     path.resolve(UPLOAD_PATH, SHA1(data)),
                     async (err) => {
                         if (err) return reject(err);
-                        let obj = Attachment.fromObject({
-                            filename: file.originalname,
-                            path: UPLOAD_PATH,
-                            mimetype: body.mimetype,
-                            sha1hash: SHA1(data),
-                            md5hash: MD5(data),
-                        });
-                        let record = await obj.toActiveRecord();
-                        resolve({ id: record.id, ...obj.toObject() });
+                        let user = await this.userRepository.findOne(userData);
+                        if (!user) return reject();
+                        let record = this.attachmentRepository.create();
+                        record.author = user;
+                        record.filename = file.originalname;
+                        record.path = UPLOAD_PATH;
+                        record.mimetype = body.mimetype;
+                        record.sha1hash = SHA1(data);
+                        record.md5hash = MD5(data);
+                        resolve(await this.attachmentRepository.save(record));
                     }
                 );
             })

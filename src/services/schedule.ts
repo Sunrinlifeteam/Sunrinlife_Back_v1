@@ -1,40 +1,54 @@
-import { Injectable } from '@decorators/di';
+import { Inject, Injectable } from '@decorators/di';
 import { DateTime } from 'luxon';
-import { ScheduleRecord } from '../entities/Schedule';
-import { IDateBody } from '../models/schedule';
+import { Repository } from 'typeorm';
+import { Schedule } from '../entities/Schedule';
 import logger from '../modules/logger';
+import { Month, Week } from '../modules/typeorm';
+import { DateTimeBody } from '../types/datetime';
 
 @Injectable()
 export class ScheduleService {
-    constructor() {}
+    constructor(
+        @Inject(Schedule)
+        private readonly scheduleRepository: Repository<Schedule>
+    ) {}
 
-    async getByMonth(date: IDateBody) {
+    async getByMonth(date: DateTimeBody) {
         logger.debug(
             'ScheduleService.getByMonth',
             'date: ',
             DateTime.fromObject(date).toString()
         );
-        return await ScheduleRecord.findByMonth(DateTime.fromObject(date));
+        return await this.scheduleRepository.find({
+            where: {
+                date: Month(date.toDateTime()),
+            },
+        });
     }
 
-    async getByWeek(date: IDateBody) {
+    async getByWeek(date: DateTimeBody) {
         logger.debug(
             'ScheduleService.getByWeek',
             'date: ',
             DateTime.fromObject(date).toString()
         );
-        return await ScheduleRecord.findByDayRange(
-            DateTime.fromObject(date),
-            DateTime.fromObject(date).plus({ weeks: 1 })
-        );
+        return await this.scheduleRepository.find({
+            where: {
+                date: Week(date.toDateTime()),
+            },
+        });
     }
 
-    async getByDay(date: IDateBody) {
+    async getByDay(date: DateTimeBody) {
         logger.debug(
             'ScheduleService.getByDay',
             'date: ',
             DateTime.fromObject(date).toString()
         );
-        return await ScheduleRecord.findByDay(DateTime.fromObject(date));
+        return await this.scheduleRepository.find({
+            where: {
+                date: date.toDateTime(),
+            },
+        });
     }
 }

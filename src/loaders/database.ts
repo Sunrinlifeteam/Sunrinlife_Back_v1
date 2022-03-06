@@ -4,6 +4,8 @@ import entities from '../entities';
 import { User } from '../entities/User';
 import { ClubInfoData } from '../entities/ClubInfo';
 import logger from '../modules/logger';
+import { Schedule } from '../entities/Schedule';
+import { UserSchedule } from '../entities/UserSchedule';
 
 export default async () => {
     await createConnection({
@@ -26,6 +28,8 @@ export default async () => {
                     provide: ClubInfoData,
                     useValue: connection.getRepository(ClubInfoData),
                 },
+                { provide: Schedule, useValue: connection.getRepository(Schedule) },
+                { provide: UserSchedule, useValue: connection.getRepository(UserSchedule) },
             ]);
             logger.log('Database Connected!');
         })

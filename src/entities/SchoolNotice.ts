@@ -8,7 +8,7 @@ import {
     JoinTable,
     getConnection,
 } from 'typeorm';
-import { AttachmentRecord } from './Attachment';
+import { Attachment } from './Attachment';
 
 @Entity('school_notice')
 export class SchoolNoticeData extends BaseEntity {
@@ -25,22 +25,7 @@ export class SchoolNoticeData extends BaseEntity {
     created: Date;
 
     // eslint-disable-next-line prettier/prettier
-    @ManyToMany((type) => AttachmentRecord)
+    @ManyToMany((type) => Attachment)
     @JoinTable()
-    attachment: AttachmentRecord[];
-
-    static async list() {
-        return getConnection()
-            .getRepository(SchoolNoticeData)
-            .createQueryBuilder('SchoolNotice')
-            .getMany();
-    }
-
-    static async findById(id: number) {
-        return getConnection()
-            .getRepository(SchoolNoticeData)
-            .createQueryBuilder('SchoolNotice')
-            .where('SchoolNotice.id = :id', { id: id })
-            .getOne();
-    }
+    attachment: Attachment[];
 }

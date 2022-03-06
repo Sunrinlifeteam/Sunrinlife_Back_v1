@@ -1,13 +1,8 @@
-import { Request } from 'express';
 import { departments } from '../constants';
 
 export type UserDepartment = typeof departments[number];
 
-export interface IRequestIncludeUser extends Request {
-    user: IUser;
-}
-
-export interface IUser {
+export interface User {
     email: string;
     username: string;
     department: UserDepartment;
@@ -17,3 +12,7 @@ export interface IUser {
     accountType: number;
     accessToken?: string;
 }
+
+export { User as IUser };
+
+export default User;

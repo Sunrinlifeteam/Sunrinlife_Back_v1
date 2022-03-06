@@ -10,7 +10,7 @@ import {
     JoinTable,
     getConnection,
 } from 'typeorm';
-import { AttachmentRecord } from './Attachment';
+import { Attachment } from './Attachment';
 
 @Entity('interaction_notice')
 export class IntranetNoticeData extends BaseEntity {
@@ -30,22 +30,7 @@ export class IntranetNoticeData extends BaseEntity {
     updated: Date;
 
     // eslint-disable-next-line prettier/prettier
-    @ManyToMany((type) => AttachmentRecord)
+    @ManyToMany((type) => Attachment)
     @JoinTable()
-    attachment: AttachmentRecord[];
-
-    static async list() {
-        return getConnection()
-            .getRepository(IntranetNoticeData)
-            .createQueryBuilder('IntranetNotice')
-            .getMany();
-    }
-
-    static async findById(id: number) {
-        return getConnection()
-            .getRepository(IntranetNoticeData)
-            .createQueryBuilder('IntranetNotice')
-            .where('IntranetNotice.id = :id', { id: id })
-            .getOne();
-    }
+    attachment: Attachment[];
 }
