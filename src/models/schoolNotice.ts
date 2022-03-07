@@ -1,6 +1,5 @@
-import { Attachment, IAttachment } from '../models/attachment';
-import { SchoolNoticeData } from '../entities/SchoolNotice';
-import { AttachmentRecord as AttachmentRecord } from '../entities/Attachment';
+import { SchoolNoticeEntity } from '../entities/SchoolNotice';
+import { AttachmentEntity } from '../entities/Attachment';
 import { getConnection } from 'typeorm';
 
 export interface ISchoolNotice {
@@ -8,14 +7,14 @@ export interface ISchoolNotice {
     title: string;
     content: string;
     created: Date;
-    attachment: Array<IAttachment>;
+    attachment: AttachmentEntity[];
 }
 
 export interface INoticeBody {
     title: string;
     content: string;
     created: Date;
-    attachment: Array<IAttachment>;
+    attachment: AttachmentEntity[];
 }
 
 export interface INoticeBodyWithID {
@@ -23,7 +22,7 @@ export interface INoticeBodyWithID {
     title: string;
     content: string;
     created: Date;
-    attachment: Array<IAttachment>;
+    attachment: AttachmentEntity[];
 }
 
 export class SchoolNotice implements ISchoolNotice {
@@ -31,14 +30,14 @@ export class SchoolNotice implements ISchoolNotice {
     title: string;
     content: string;
     created: Date;
-    attachment: IAttachment[];
+    attachment: AttachmentEntity[];
 
     constructor(
         id: number,
         title: string,
         content: string,
         created: Date,
-        attachment: IAttachment[]
+        attachment: AttachmentEntity[]
     ) {
         this.id = id;
         this.title = title;
@@ -60,29 +59,30 @@ export class SchoolNotice implements ISchoolNotice {
         return JSON.stringify(this.toObject());
     }
 
-    async toActiveRecord(): Promise<SchoolNoticeData> {
-        let record = new SchoolNoticeData();
+    async toActiveRecord(): Promise<SchoolNoticeEntity> {
+        let record = new SchoolNoticeEntity();
         record.id = +this.id;
-        record.created = new Date(this.created)
+        record.created = new Date(this.created);
         record.title = this.title;
         record.content = this.content;
         record.attachment = await Promise.all(
+            [] /*
             this.attachment.map((x) =>
                 Attachment.fromObject(x).toActiveRecord()
-            )
+            ) */
         );
         return await getConnection().manager.save(record);
     }
 
-    static fromActiveRecord(record: SchoolNoticeData): SchoolNotice {
+    static fromActiveRecord(record: SchoolNoticeEntity): SchoolNotice {
         return SchoolNotice.fromObject({
             id: +record.id,
             created: new Date(record.created),
             title: record.title,
             content: record.content,
-            attachment: (record.attachment || []).map((x) =>
+            attachment: [] /* (record.attachment || []).map((x) =>
                 Attachment.fromActiveRecord(x)
-            ),
+            )*/,
         });
     }
 
@@ -94,10 +94,10 @@ export class SchoolNotice implements ISchoolNotice {
             content: data.content,
             attachment: (
                 await getConnection().manager.findByIds(
-                    AttachmentRecord,
+                    AttachmentEntity,
                     data.attachment
                 )
-            ).map((x) => Attachment.fromActiveRecord(x)),
+            ).map((x) => x /* Attachment.fromActiveRecord(x) */),
         });
     }
     static fromObject(data: ISchoolNotice): SchoolNotice {
@@ -116,9 +116,9 @@ export class SchoolNotice implements ISchoolNotice {
             title: object['title'].toString(),
             content: object['content'].toString(),
             created: new Date(object['created'].toString()),
-            attachment: object['attachment'].map((x: IAttachment) =>
+            attachment: [] /* object['attachment'].map((x: Att) =>
                 Attachment.fromObject(x)
-            ),
+            )*/,
         });
     }
 }

@@ -1,25 +1,30 @@
-import { Injectable } from '@decorators/di';
-import { IntranetNoticeData } from '../entities/IntranetNotice';
-import { IntranetNotice } from '../models/intranetNotice';
-import { INoticeBody, INoticeBodyWithID } from '../models/intranetNotice';
+import { Inject, Injectable } from '@decorators/di';
+import { IntranetNoticeEntity } from '../entities/IntranetNotice';
+import { INoticeBodyWithID, IntranetNotice } from '../models/intranetNotice';
 import logger from '../modules/logger';
-import { getConnection } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
 
 @Injectable()
 export class IntranetNoticeService {
-    constructor() {}
+    constructor(
+        @Inject(IntranetNoticeEntity)
+        private readonly intranetNoticeRepository: Repository<IntranetNoticeEntity>
+    ) {}
 
-    async list(): Promise<IntranetNotice[]> {
-        let find = await IntranetNoticeData.list();
-        logger.debug('services.IntranetNotice.list', find);
-        return (find || []).map(x => IntranetNotice.fromActiveRecord(x));
+    async list(): Promise<IntranetNoticeEntity[]> {
+        let intranetNotices = await this.intranetNoticeRepository.find();
+        logger.debug('services.IntranetNotice.list', intranetNotices);
+        // return (find || []).map((x) => IntranetNotice.fromActiveRecord(x));
+        return intranetNotices;
     }
 
-    async get(id: number): Promise<IntranetNotice | undefined> {
-        let find = await IntranetNoticeData.findById(id);
-        if (find == undefined) return undefined;
-        logger.debug('services.IntranetNotice.get',find);
-        return IntranetNotice.fromActiveRecord(find);
+    async get(id: number): Promise<IntranetNoticeEntity | undefined> {
+        let intranetNotice = await this.intranetNoticeRepository.findOne({
+            id,
+        });
+        if (!intranetNotice) return undefined;
+        logger.debug('services.IntranetNotice.get', intranetNotice);
+        return IntranetNotice.fromActiveRecord(intranetNotice);
     }
 
     async add(body: INoticeBodyWithID): Promise<any> {

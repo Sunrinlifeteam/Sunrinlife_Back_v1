@@ -1,17 +1,17 @@
 import {
     Entity,
     Column,
-    BaseEntity,
     PrimaryColumn,
     PrimaryGeneratedColumn,
-    getConnection,
     ManyToOne,
 } from 'typeorm';
 import path from 'path';
-import { User } from './User';
+import { UserEntity } from './User';
+import { Injectable } from '@decorators/di';
 
 @Entity('attachment')
-export class Attachment {
+@Injectable()
+export class AttachmentEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -19,7 +19,7 @@ export class Attachment {
     filename: string;
 
     @Column({ nullable: false })
-    path: string; // 파일이 저장된 경로
+    path: string;
 
     @PrimaryColumn({ nullable: false, unique: true })
     sha1hash: string;
@@ -30,8 +30,8 @@ export class Attachment {
     @Column({ nullable: false })
     mimetype: string;
 
-    @ManyToOne((type) => User, (user) => user.id)
-    author: User;
+    @ManyToOne(() => UserEntity, (user) => user.id)
+    author: UserEntity;
 
     getPath(): string {
         return path.resolve(process.cwd(), this.path, this.sha1hash);

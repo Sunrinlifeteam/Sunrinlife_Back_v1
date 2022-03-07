@@ -1,11 +1,16 @@
 import { Container } from '@decorators/di';
 import { createConnection } from 'typeorm';
-import entities from '../entities';
-import { User } from '../entities/User';
-import { ClubInfoData } from '../entities/ClubInfo';
+import {
+    AttachmentEntity,
+    IntranetNoticeEntity,
+    MealEntity,
+    ScheduleEntity,
+    SchoolNoticeEntity,
+    UserEntity,
+    UserScheduleEntity,
+} from '../entities';
+import { ClubInfoEntity } from '../entities/ClubInfo';
 import logger from '../modules/logger';
-import { Schedule } from '../entities/Schedule';
-import { UserSchedule } from '../entities/UserSchedule';
 
 export default async () => {
     await createConnection({
@@ -17,19 +22,53 @@ export default async () => {
         database: process.env.DB_NAME,
         synchronize: true,
         logging: false,
-        entities,
+        entities: [
+            AttachmentEntity,
+            ClubInfoEntity,
+            MealEntity,
+            IntranetNoticeEntity,
+            ScheduleEntity,
+            SchoolNoticeEntity,
+            UserEntity,
+            UserScheduleEntity,
+        ],
         migrations: [],
         subscribers: [],
     })
         .then((connection) => {
             Container.provide([
-                { provide: User, useValue: connection.getRepository(User) },
                 {
-                    provide: ClubInfoData,
-                    useValue: connection.getRepository(ClubInfoData),
+                    provide: UserEntity,
+                    useValue: connection.getRepository(UserEntity),
                 },
-                { provide: Schedule, useValue: connection.getRepository(Schedule) },
-                { provide: UserSchedule, useValue: connection.getRepository(UserSchedule) },
+                {
+                    provide: AttachmentEntity,
+                    useValue: connection.getRepository(AttachmentEntity),
+                },
+                {
+                    provide: ClubInfoEntity,
+                    useValue: connection.getRepository(ClubInfoEntity),
+                },
+                {
+                    provide: ScheduleEntity,
+                    useValue: connection.getRepository(ScheduleEntity),
+                },
+                {
+                    provide: UserScheduleEntity,
+                    useValue: connection.getRepository(UserScheduleEntity),
+                },
+                {
+                    provide: SchoolNoticeEntity,
+                    useValue: connection.getRepository(SchoolNoticeEntity),
+                },
+                {
+                    provide: IntranetNoticeEntity,
+                    useValue: connection.getRepository(IntranetNoticeEntity),
+                },
+                {
+                    provide: MealEntity,
+                    useValue: connection.getRepository(MealEntity),
+                },
             ]);
             logger.log('Database Connected!');
         })

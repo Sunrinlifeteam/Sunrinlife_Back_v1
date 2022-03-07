@@ -19,7 +19,7 @@ import { celebrate } from 'celebrate';
 import { uploadValidator } from '../validators/upload';
 import { createReadStream } from 'fs';
 import { accessTokenGuard } from '../modules/passport';
-import { User } from '../entities/User';
+import { UserEntity } from '../entities/User';
 import { ErrorHandler } from '../modules/ErrorHandler';
 
 @Controller('/upload')

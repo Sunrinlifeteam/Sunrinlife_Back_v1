@@ -1,19 +1,18 @@
-/* eslint-disable no-unused-vars */
+import { Injectable } from '@decorators/di';
 import {
     Entity,
     Column,
-    BaseEntity,
     PrimaryGeneratedColumn,
     CreateDateColumn,
     UpdateDateColumn,
     ManyToMany,
     JoinTable,
-    getConnection,
 } from 'typeorm';
-import { Attachment } from './Attachment';
+import { AttachmentEntity } from './Attachment';
 
 @Entity('interaction_notice')
-export class IntranetNoticeData extends BaseEntity {
+@Injectable()
+export class IntranetNoticeEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -29,8 +28,7 @@ export class IntranetNoticeData extends BaseEntity {
     @UpdateDateColumn()
     updated: Date;
 
-    // eslint-disable-next-line prettier/prettier
-    @ManyToMany((type) => Attachment)
+    @ManyToMany(() => AttachmentEntity)
     @JoinTable()
-    attachment: Attachment[];
+    attachment: AttachmentEntity[];
 }

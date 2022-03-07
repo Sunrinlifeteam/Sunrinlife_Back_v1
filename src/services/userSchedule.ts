@@ -1,31 +1,29 @@
 import { Inject, Injectable } from '@decorators/di';
-import { UserSchedule } from '../entities/UserSchedule';
+import { UserScheduleEntity } from '../entities/UserSchedule';
 import logger from '../modules/logger';
 import { DateTime } from 'luxon';
 import { Repository } from 'typeorm';
 import { IUser } from '../types/user';
-import { User } from '../entities/User';
-import { IUserSchedule, IWriteUserScheduleBody } from '../types/userSchedule';
+import { UserEntity } from '../entities/User';
+import { IWriteUserScheduleBody } from '../types/userSchedule';
 import { Today, Week } from '../modules/typeorm';
 
 @Injectable()
 export class UserScheduleService {
     constructor(
-        @Inject(UserSchedule)
-        private readonly userScheduleRepository: Repository<UserSchedule>,
-        @Inject(User)
-        private readonly userRepository: Repository<User>
+        @Inject(UserScheduleEntity)
+        private readonly userScheduleRepository: Repository<UserScheduleEntity>,
+        @Inject(UserEntity)
+        private readonly userRepository: Repository<UserEntity>
     ) {}
 
-    async week(user: Repository<User>): Promise<UserSchedule[]> {
+    async week(user: UserEntity): Promise<UserScheduleEntity[]> {
         logger.debug('called', 'services.mySchedule.list', user);
-        let find = await UserSchedule.find({
-            where: {
-                date: Week(new DateTime()),
-            },
+        const userSchedules = await this.userScheduleRepository.find({
+            date: Week(new DateTime()),
         });
-        logger.debug('services.mySchedule.list', find);
-        return find;
+        logger.debug('services.mySchedule.list', userSchedules);
+        return userSchedules;
     }
 
     async write(userData: IUser, body: IWriteUserScheduleBody): Promise<any> {

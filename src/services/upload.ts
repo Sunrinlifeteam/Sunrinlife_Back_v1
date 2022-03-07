@@ -1,21 +1,20 @@
 import { Inject, Injectable } from '@decorators/di';
 import { UploadBody } from '../types/upload';
-import { Attachment as Attachment } from '../entities/Attachment';
+import { AttachmentEntity } from '../entities/Attachment';
 import { readFile, rename } from 'fs';
 import path from 'path';
 import { MD5, SHA1 } from '../modules/hash';
-import { getConnection, Repository } from 'typeorm';
-import { IAttachment } from '../types/attachment';
-import { User } from '../entities/User';
+import { Repository } from 'typeorm';
+import { UserEntity } from '../entities/User';
 import { IUser } from '../types/user';
 
 @Injectable()
 export class UploadService {
     constructor(
-        @Inject(Attachment)
-        private readonly attachmentRepository: Repository<Attachment>,
-        @Inject(User)
-        private readonly userRepository: Repository<User>
+        @Inject(AttachmentEntity)
+        private readonly attachmentRepository: Repository<AttachmentEntity>,
+        @Inject(UserEntity)
+        private readonly userRepository: Repository<UserEntity>
     ) {}
 
     async list(offset: number = 0, limit: number = 25) {
@@ -47,7 +46,7 @@ export class UploadService {
         // eslint-disable-next-line no-undef
         file: Express.Multer.File,
         body: UploadBody
-    ): Promise<Attachment> {
+    ): Promise<AttachmentEntity> {
         const UPLOAD_PATH = process.env.UPLOAD_PATH || './data';
         return new Promise((resolve, reject) =>
             readFile(path.resolve(process.cwd(), file.path), (err, data) => {

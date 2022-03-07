@@ -13,7 +13,6 @@ import logger from '../modules/logger';
 import { writeValidator } from '../validators/mySchedule';
 import { celebrate } from 'celebrate';
 import { User as IUser } from '../types/user';
-import HttpStatusCode from '../constants/HttpStatusCode';
 import { accessTokenGuard } from '../modules/passport';
 import { IUserSchedule, IWriteUserScheduleBody } from '../types/userSchedule';
 import { ErrorHandler } from '../modules/ErrorHandler';

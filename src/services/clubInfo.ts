@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@decorators/di';
 import { Repository } from 'typeorm';
-import { ClubInfoData, CLUB_SELECT } from '../entities/ClubInfo';
+import { ClubInfoEntity, CLUB_SELECT } from '../entities/ClubInfo';
 import { IClubInfoBody } from '../models/clubInfo';
 
 @Injectable()
 export class ClubInfoService {
     constructor(
-        @Inject(ClubInfoData)
-        private readonly clubInfoRepository: Repository<ClubInfoData>
+        @Inject(ClubInfoEntity)
+        private readonly clubInfoRepository: Repository<ClubInfoEntity>
     ) {}
 
     async getAllClubs() {
@@ -37,7 +37,7 @@ export class ClubInfoService {
         });
     }
 
-    async createAndGetClub(club: IClubInfoBody): Promise<ClubInfoData> {
+    async createAndGetClub(club: IClubInfoBody): Promise<ClubInfoEntity> {
         const newClub = this.clubInfoRepository.create(club);
         return await this.clubInfoRepository.save(newClub);
     }

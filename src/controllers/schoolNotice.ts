@@ -14,6 +14,7 @@ import { Injectable } from '@decorators/di';
 import { INoticeBody } from '../models/schoolNotice';
 import { SchoolNoticeService } from '../services/schoolNotice';
 import { schoolNoticeValidator } from '../validators/schoolNotice';
+import { SchoolNoticeEntity } from '../entities';
 
 @Controller('/notice/school')
 @Injectable()
@@ -52,7 +53,7 @@ export class SchoolNoticeController {
     }
 
     @Post('/', [celebrate(schoolNoticeValidator)] as any[])
-    add(@Response() res: IResponse, @Body() body: INoticeBody) {
+    add(@Response() res: IResponse, @Body() body: SchoolNoticeEntity) {
         const result = this.schoolNoticeService.add(body);
         return res.status(200).json(result);
     }

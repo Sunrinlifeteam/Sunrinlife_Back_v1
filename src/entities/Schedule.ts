@@ -1,18 +1,9 @@
-/* eslint-disable no-unused-vars */
-import {
-    Entity,
-    Column,
-    BaseEntity,
-    ManyToMany,
-    PrimaryGeneratedColumn,
-    JoinTable,
-    getConnection,
-} from 'typeorm';
-import { DateTime } from 'luxon';
-import logger from '../modules/logger';
+import { Injectable } from '@decorators/di';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('schedule')
-export class Schedule extends BaseEntity {
+@Injectable()
+export class ScheduleEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

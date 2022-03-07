@@ -1,15 +1,10 @@
-import {
-    Entity,
-    Column,
-    BaseEntity,
-    PrimaryGeneratedColumn,
-    ManyToOne,
-    getConnection,
-} from 'typeorm';
-import { User } from './User';
+import { Injectable } from '@decorators/di';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { UserEntity } from './User';
 
-@Entity('userschedule')
-export class UserSchedule extends BaseEntity {
+@Entity('user_schedule')
+@Injectable()
+export class UserScheduleEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -19,6 +14,6 @@ export class UserSchedule extends BaseEntity {
     @Column({ nullable: true })
     body: string;
 
-    @ManyToOne((type) => User, (user) => user.id)
-    owner: User;
+    @ManyToOne(() => UserEntity, (user) => user.id)
+    owner: UserEntity;
 }
