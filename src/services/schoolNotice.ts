@@ -1,26 +1,30 @@
 /* eslint-disable no-unused-vars */
-import { Injectable } from '@decorators/di';
+import { Inject, Injectable } from '@decorators/di';
 import { SchoolNotice } from '../models/schoolNotice';
-import { SchoolNoticeData } from '../entities/SchoolNotice';
+import { SchoolNoticeEntity } from '../entities/SchoolNotice';
 import { INoticeBodyWithID } from '../models/schoolNotice';
 import logger from '../modules/logger';
-import { getConnection } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
 
 @Injectable()
 export class SchoolNoticeService {
-    constructor() {}
+    constructor(
+        @Inject(SchoolNoticeEntity)
+        private readonly schoolNoticeRepository: Repository<SchoolNotice>
+    ) {}
 
     async list(): Promise<SchoolNotice[]> {
-        let find = await SchoolNoticeData.list();
-        logger.debug('services.IntranetNotice.list', find);
-        return (find || []).map((x) => SchoolNotice.fromActiveRecord(x));
+        const schoolNotices = await this.schoolNoticeRepository.find();
+        logger.debug('services.IntranetNotice.list', schoolNotices);
+        // return (schoolNotices || []).map((x: any) => SchoolNotice.fromActiveRecord(x));
+        return schoolNotices;
     }
 
     async get(id: number): Promise<SchoolNotice | undefined> {
-        let find = await SchoolNoticeData.findById(id);
-        if (find == undefined) return undefined;
-        logger.debug('services.IntranetNotice.get', find);
-        return SchoolNotice.fromActiveRecord(find);
+        const schoolNotice = await this.schoolNoticeRepository.findOne({ id });
+        if (!schoolNotice) return undefined;
+        logger.debug('services.IntranetNotice.get', schoolNotice);
+        return SchoolNotice.fromActiveRecord(schoolNotice);
     }
 
     async add(body: INoticeBodyWithID): Promise<any> {

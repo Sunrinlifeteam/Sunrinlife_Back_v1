@@ -1,17 +1,6 @@
 import { Response as IResponse, Request as IRequest } from 'express';
-import {
-    Response,
-    Request,
-    Controller,
-    Get,
-    Post,
-    Delete,
-    Put,
-    Body,
-} from '@decorators/express';
-import { celebrate } from 'celebrate';
+import { Response, Request, Controller, Get } from '@decorators/express';
 import { Injectable } from '@decorators/di';
-import { IClubInfo, IClubInfoBody } from '../models/clubInfo';
 import { ClubInfoService } from '../services/clubInfo';
 import logger from '../modules/logger';
 

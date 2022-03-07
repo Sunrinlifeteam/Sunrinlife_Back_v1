@@ -1,17 +1,7 @@
-/* eslint-disable no-unused-vars */
 import { Injectable } from '@decorators/di';
-import {
-    Entity,
-    Column,
-    BaseEntity,
-    ManyToMany,
-    PrimaryGeneratedColumn,
-    JoinTable,
-    ManyToOne,
-    getConnection,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-export const CLUB_SELECT: (keyof ClubInfoData)[] = [
+export const CLUB_SELECT: (keyof ClubInfoEntity)[] = [
     'name',
     'description',
     'url',
@@ -30,7 +20,7 @@ export const CLUB_SELECT: (keyof ClubInfoData)[] = [
 
 @Entity('clubinfo')
 @Injectable()
-export class ClubInfoData {
+export class ClubInfoEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -73,6 +63,6 @@ export class ClubInfoData {
     @Column({ type: 'int', nullable: false })
     type: number;
 
-    @Column({ type: 'string', nullable: true })
+    @Column({ type: 'text', nullable: true })
     curriculum: string;
 }

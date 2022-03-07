@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import { isProduction } from '../constants';
 
 export default async (app: Express) => {
-    app.set('port', process.env.PORT || 3000);
+    app.set('service_port', process.env.PORT || 3000);
     if (isProduction) {
         app.use(helmet());
     }

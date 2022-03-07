@@ -2,7 +2,7 @@ import { Injectable } from '@decorators/di';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { UserDepartment } from '../types/user';
 
-export const USER_SELECT: (keyof User)[] = [
+export const USER_SELECT: (keyof UserEntity)[] = [
     'id',
     'email',
     'username',
@@ -15,7 +15,7 @@ export const USER_SELECT: (keyof User)[] = [
 
 @Entity('user')
 @Injectable()
-export class User {
+export class UserEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 

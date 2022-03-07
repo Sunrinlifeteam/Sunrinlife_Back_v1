@@ -1,4 +1,4 @@
-import { User } from '../entities/User';
+import { UserEntity } from '../entities/User';
 
 export interface IWriteUserScheduleBody {
     body: string;
@@ -7,5 +7,5 @@ export interface IWriteUserScheduleBody {
 export interface IUserSchedule {
     date: string;
     body: string;
-    owner: User;
+    owner: UserEntity;
 }

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@decorators/di';
 import { DateTime } from 'luxon';
 import { Repository } from 'typeorm';
-import { Schedule } from '../entities/Schedule';
+import { ScheduleEntity } from '../entities/Schedule';
 import logger from '../modules/logger';
 import { Month, Week } from '../modules/typeorm';
 import { DateTimeBody } from '../types/datetime';
@@ -9,8 +9,8 @@ import { DateTimeBody } from '../types/datetime';
 @Injectable()
 export class ScheduleService {
     constructor(
-        @Inject(Schedule)
-        private readonly scheduleRepository: Repository<Schedule>
+        @Inject(ScheduleEntity)
+        private readonly scheduleRepository: Repository<ScheduleEntity>
     ) {}
 
     async getByMonth(date: DateTimeBody) {

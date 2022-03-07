@@ -1,16 +1,17 @@
 import { Injectable, Inject } from '@decorators/di';
 import { Repository } from 'typeorm';
 import jwt from 'jsonwebtoken';
-import { User, USER_SELECT } from '../entities/User';
+import { UserEntity, USER_SELECT } from '../entities/User';
 import { IUser } from '../types/user';
 
 @Injectable()
 export class AuthService {
     constructor(
-        @Inject(User) private readonly userRepository: Repository<User>
+        @Inject(UserEntity)
+        private readonly userRepository: Repository<UserEntity>
     ) {}
 
-    async createAndGetUser(user: IUser): Promise<User> {
+    async createAndGetUser(user: IUser): Promise<UserEntity> {
         const newUser = this.userRepository.create(user);
         return await this.userRepository.save(newUser);
     }

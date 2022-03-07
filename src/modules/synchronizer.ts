@@ -1,17 +1,19 @@
 import { DateTime } from 'luxon';
-import { getConnection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+import { Container } from '@decorators/di';
 import {
     DefaultParameterPreset,
     SchoolParameterPreset,
 } from '../constants/neis';
-import { Schedule } from '../entities/Schedule';
+import { ScheduleEntity } from '../entities/Schedule';
 import logger from './logger';
 import { SchoolSchedule } from './neis';
 
 export class NeisOpenAPI {
-    private static readonly scheduleRepository: Repository<Schedule>;
     static readonly parser = new SchoolSchedule();
     static async SchoolSchedule(start: DateTime, end: DateTime) {
+        const scheduleRepository =
+            Container.get<Repository<ScheduleEntity>>(ScheduleEntity);
         const result = await this.parser.fetchByMonthRange(
             DefaultParameterPreset,
             {
@@ -21,10 +23,10 @@ export class NeisOpenAPI {
             start,
             end
         );
-        const old_records = await this.scheduleRepository.find(Schedule);
+        const old_records = await scheduleRepository.find();
         const records = [];
         for (let row of result.SchoolSchedule[1].row) {
-            let obj = new Schedule();
+            let obj = new ScheduleEntity();
             obj.date = row.AA_YMD.replace(
                 /([0-9]{4})([0-9]{2})([0-9]{2})/,
                 '$1-$2-$3'
@@ -47,8 +49,8 @@ export class NeisOpenAPI {
             'Schedule Loaded: ',
             records.length
         );
-        this.scheduleRepository.save(records);
-        this.scheduleRepository.remove(old_records);
+        scheduleRepository.save(records);
+        scheduleRepository.remove(old_records);
         return result;
     }
 }
