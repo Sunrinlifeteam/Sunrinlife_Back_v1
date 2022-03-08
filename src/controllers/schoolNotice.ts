@@ -11,7 +11,7 @@ import {
 } from '@decorators/express';
 import { celebrate } from 'celebrate';
 import { Injectable } from '@decorators/di';
-import { INoticeBody } from '../models/schoolNotice';
+import { INoticeBodyWithID } from '../models/schoolNotice';
 import { SchoolNoticeService } from '../services/schoolNotice';
 import { schoolNoticeValidator } from '../validators/schoolNotice';
 
@@ -43,7 +43,7 @@ export class SchoolNoticeController {
     edit(
         @Request() req: IRequest,
         @Response() res: IResponse,
-        @Body() body: INoticeBody
+        @Body() body: INoticeBodyWithID
     ) {
         const result = this.schoolNoticeService.edit(
             Object.assign({ id: parseInt(req.params.id) }, body)
@@ -52,7 +52,7 @@ export class SchoolNoticeController {
     }
 
     @Post('/', [celebrate(schoolNoticeValidator)] as any[])
-    add(@Response() res: IResponse, @Body() body: INoticeBody) {
+    add(@Response() res: IResponse, @Body() body: INoticeBodyWithID) {
         const result = this.schoolNoticeService.add(body);
         return res.status(200).json(result);
     }
