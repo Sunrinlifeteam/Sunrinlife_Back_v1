@@ -1,7 +1,6 @@
-import { IntranetNoticeData } from '../entities/IntranetNotice';
-import { AttachmentRecord as AttachmentRecord } from '../entities/Attachment';
-import { Attachment, IAttachment } from './attachment';
+import { IntranetNoticeEntity } from '../entities/IntranetNotice';
 import { getConnection } from 'typeorm';
+import { AttachmentEntity } from '../entities';
 
 export interface IIntranetNotice {
     id: number;
@@ -9,7 +8,7 @@ export interface IIntranetNotice {
     content: string;
     created: Date;
     updated: Date;
-    attachment: Array<IAttachment>;
+    attachment: AttachmentEntity[];
 }
 
 export interface INoticeBody {
@@ -17,7 +16,7 @@ export interface INoticeBody {
     content: string;
     created: Date;
     updated: Date;
-    attachment: Array<IAttachment>;
+    attachment: AttachmentEntity[];
 }
 
 export interface INoticeBodyWithID {
@@ -26,7 +25,7 @@ export interface INoticeBodyWithID {
     content: string;
     created: Date;
     updated: Date;
-    attachment: Array<IAttachment>;
+    attachment: AttachmentEntity[];
 }
 
 export class IntranetNotice implements IIntranetNotice {
@@ -35,7 +34,7 @@ export class IntranetNotice implements IIntranetNotice {
     content: string;
     created: Date;
     updated: Date;
-    attachment: IAttachment[];
+    attachment: AttachmentEntity[];
 
     constructor(
         id: number,
@@ -43,7 +42,7 @@ export class IntranetNotice implements IIntranetNotice {
         content: string,
         created: Date,
         updated: Date,
-        attachment: IAttachment[]
+        attachment: AttachmentEntity[]
     ) {
         this.id = id;
         this.title = title;
@@ -67,31 +66,32 @@ export class IntranetNotice implements IIntranetNotice {
         return JSON.stringify(this.toObject());
     }
 
-    async toActiveRecord(): Promise<IntranetNoticeData> {
-        let record = new IntranetNoticeData();
+    async toActiveRecord(): Promise<IntranetNoticeEntity> {
+        let record = new IntranetNoticeEntity();
         record.id = +this.id;
         record.created = new Date(this.created);
         record.updated = new Date(this.updated);
         record.title = this.title;
         record.content = this.content;
         record.attachment = await Promise.all(
+            [] /*
             this.attachment.map((x) =>
                 Attachment.fromObject(x).toActiveRecord()
-            )
+            )*/
         );
         return await getConnection().manager.save(record);
     }
 
-    static fromActiveRecord(record: IntranetNoticeData): IntranetNotice {
+    static fromActiveRecord(record: IntranetNoticeEntity): IntranetNotice {
         return IntranetNotice.fromObject({
             id: +record.id,
             created: new Date(record.created),
             updated: new Date(record.updated),
             title: record.title,
             content: record.content,
-            attachment: (record.attachment || []).map((x) =>
+            attachment: [] /*(record.attachment || []).map((x) =>
                 Attachment.fromActiveRecord(x)
-            ),
+            )*/,
         });
     }
 
@@ -104,10 +104,10 @@ export class IntranetNotice implements IIntranetNotice {
             content: data.content,
             attachment: (
                 await getConnection().manager.findByIds(
-                    AttachmentRecord,
+                    AttachmentEntity,
                     data.attachment
                 )
-            ).map((x) => Attachment.fromActiveRecord(x)),
+            ).map((x) => x /*Attachment.fromActiveRecord(x)*/),
         });
     }
     static fromObject(data: IIntranetNotice): IntranetNotice {
@@ -128,9 +128,9 @@ export class IntranetNotice implements IIntranetNotice {
             content: object['content'].toString(),
             created: new Date(object['created'].toString()),
             updated: new Date(object['updated'].toString()),
-            attachment: object['attachment'].map((x: IAttachment) =>
+            attachment: [] /*object['attachment'].map((x: AttachmentEntity) =>
                 Attachment.fromObject(x)
-            ),
+            )*/,
         });
     }
 }

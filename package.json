@@ -93,7 +93,11 @@
       "passport-custom": "^1.1.1",
       "passport-google-oauth20": "^2.0.0",
       "passport-jwt": "^4.0.0",
+      "redis": "^4.0.4",
       "reflect-metadata": "^0.1.10",
       "typeorm": "0.2.41"
+   },
+   "optionalDependencies": {
+      "fsevents": "^2.3.2"
    }
 }

@@ -1,11 +1,10 @@
-import { Response as IResponse } from 'express';
+import { Request as IRequest, Response as IResponse } from 'express';
 import { Response, Request, Controller, Get } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import passport from 'passport';
 import { AuthService } from '../services/auth';
 import logger from '../modules/logger';
 import HttpStatusCode from '../constants/HttpStatusCode';
-import { IRequestIncludeUser } from '../types/user';
 import { accessTokenGuard, refreshTokenGuard } from '../modules/passport';
 import {
     REFRESH_TOKEN_COOKIE_KEY,
@@ -46,11 +45,9 @@ export class AuthController {
     @Get('/google/callback', [
         passport.authenticate('google', { failureRedirect: '/auth/google' }),
     ])
-    async googleRedirect(
-        @Request() req: IRequestIncludeUser,
-        @Response() res: IResponse
-    ) {
+    async googleRedirect(@Request() req: IRequest, @Response() res: IResponse) {
         let { user } = req;
+        if (!user) return res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
         const { email } = user;
         let savedUser = await this.authService.getUserByEmail(email);
         if (!savedUser)

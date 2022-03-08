@@ -1,7 +1,9 @@
-import { Entity, Column, BaseEntity, PrimaryColumn } from 'typeorm';
+import { Injectable } from '@decorators/di';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 
-@Entity()
-export class Meal extends BaseEntity {
+@Entity('meal')
+@Injectable()
+export class MealEntity {
     @PrimaryColumn({ type: 'date', nullable: false })
     date: string;
 

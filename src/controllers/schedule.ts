@@ -5,7 +5,7 @@ import logger from '../modules/logger';
 import { ScheduleService } from '../services/schedule';
 import { DateValidator } from '../validators/schedule';
 import { celebrate } from 'celebrate';
-import { IDateBody } from '../models/schedule';
+import { DateTimeBody } from '../types/datetime';
 
 @Controller('/schedule')
 @Injectable()
@@ -16,19 +16,19 @@ export class ScheduleController {
     }
 
     @Get('/', [celebrate(DateValidator)] as any[])
-    async Get(@Response() res: IResponse, @Body() body: IDateBody) {
+    async Get(@Response() res: IResponse, @Body() body: DateTimeBody) {
         const result = await this.service.getByDay(body);
         return res.status(200).json(result);
     }
 
     @Get('/week', [celebrate(DateValidator)] as any[])
-    async GetWeek(@Response() res: IResponse, @Body() body: IDateBody) {
-        const result = await this.service.getByMonth(body);
+    async GetWeek(@Response() res: IResponse, @Body() body: DateTimeBody) {
+        const result = await this.service.getByWeek(body);
         return res.status(200).json(result);
     }
 
     @Get('/month', [celebrate(DateValidator)] as any[])
-    async GetMonth(@Response() res: IResponse, @Body() body: IDateBody) {
+    async GetMonth(@Response() res: IResponse, @Body() body: DateTimeBody) {
         const result = await this.service.getByMonth(body);
         return res.status(200).json(result);
     }

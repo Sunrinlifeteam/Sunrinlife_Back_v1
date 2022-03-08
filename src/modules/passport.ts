@@ -4,7 +4,7 @@ import { ExtractJwt, StrategyOptions, VerifyCallback } from 'passport-jwt';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
 import jwt from 'jsonwebtoken';
-import { User, USER_SELECT } from '../entities/User';
+import { UserEntity, USER_SELECT } from '../entities/User';
 import { isNumberic } from './isNumberic';
 import { IUser } from '../types/user';
 import { getDepartmentByClass } from './getDepartment';
@@ -21,7 +21,8 @@ export const jwtConfig: StrategyOptions = {
 
 export const jwtVerify: VerifyCallback = async ({ id }, done) => {
     try {
-        const userRepository = Container.get<Repository<User>>(User);
+        const userRepository =
+            Container.get<Repository<UserEntity>>(UserEntity);
         const user = await userRepository.findOne({
             where: { id },
             select: USER_SELECT,
@@ -43,7 +44,8 @@ export const jwtRefreshVerify: VerifyCallback = async (req: Request, done) => {
                     id: string;
                 }
             )?.id;
-            const userRepository = Container.get<Repository<User>>(User);
+            const userRepository =
+                Container.get<Repository<UserEntity>>(UserEntity);
             const user = (await userRepository.findOne({
                 where: { id },
                 select: [...USER_SELECT, 'refreshToken'],

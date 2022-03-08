@@ -1,19 +1,18 @@
-/* eslint-disable no-unused-vars */
+import { Injectable } from '@decorators/di';
 import {
     Entity,
     Column,
-    BaseEntity,
     PrimaryGeneratedColumn,
     CreateDateColumn,
     UpdateDateColumn,
     ManyToMany,
     JoinTable,
-    getConnection,
 } from 'typeorm';
-import { AttachmentRecord } from './Attachment';
+import { AttachmentEntity } from './Attachment';
 
 @Entity('interaction_notice')
-export class IntranetNoticeData extends BaseEntity {
+@Injectable()
+export class IntranetNoticeEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -29,23 +28,7 @@ export class IntranetNoticeData extends BaseEntity {
     @UpdateDateColumn()
     updated: Date;
 
-    // eslint-disable-next-line prettier/prettier
-    @ManyToMany((type) => AttachmentRecord)
+    @ManyToMany(() => AttachmentEntity)
     @JoinTable()
-    attachment: AttachmentRecord[];
-
-    static async list() {
-        return getConnection()
-            .getRepository(IntranetNoticeData)
-            .createQueryBuilder('IntranetNotice')
-            .getMany();
-    }
-
-    static async findById(id: number) {
-        return getConnection()
-            .getRepository(IntranetNoticeData)
-            .createQueryBuilder('IntranetNotice')
-            .where('IntranetNotice.id = :id', { id: id })
-            .getOne();
-    }
+    attachment: AttachmentEntity[];
 }
