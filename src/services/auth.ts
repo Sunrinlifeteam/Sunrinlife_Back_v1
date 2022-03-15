@@ -25,14 +25,17 @@ export class AuthService {
 
     createAccessTokenByUserId(id: string): string {
         return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET!, {
-            expiresIn: '7d',
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN!,
         });
     }
 
     async createAndGetRefreshTokenByUserId(id: string): Promise<string> {
         const refreshToken = jwt.sign(
             { id },
-            process.env.REFRESH_TOKEN_SECRET!
+            process.env.REFRESH_TOKEN_SECRET!,
+            {
+                expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN!,
+            }
         );
         await this.userRepository.update(id, { refreshToken });
         return refreshToken;
