@@ -41,7 +41,7 @@ export class UserEntity {
     accountType: number;
 
     @Column({ length: 200, nullable: true, select: false })
-    refreshToken: string;
+    refreshToken: string | null;
 
     @Column({ nullable: true, unique: true })
     libraryId: string;

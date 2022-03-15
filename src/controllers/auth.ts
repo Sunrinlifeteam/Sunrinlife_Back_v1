@@ -71,7 +71,8 @@ export class AuthController {
     }
 
     @Delete('/', [refreshTokenGuard])
-    logout(@Response() res: IResponse) {
+    async logout(@Request() req: any, @Response() res: IResponse) {
+        await this.authService.removeRefreshTokenByUserId(req.user.id);
         res.clearCookie(REFRESH_TOKEN_COOKIE_KEY, REFRESH_TOKEN_COOKIE_OPTION);
         return res.status(HttpStatusCode.OK).json('success');
     }
