@@ -1,5 +1,11 @@
 import { Request as IRequest, Response as IResponse } from 'express';
-import { Response, Request, Controller, Get } from '@decorators/express';
+import {
+    Response,
+    Request,
+    Controller,
+    Get,
+    Delete,
+} from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import passport from 'passport';
 import { AuthService } from '../services/auth';
@@ -62,5 +68,11 @@ export class AuthController {
             REFRESH_TOKEN_COOKIE_OPTION
         );
         return res.redirect(process.env.FRONTEND_URL!);
+    }
+
+    @Delete('/', [refreshTokenGuard])
+    logout(@Response() res: IResponse) {
+        res.clearCookie(REFRESH_TOKEN_COOKIE_KEY, REFRESH_TOKEN_COOKIE_OPTION);
+        return res.status(HttpStatusCode.OK).json('success');
     }
 }
