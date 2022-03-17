@@ -15,7 +15,7 @@ import {
 } from '../constants';
 
 export const jwtConfig: StrategyOptions = {
-    jwtFromRequest: ExtractJwt.fromHeader('Authorization'),
+    jwtFromRequest: ExtractJwt.fromHeader('authorization'),
     secretOrKey: process.env.ACCESS_TOKEN_SECRET,
 };
 
