@@ -13,7 +13,7 @@ export default async (app: Express) => {
     app.use(morgan(isProduction ? 'combined' : 'dev'));
     app.use(
         cors({
-            origin: '*',
+            origin: process.env.FRONTEND_URL,
             methods: ['GET', 'POST', 'PUT', 'DELETE'],
             credentials: true,
         })
