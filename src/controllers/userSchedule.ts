@@ -28,7 +28,7 @@ export class UserScheduleController {
     async week(@Request() req: IRequest, @Response() res: IResponse) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        const result = await this.service.week(res.locals.user);
+        const result = await this.service.week(req.user);
         return res.status(200).json(result);
     }
 

@@ -17,10 +17,15 @@ export class UserScheduleService {
         private readonly userRepository: Repository<UserEntity>
     ) {}
 
-    async week(user: UserEntity): Promise<UserScheduleEntity[]> {
+    async week(user: IUser): Promise<UserScheduleEntity[]> {
         logger.debug('called', 'services.mySchedule.list', user);
+        const owner = await this.userRepository.findOne({ email: user.email });
+        if (!owner) throw new Error('Unauthorization');
         const userSchedules = await this.userScheduleRepository.find({
-            date: Week(new DateTime()),
+            where: {
+                date: Week(DateTime.now()),
+                owner: owner,
+            },
         });
         logger.debug('services.mySchedule.list', userSchedules);
         return userSchedules;
@@ -28,6 +33,7 @@ export class UserScheduleService {
 
     async write(userData: IUser, body: IWriteUserScheduleBody): Promise<any> {
         const user = await this.userRepository.findOne(userData);
+        if (!user) throw new Error('Unauthorization');
         const newSchedule = this.userScheduleRepository.create({
             ...body,
             owner: user,
