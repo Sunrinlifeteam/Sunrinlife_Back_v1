@@ -1,4 +1,4 @@
-import { Parse, ParseServer, searchSchool } from ".";
+import { Parse, ParseServer, searchSchool } from '.';
 
 (async () => {
     const server = await ParseServer();
