@@ -2,7 +2,7 @@
 import { Inject, Injectable } from '@decorators/di';
 import { SchoolNotice } from '../models/schoolNotice';
 import { SchoolNoticeEntity } from '../entities/SchoolNotice';
-import { INoticeBodyWithID } from '../models/schoolNotice';
+import { ISchoolNotice, ISchoolNoticePut } from '../models/schoolNotice';
 import logger from '../modules/logger';
 import { getConnection, Repository } from 'typeorm';
 
@@ -10,10 +10,10 @@ import { getConnection, Repository } from 'typeorm';
 export class SchoolNoticeService {
     constructor(
         @Inject(SchoolNoticeEntity)
-        private readonly schoolNoticeRepository: Repository<SchoolNotice>
+        private readonly schoolNoticeRepository: Repository<SchoolNoticeEntity>
     ) {}
 
-    async list(): Promise<SchoolNotice[]> {
+    async list(): Promise<SchoolNoticeEntity[]> {
         const schoolNotices = await this.schoolNoticeRepository.find();
         logger.debug('services.IntranetNotice.list', schoolNotices);
         // return (schoolNotices || []).map((x: any) => SchoolNotice.fromActiveRecord(x));
@@ -27,7 +27,7 @@ export class SchoolNoticeService {
         return SchoolNotice.fromActiveRecord(schoolNotice);
     }
 
-    async add(body: INoticeBodyWithID): Promise<any> {
+    async add(body: ISchoolNotice): Promise<any> {
         let object = await SchoolNotice.fromBody(body);
         let record = await object.toActiveRecord();
         await getConnection().manager.save(record);
@@ -35,18 +35,19 @@ export class SchoolNoticeService {
         return { isError: false, id: record.id, data: object };
     }
 
-    async edit(data: INoticeBodyWithID): Promise<INoticeBodyWithID> {
+    async edit(data: { id: number; } & ISchoolNoticePut): Promise<ISchoolNotice> {
         // TODO
+        let temp = {created:new Date()} // TEMP Code
         return {
             id: data.id,
             title: data.title,
-            created: data.created,
+            created: temp.created,
             content: data.content,
             attachment: data.attachment,
         };
     }
 
-    async remove(id: number): Promise<INoticeBodyWithID[]> {
+    async remove(id: number): Promise<ISchoolNotice[]> {
         // TODO
         return [];
     }

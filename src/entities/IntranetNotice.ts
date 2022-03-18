@@ -25,9 +25,6 @@ export class IntranetNoticeEntity {
     @CreateDateColumn()
     created: Date;
 
-    @UpdateDateColumn()
-    updated: Date;
-
     @ManyToMany(() => AttachmentEntity)
     @JoinTable()
     attachment: AttachmentEntity[];

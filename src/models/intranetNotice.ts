@@ -1,39 +1,27 @@
 import { IntranetNoticeEntity } from '../entities/IntranetNotice';
-import { getConnection } from 'typeorm';
 import { AttachmentEntity } from '../entities';
+import { getConnection } from 'typeorm';
+
+export interface IIntranetNoticePut {
+    title: string;
+    content: string;
+    attachment: AttachmentEntity[];
+}
 
 export interface IIntranetNotice {
     id: number;
     title: string;
     content: string;
     created: Date;
-    updated: Date;
-    attachment: AttachmentEntity[];
-}
-
-export interface INoticeBody {
-    title: string;
-    content: string;
-    created: Date;
-    updated: Date;
-    attachment: AttachmentEntity[];
-}
-
-export interface INoticeBodyWithID {
-    id: number;
-    title: string;
-    content: string;
-    created: Date;
-    updated: Date;
     attachment: AttachmentEntity[];
 }
 
 export class IntranetNotice implements IIntranetNotice {
+
     id: number;
     title: string;
     content: string;
     created: Date;
-    updated: Date;
     attachment: AttachmentEntity[];
 
     constructor(
@@ -41,14 +29,12 @@ export class IntranetNotice implements IIntranetNotice {
         title: string,
         content: string,
         created: Date,
-        updated: Date,
         attachment: AttachmentEntity[]
     ) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.created = created;
-        this.updated = updated;
         this.attachment = attachment;
     }
 
@@ -58,10 +44,10 @@ export class IntranetNotice implements IIntranetNotice {
             title: this.title,
             content: this.content,
             created: this.created,
-            updated: this.updated,
             attachment: this.attachment,
         };
     }
+
     toJSON(): string {
         return JSON.stringify(this.toObject());
     }
@@ -70,7 +56,6 @@ export class IntranetNotice implements IIntranetNotice {
         let record = new IntranetNoticeEntity();
         record.id = +this.id;
         record.created = new Date(this.created);
-        record.updated = new Date(this.updated);
         record.title = this.title;
         record.content = this.content;
         record.attachment = await Promise.all(
@@ -86,7 +71,6 @@ export class IntranetNotice implements IIntranetNotice {
         return IntranetNotice.fromObject({
             id: +record.id,
             created: new Date(record.created),
-            updated: new Date(record.updated),
             title: record.title,
             content: record.content,
             attachment: [] /*(record.attachment || []).map((x) =>
@@ -95,11 +79,10 @@ export class IntranetNotice implements IIntranetNotice {
         });
     }
 
-    static async fromBody(data: INoticeBodyWithID): Promise<IntranetNotice> {
+    static async fromBody(data: IIntranetNotice): Promise<IntranetNotice> {
         return IntranetNotice.fromObject({
             id: +data.id,
             created: new Date(data.created),
-            updated: new Date(data.updated),
             title: data.title,
             content: data.content,
             attachment: (
@@ -116,7 +99,6 @@ export class IntranetNotice implements IIntranetNotice {
             data.title,
             data.content,
             data.created,
-            data.updated,
             data.attachment
         );
     }
@@ -127,7 +109,6 @@ export class IntranetNotice implements IIntranetNotice {
             title: object['title'].toString(),
             content: object['content'].toString(),
             created: new Date(object['created'].toString()),
-            updated: new Date(object['updated'].toString()),
             attachment: [] /*object['attachment'].map((x: AttachmentEntity) =>
                 Attachment.fromObject(x)
             )*/,

@@ -2,22 +2,13 @@ import { SchoolNoticeEntity } from '../entities/SchoolNotice';
 import { AttachmentEntity } from '../entities/Attachment';
 import { getConnection } from 'typeorm';
 
+export interface ISchoolNoticePut {
+    title: string;
+    content: string;
+    attachment: AttachmentEntity[];
+}
+
 export interface ISchoolNotice {
-    id: number;
-    title: string;
-    content: string;
-    created: Date;
-    attachment: AttachmentEntity[];
-}
-
-export interface INoticeBody {
-    title: string;
-    content: string;
-    created: Date;
-    attachment: AttachmentEntity[];
-}
-
-export interface INoticeBodyWithID {
     id: number;
     title: string;
     content: string;
@@ -55,6 +46,7 @@ export class SchoolNotice implements ISchoolNotice {
             attachment: this.attachment,
         };
     }
+    
     toJSON(): string {
         return JSON.stringify(this.toObject());
     }
@@ -86,7 +78,7 @@ export class SchoolNotice implements ISchoolNotice {
         });
     }
 
-    static async fromBody(data: INoticeBodyWithID): Promise<SchoolNotice> {
+    static async fromBody(data: ISchoolNotice): Promise<SchoolNotice> {
         return SchoolNotice.fromObject({
             id: +data.id,
             created: new Date(data.created),
