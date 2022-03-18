@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { Repository } from 'typeorm';
 import { ScheduleEntity } from '../entities/Schedule';
 import logger from '../modules/logger';
-import { Month, Week } from '../modules/typeorm';
+import { Format, Month, Week } from '../modules/typeorm';
 import { DateTimeBody } from '../types/datetime';
 
 @Injectable()
@@ -47,7 +47,7 @@ export class ScheduleService {
         );
         return await this.scheduleRepository.find({
             where: {
-                date: DateTime.fromObject(date),
+                date: Format(DateTime.fromObject(date)),
             },
         });
     }
