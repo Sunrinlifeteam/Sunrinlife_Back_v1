@@ -86,18 +86,21 @@ export class AuthController {
         if (!user) return res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
         const { email } = user;
         let savedUser = await this.authService.getUserByEmail(email);
-        if (!savedUser)
+        const isNewUser = !savedUser;
+        if (isNewUser)
             savedUser = await this.authService.createAndGetUser(user);
         const refreshToken =
             await this.authService.createAndGetRefreshTokenByUserId(
-                savedUser.id
+                savedUser!.id
             );
         res.cookie(
             REFRESH_TOKEN_COOKIE_KEY,
             refreshToken,
             REFRESH_TOKEN_COOKIE_OPTION
         );
-        return res.redirect(process.env.FRONTEND_URL!);
+        return res.redirect(
+            process.env.FRONTEND_URL! + (isNewUser ? '/register' : '')
+        );
     }
 
     @Delete('/', [refreshTokenGuard])
