@@ -5,6 +5,8 @@ import {
     Controller,
     Get,
     Delete,
+    Put,
+    Body,
 } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import passport from 'passport';
@@ -16,6 +18,8 @@ import {
     REFRESH_TOKEN_COOKIE_KEY,
     REFRESH_TOKEN_COOKIE_OPTION,
 } from '../constants';
+import { celebrate } from 'celebrate';
+import { updateUserValidator } from '../validators/user';
 
 @Controller('/auth')
 @Injectable()
@@ -29,7 +33,8 @@ export class AuthController {
         const { id } = req.user;
         if (!id)
             return res.status(HttpStatusCode.UNAUTHORIZED).json('Unauthorized');
-        const accessToken = this.authService.createAccessTokenByUserId(id);
+        const accessToken =
+            this.authService.createAndGetAccessTokenByUserId(id);
         return res.status(HttpStatusCode.OK).json({ accessToken });
     }
 
@@ -41,6 +46,31 @@ export class AuthController {
     @Get('/user', [accessTokenGuard])
     async getUser(@Request() req: any, @Response() res: IResponse) {
         return res.status(HttpStatusCode.OK).json(req.user);
+    }
+
+    @Get('/user/club', [accessTokenGuard])
+    async getUserIncludeClub(@Request() req: any, @Response() res: IResponse) {
+        const user = await this.authService.getUserById(req.user.id, [
+            'clubInfo',
+        ]);
+        return res.status(HttpStatusCode.OK).json(user);
+    }
+
+    @Put('/user', [accessTokenGuard, celebrate(updateUserValidator)])
+    async updateUser(
+        @Request() req: any,
+        @Body() user: any,
+        @Response() res: IResponse
+    ) {
+        try {
+            const updatedUser = await this.authService.updateAndGetUser({
+                ...user,
+                id: req.user.id,
+            });
+            return res.status(HttpStatusCode.CREATED).json(updatedUser);
+        } catch (_err) {
+            return res.status(HttpStatusCode.CONFLICT).json('error');
+        }
     }
 
     @Get('/google', [

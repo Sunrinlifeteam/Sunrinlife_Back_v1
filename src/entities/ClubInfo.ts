@@ -1,5 +1,6 @@
 import { Injectable } from '@decorators/di';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { UserEntity } from './User';
 
 export const CLUB_SELECT: (keyof ClubInfoEntity)[] = [
     'name',
@@ -65,4 +66,7 @@ export class ClubInfoEntity {
 
     @Column({ type: 'text', nullable: true })
     curriculum: string;
+
+    @OneToMany(() => UserEntity, (user) => user.clubInfo)
+    users: UserEntity[];
 }

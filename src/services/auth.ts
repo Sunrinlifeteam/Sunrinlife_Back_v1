@@ -16,14 +16,28 @@ export class AuthService {
         return await this.userRepository.save(newUser);
     }
 
-    async getUserByEmail(email: string) {
+    async updateAndGetUser(user: UserEntity): Promise<UserEntity | undefined> {
+        await this.userRepository.update(user.id, user);
+        return await this.getUserById(user.id);
+    }
+
+    async getUserById(id: string, relations: string[] = []) {
         return await this.userRepository.findOne({
-            where: { email },
+            where: { id },
             select: USER_SELECT,
+            relations,
         });
     }
 
-    createAccessTokenByUserId(id: string): string {
+    async getUserByEmail(email: string, relations: string[] = []) {
+        return await this.userRepository.findOne({
+            where: { email },
+            select: USER_SELECT,
+            relations,
+        });
+    }
+
+    createAndGetAccessTokenByUserId(id: string): string {
         return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET!, {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN!,
         });

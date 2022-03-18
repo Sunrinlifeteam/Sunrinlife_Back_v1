@@ -1,6 +1,15 @@
 import { Injectable } from '@decorators/di';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
+    ManyToOne,
+    JoinColumn,
+} from 'typeorm';
 import { UserDepartment } from '../types/user';
+import { ClubInfoEntity } from './ClubInfo';
 
 export const USER_SELECT: (keyof UserEntity)[] = [
     'id',
@@ -11,6 +20,9 @@ export const USER_SELECT: (keyof UserEntity)[] = [
     'class',
     'number',
     'accountType',
+    'description',
+    'githubLink',
+    'image',
 ];
 
 @Entity('user')
@@ -43,9 +55,28 @@ export class UserEntity {
     @Column({ length: 200, nullable: true, select: false })
     refreshToken: string;
 
+    @Column({ length: 150, nullable: true })
+    description: string;
+
+    @Column({ length: 200, nullable: true })
+    githubLink: string;
+
+    @Column({ length: 200, nullable: true })
+    image: string;
+
     @Column({ nullable: true, unique: true })
     libraryId: string;
 
     @Column({ nullable: true, unique: true })
     teacherEmail: string;
+
+    @ManyToOne(() => ClubInfoEntity, (clubInfo) => clubInfo.users)
+    @JoinColumn()
+    clubInfo: ClubInfoEntity;
+
+    @CreateDateColumn()
+    createdDate: Date;
+
+    @UpdateDateColumn()
+    updatedDate: Date;
 }
