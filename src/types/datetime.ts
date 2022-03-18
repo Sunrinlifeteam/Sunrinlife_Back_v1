@@ -1,11 +1,7 @@
 import { DateTime } from 'luxon';
 
-export class DateTimeBody {
+export interface DateTimeBody {
     year: number;
     month: number;
     day: number;
-
-    toDateTime() {
-        return DateTime.fromObject(this);
-    }
 }

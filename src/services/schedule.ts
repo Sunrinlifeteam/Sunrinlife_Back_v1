@@ -21,7 +21,7 @@ export class ScheduleService {
         );
         return await this.scheduleRepository.find({
             where: {
-                date: Month(date.toDateTime()),
+                date: Month(DateTime.fromObject(date)),
             },
         });
     }
@@ -34,7 +34,7 @@ export class ScheduleService {
         );
         return await this.scheduleRepository.find({
             where: {
-                date: Week(date.toDateTime()),
+                date: Week(DateTime.fromObject(date)),
             },
         });
     }
@@ -47,7 +47,7 @@ export class ScheduleService {
         );
         return await this.scheduleRepository.find({
             where: {
-                date: date.toDateTime(),
+                date: DateTime.fromObject(date),
             },
         });
     }
