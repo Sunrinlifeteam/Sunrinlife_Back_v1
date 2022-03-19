@@ -61,7 +61,7 @@ export class UserEntity {
     @Column({ length: 200, nullable: true })
     githubLink: string;
 
-    @Column({ length: 200, nullable: true })
+    @Column({ type: 'mediumtext', nullable: true })
     image: string;
 
     @Column({ nullable: true, unique: true })
