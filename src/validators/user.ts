@@ -3,7 +3,7 @@ import Joi from 'joi';
 
 const updateUserJoiObject = Joi.object({
     description: Joi.string().max(150),
-    image: Joi.string().max(200),
+    image: Joi.string(),
     githubLink: Joi.string().max(200),
     clubInfo: Joi.number(),
 });
