@@ -11,7 +11,7 @@ import {
 } from '@decorators/express';
 import { celebrate } from 'celebrate';
 import { Injectable } from '@decorators/di';
-import { INoticeBody } from '../models/schoolNotice';
+import { ISchoolNoticePut } from '../models/schoolNotice';
 import { SchoolNoticeService } from '../services/schoolNotice';
 import { schoolNoticeValidator } from '../validators/schoolNotice';
 import { SchoolNoticeEntity } from '../entities';
@@ -44,7 +44,7 @@ export class SchoolNoticeController {
     edit(
         @Request() req: IRequest,
         @Response() res: IResponse,
-        @Body() body: INoticeBody
+        @Body() body: ISchoolNoticePut
     ) {
         const result = this.schoolNoticeService.edit(
             Object.assign({ id: parseInt(req.params.id) }, body)

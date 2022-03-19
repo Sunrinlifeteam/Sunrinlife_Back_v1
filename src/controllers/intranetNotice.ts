@@ -11,7 +11,7 @@ import {
 } from '@decorators/express';
 import { celebrate } from 'celebrate';
 import { Injectable } from '@decorators/di';
-import { INoticeBody } from '../models/intranetNotice';
+import { IIntranetNoticePut } from '../models/intranetNotice';
 import { IntranetNoticeService } from '../services/intranetNotice';
 import { intranetNoticeValidator } from '../validators/intranetNotice';
 import { IntranetNoticeEntity } from '../entities';
@@ -48,7 +48,7 @@ export class IntranetNoticeController {
     edit(
         @Request() req: IRequest,
         @Response() res: IResponse,
-        @Body() body: INoticeBody
+        @Body() body: IIntranetNoticePut
     ) {
         const result = this.intranetNoticeService.edit(
             Object.assign({ id: parseInt(req.params.id) }, body)

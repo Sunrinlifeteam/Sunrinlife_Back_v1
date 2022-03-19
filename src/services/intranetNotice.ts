@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@decorators/di';
 import { IntranetNoticeEntity } from '../entities/IntranetNotice';
-import { INoticeBodyWithID, IntranetNotice } from '../models/intranetNotice';
+import { IntranetNotice, IIntranetNotice, IIntranetNoticePut } from '../models/intranetNotice';
 import logger from '../modules/logger';
 import { getConnection, Repository } from 'typeorm';
 
@@ -27,7 +27,7 @@ export class IntranetNoticeService {
         return IntranetNotice.fromActiveRecord(intranetNotice);
     }
 
-    async add(body: INoticeBodyWithID): Promise<any> {
+    async add(body: IIntranetNotice): Promise<any> {
         let object = await IntranetNotice.fromBody(body);
         let record = await object.toActiveRecord();
         await getConnection().manager.save(record);
@@ -35,19 +35,19 @@ export class IntranetNoticeService {
         return { isError: false, id: record.id, data: object };
     }
 
-    async edit(data: INoticeBodyWithID): Promise<INoticeBodyWithID> {
+    async edit(data: { id: number; } & IIntranetNoticePut): Promise<IIntranetNotice> {
         // TODO
+        let temp = {created:new Date()} // TEMP Code
         return {
             id: data.id,
             title: data.title,
-            created: data.created,
-            updated: data.updated,
+            created: temp.created,
             content: data.content,
             attachment: data.attachment,
         };
     }
 
-    async remove(id: number): Promise<INoticeBodyWithID[]> {
+    async remove(id: number): Promise<IIntranetNotice[]> {
         // TODO
         return [];
     }
