@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@decorators/di';
 import { UserScheduleEntity } from '../entities/UserSchedule';
 import logger from '../modules/logger';
 import { DateTime } from 'luxon';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { IUser } from '../types/user';
 import { UserEntity } from '../entities/User';
 import { IWriteUserScheduleBody } from '../types/userSchedule';
@@ -18,7 +18,11 @@ export class UserScheduleService {
     ) {}
 
     async week(user: IUser): Promise<UserScheduleEntity[]> {
-        logger.debug('called', 'services.mySchedule.list', user);
+        logger.debug(
+            'called',
+            'services/userSchedule.ts/UserScheduleService.week',
+            user
+        );
         const owner = await this.userRepository.findOne({ email: user.email });
         if (!owner) throw new Error('Unauthorization');
         const userSchedules = await this.userScheduleRepository.find({
@@ -31,7 +35,10 @@ export class UserScheduleService {
         return userSchedules;
     }
 
-    async write(userData: IUser, body: IWriteUserScheduleBody): Promise<any> {
+    async write(
+        userData: IUser,
+        body: IWriteUserScheduleBody
+    ): Promise<UserScheduleEntity> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
         const newSchedule = this.userScheduleRepository.create({
@@ -40,5 +47,14 @@ export class UserScheduleService {
             date: Today(),
         });
         return await this.userScheduleRepository.save(newSchedule);
+    }
+
+    async delete(userData: IUser, id: number): Promise<DeleteResult> {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) throw new Error('Unauthorization');
+        return await this.userScheduleRepository.delete({
+            id,
+            owner: user,
+        });
     }
 }
