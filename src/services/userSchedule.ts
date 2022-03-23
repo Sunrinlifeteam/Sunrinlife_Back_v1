@@ -6,7 +6,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { IUser } from '../types/user';
 import { UserEntity } from '../entities/User';
 import { IWriteUserScheduleBody } from '../types/userSchedule';
-import { Today, Week } from '../modules/typeorm';
+import { Format, Week } from '../modules/typeorm';
 
 @Injectable()
 export class UserScheduleService {
@@ -44,7 +44,7 @@ export class UserScheduleService {
         const newSchedule = this.userScheduleRepository.create({
             ...body,
             owner: user,
-            date: Today(),
+            date: Format(DateTime.fromObject(body.date)),
         });
         return await this.userScheduleRepository.save(newSchedule);
     }
