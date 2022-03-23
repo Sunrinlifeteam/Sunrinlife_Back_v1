@@ -44,7 +44,6 @@ export class UserScheduleService {
         const newSchedule = this.userScheduleRepository.create({
             ...body,
             owner: user,
-            date: Format(DateTime.fromObject(body.date)),
         });
         return await this.userScheduleRepository.save(newSchedule);
     }
