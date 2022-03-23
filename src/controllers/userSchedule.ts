@@ -6,6 +6,8 @@ import {
     Get,
     Body,
     Post,
+    Delete,
+    Params,
 } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import { UserScheduleService } from '../services/userSchedule';
@@ -16,6 +18,7 @@ import { User as IUser } from '../types/user';
 import { accessTokenGuard } from '../modules/passport';
 import { IUserSchedule, IWriteUserScheduleBody } from '../types/userSchedule';
 import { ErrorHandler } from '../modules/ErrorHandler';
+import HttpStatusCode from '../constants/HttpStatusCode';
 
 @Controller('/me/schedule')
 @Injectable()
@@ -29,7 +32,7 @@ export class UserScheduleController {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service.week(req.user);
-        return res.status(200).json(result);
+        return res.status(HttpStatusCode.OK).json(result);
     }
 
     @Post('/write', [accessTokenGuard, celebrate(writeValidator)])
@@ -41,6 +44,18 @@ export class UserScheduleController {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service.write(req.user, body);
-        return res.status(201).json(result);
+        return res.status(HttpStatusCode.CREATED).json(result);
+    }
+
+    @Delete('/:id', [accessTokenGuard])
+    async delete(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Params('id') id: number
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        const result = await this.service.delete(req.user, id);
+        return res.status(HttpStatusCode.NO_CONTENT).json(result);
     }
 }
