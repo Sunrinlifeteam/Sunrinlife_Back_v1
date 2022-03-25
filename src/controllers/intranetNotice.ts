@@ -8,6 +8,7 @@ import {
     Delete,
     Put,
     Body,
+    Params,
 } from '@decorators/express';
 import { celebrate } from 'celebrate';
 import { Injectable } from '@decorators/di';
@@ -31,16 +32,14 @@ export class IntranetNoticeController {
     }
 
     @Get('/:id')
-    get(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = this.intranetNoticeService.get(parseInt(req.params.id));
+    get(@Request() req: IRequest, @Response() res: IResponse, @Params('id') id: number) {
+        const result = this.intranetNoticeService.get(id);
         return res.status(200).json(result);
     }
 
     @Delete('/:id')
-    remove(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = this.intranetNoticeService.remove(
-            parseInt(req.params.id)
-        );
+    remove(@Request() req: IRequest, @Response() res: IResponse, @Params('id') id: number) {
+        const result = this.intranetNoticeService.remove(id);
         return res.status(200).json(result);
     }
 
@@ -48,10 +47,11 @@ export class IntranetNoticeController {
     edit(
         @Request() req: IRequest,
         @Response() res: IResponse,
-        @Body() body: IIntranetNoticePut
+        @Body() body: IIntranetNoticePut,
+        @Params('id') id: number
     ) {
         const result = this.intranetNoticeService.edit(
-            Object.assign({ id: parseInt(req.params.id) }, body)
+            Object.assign({ id: id }, body)
         );
         return res.status(200).json(result);
     }
