@@ -54,6 +54,7 @@ export class UserScheduleService {
         return await this.userScheduleRepository.update(
             {
                 id,
+                owner: user,
             },
             {
                 ...body,
