@@ -48,6 +48,20 @@ export class UserScheduleService {
         return await this.userScheduleRepository.save(newSchedule);
     }
 
+    async update(userData: IUser, id: number, body: IWriteUserScheduleBody) {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) throw new Error('Unauthorization');
+        return await this.userScheduleRepository.update(
+            {
+                id,
+            },
+            {
+                ...body,
+                owner: user,
+            }
+        );
+    }
+
     async delete(userData: IUser, id: number): Promise<DeleteResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
