@@ -46,7 +46,7 @@ export class SchoolNotice implements ISchoolNotice {
             attachment: this.attachment,
         };
     }
-    
+
     toJSON(): string {
         return JSON.stringify(this.toObject());
     }

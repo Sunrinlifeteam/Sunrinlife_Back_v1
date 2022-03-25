@@ -58,7 +58,7 @@ export class UserScheduleController {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service.update(req.user, id, body);
-        return res.status(HttpStatusCode.CREATED).json(result);
+        return res.status(HttpStatusCode.NO_CONTENT).json(result);
     }
 
     @Delete('/:id', [accessTokenGuard])
