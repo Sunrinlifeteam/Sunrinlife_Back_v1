@@ -8,6 +8,7 @@ import {
     Post,
     Delete,
     Params,
+    Put,
 } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import { UserScheduleService } from '../services/userSchedule';
@@ -44,6 +45,19 @@ export class UserScheduleController {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service.write(req.user, body);
+        return res.status(HttpStatusCode.CREATED).json(result);
+    }
+
+    @Put('/:id', [accessTokenGuard, celebrate(writeValidator)])
+    async update(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Params('id') id: number,
+        @Body() body: IWriteUserScheduleBody
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        const result = await this.service.update(req.user, id, body);
         return res.status(HttpStatusCode.CREATED).json(result);
     }
 
