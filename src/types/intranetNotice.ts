@@ -17,7 +17,6 @@ export interface IIntranetNotice {
 }
 
 export class IntranetNotice implements IIntranetNotice {
-
     id: number;
     title: string;
     content: string;

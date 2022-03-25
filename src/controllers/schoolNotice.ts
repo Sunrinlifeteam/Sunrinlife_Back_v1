@@ -11,7 +11,7 @@ import {
 } from '@decorators/express';
 import { celebrate } from 'celebrate';
 import { Injectable } from '@decorators/di';
-import { ISchoolNoticePut } from '../models/schoolNotice';
+import { ISchoolNoticePut } from '../types/schoolNotice';
 import { SchoolNoticeService } from '../services/schoolNotice';
 import { schoolNoticeValidator } from '../validators/schoolNotice';
 import { SchoolNoticeEntity } from '../entities';

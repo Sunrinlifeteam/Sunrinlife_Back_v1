@@ -1,6 +1,10 @@
 import { Inject, Injectable } from '@decorators/di';
 import { IntranetNoticeEntity } from '../entities/IntranetNotice';
-import { IntranetNotice, IIntranetNotice, IIntranetNoticePut } from '../models/intranetNotice';
+import {
+    IntranetNotice,
+    IIntranetNotice,
+    IIntranetNoticePut,
+} from '../types/intranetNotice';
 import logger from '../modules/logger';
 import { getConnection, Repository } from 'typeorm';
 
@@ -35,9 +39,11 @@ export class IntranetNoticeService {
         return { isError: false, id: record.id, data: object };
     }
 
-    async edit(data: { id: number; } & IIntranetNoticePut): Promise<IIntranetNotice> {
+    async edit(
+        data: { id: number } & IIntranetNoticePut
+    ): Promise<IIntranetNotice> {
         // TODO
-        let temp = {created:new Date()} // TEMP Code
+        let temp = { created: new Date() }; // TEMP Code
         return {
             id: data.id,
             title: data.title,

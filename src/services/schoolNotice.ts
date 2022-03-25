@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { Inject, Injectable } from '@decorators/di';
-import { SchoolNotice } from '../models/schoolNotice';
+import { SchoolNotice } from '../types/schoolNotice';
 import { SchoolNoticeEntity } from '../entities/SchoolNotice';
-import { ISchoolNotice, ISchoolNoticePut } from '../models/schoolNotice';
+import { ISchoolNotice, ISchoolNoticePut } from '../types/schoolNotice';
 import logger from '../modules/logger';
 import { getConnection, Repository } from 'typeorm';
 
@@ -35,9 +35,11 @@ export class SchoolNoticeService {
         return { isError: false, id: record.id, data: object };
     }
 
-    async edit(data: { id: number; } & ISchoolNoticePut): Promise<ISchoolNotice> {
+    async edit(
+        data: { id: number } & ISchoolNoticePut
+    ): Promise<ISchoolNotice> {
         // TODO
-        let temp = {created:new Date()} // TEMP Code
+        let temp = { created: new Date() }; // TEMP Code
         return {
             id: data.id,
             title: data.title,

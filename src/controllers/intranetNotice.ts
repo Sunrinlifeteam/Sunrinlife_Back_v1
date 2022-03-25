@@ -11,7 +11,7 @@ import {
 } from '@decorators/express';
 import { celebrate } from 'celebrate';
 import { Injectable } from '@decorators/di';
-import { IIntranetNoticePut } from '../models/intranetNotice';
+import { IIntranetNoticePut } from '../types/intranetNotice';
 import { IntranetNoticeService } from '../services/intranetNotice';
 import { intranetNoticeValidator } from '../validators/intranetNotice';
 import { IntranetNoticeEntity } from '../entities';
