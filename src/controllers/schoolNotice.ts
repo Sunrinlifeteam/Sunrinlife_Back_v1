@@ -8,6 +8,7 @@ import {
     Delete,
     Put,
     Body,
+    Params,
 } from '@decorators/express';
 import { celebrate } from 'celebrate';
 import { Injectable } from '@decorators/di';
@@ -29,14 +30,14 @@ export class SchoolNoticeController {
     }
 
     @Get('/:id')
-    get(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = this.schoolNoticeService.get(parseInt(req.params.id));
+    get(@Request() req: IRequest, @Response() res: IResponse, @Params('id') id: number) {
+        const result = this.schoolNoticeService.get(id);
         return res.status(200).json(result);
     }
 
     @Delete('/:id')
-    remove(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = this.schoolNoticeService.remove(parseInt(req.params.id));
+    remove(@Request() req: IRequest, @Response() res: IResponse, @Params('id') id: number) {
+        const result = this.schoolNoticeService.remove(id);
         return res.status(200).json(result);
     }
 
@@ -44,10 +45,11 @@ export class SchoolNoticeController {
     edit(
         @Request() req: IRequest,
         @Response() res: IResponse,
-        @Body() body: ISchoolNoticePut
+        @Body() body: ISchoolNoticePut,
+        @Params('id') id: number
     ) {
         const result = this.schoolNoticeService.edit(
-            Object.assign({ id: parseInt(req.params.id) }, body)
+            Object.assign({ id: id }, body)
         );
         return res.status(200).json(result);
     }
