@@ -1,5 +1,3 @@
-import { isProduction } from '../constants';
-
 const format = function (name: string) {
     return `Environment ${name} is empty`;
 };
@@ -28,9 +26,6 @@ export const ENVIRONMENT_NAMES = [
 ];
 
 export default async () => {
-    console.log(
-        `Server run in ${isProduction ? 'Production' : 'Development'} mode!`
-    );
     if (!process.env.NODE_ENV) process.env.NODE_ENV = 'production';
     if (!process.env.PORT) process.env.PORT = '80';
     for (const env_name of ENVIRONMENT_NAMES) {
