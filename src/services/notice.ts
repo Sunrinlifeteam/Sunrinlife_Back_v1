@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@decorators/di';
 import logger from '../modules/logger';
 import { DeleteResult, Repository } from 'typeorm';
-import { NoticeEntity } from '../entities/notice';
+import { NoticeEntity } from '../entities/Notice';
 import { IWriteNoticeBody, INoticeListOption } from '../types/notice'
 
 @Injectable()

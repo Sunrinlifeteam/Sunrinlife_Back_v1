@@ -2,12 +2,11 @@ import { Container } from '@decorators/di';
 import { createConnection } from 'typeorm';
 import {
     AttachmentEntity,
-    IntranetNoticeEntity,
     MealEntity,
     ScheduleEntity,
-    SchoolNoticeEntity,
     UserEntity,
     UserScheduleEntity,
+    NoticeEntity,
 } from '../entities';
 import { ClubInfoEntity } from '../entities/ClubInfo';
 import logger from '../modules/logger';
@@ -26,11 +25,10 @@ export default async () => {
             AttachmentEntity,
             ClubInfoEntity,
             MealEntity,
-            IntranetNoticeEntity,
             ScheduleEntity,
-            SchoolNoticeEntity,
             UserEntity,
             UserScheduleEntity,
+            NoticeEntity,
         ],
         migrations: [],
         subscribers: [],
@@ -58,12 +56,8 @@ export default async () => {
                     useValue: connection.getRepository(UserScheduleEntity),
                 },
                 {
-                    provide: SchoolNoticeEntity,
-                    useValue: connection.getRepository(SchoolNoticeEntity),
-                },
-                {
-                    provide: IntranetNoticeEntity,
-                    useValue: connection.getRepository(IntranetNoticeEntity),
+                    provide: NoticeEntity,
+                    useValue: connection.getRepository(NoticeEntity),
                 },
                 {
                     provide: MealEntity,
