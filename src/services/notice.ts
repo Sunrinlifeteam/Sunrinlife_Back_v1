@@ -19,12 +19,13 @@ export class NoticeService {
         );
         const { type, page, count, sort } = option
         const noticeList = await this.noticeServiceRepository.find({
+            skip:(page-1)*count,
             take:count,
-            skip:page>=1 ? (page-1)*count : 0,
-            where: {
-                type: option.type!=='all' ? option.type : undefined  
-            }
+            where: type!=='all' ? {
+                type: type
+            } : undefined
         });
+        noticeList.sort(()=> sort==='old' ? 1 : -1)
         logger.debug('services.NoticeService.list', noticeList);
         return noticeList
     }

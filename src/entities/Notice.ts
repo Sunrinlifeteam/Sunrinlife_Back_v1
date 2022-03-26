@@ -17,7 +17,7 @@ export class NoticeEntity {
     id: number;
 
     @Column({ nullable: false })
-    type: 'notice' | 'intranet';
+    type: 'school' | 'intranet';
 
     @Column({ nullable: false })
     title: string;

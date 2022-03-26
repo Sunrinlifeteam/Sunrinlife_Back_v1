@@ -9,14 +9,13 @@ import {
     Delete,
     Params,
     Put,
+    Query
 } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import logger from '../modules/logger';
 import { NoticeService } from '../services/notice';
 import { IWriteNoticeBody } from '../types/notice';
 import HttpStatusCode from '../constants/HttpStatusCode';
-import { celebrate } from 'celebrate';
-import { writeValidator } from '../validators/notice';
 
 @Controller('/notice')
 @Injectable()
@@ -29,10 +28,10 @@ export class NoticeController {
     async list(
         @Request() req: IRequest,
         @Response() res: IResponse,
-        @Params('type') type: 'notice' | 'intranet' | 'all' = 'all',
-        @Params('page') page: number = 1,
-        @Params('count') count: number = 5,
-        @Params('sort') sort: 'old' | 'new' = 'new'
+        @Query('type') type: 'school' | 'intranet' | 'all' = 'all',
+        @Query('page') page: number = 1,
+        @Query('count') count: number = 5,
+        @Query('sort') sort: 'old' | 'new' = 'new'
     ) {
         const result = await this.service.list({
             type: type,
