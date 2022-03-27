@@ -42,6 +42,17 @@ export class NoticeController {
         return res.status(HttpStatusCode.OK).json(result);
     }
 
+    @Get('/:id')
+    async get(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Params() id: number
+    ) {
+        const result = await this.service.get(id);
+        if(!result) return res.status(HttpStatusCode.BAD_REQUEST).send('result not found');
+        return res.status(HttpStatusCode.OK).json(result);
+    }
+
     @Post('/')
     async write(
         @Request() req: IRequest,

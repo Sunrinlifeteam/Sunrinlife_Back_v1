@@ -11,6 +11,17 @@ export class NoticeService {
         private readonly noticeServiceRepository: Repository<NoticeEntity>
     ) {}
 
+    async get(id: number): Promise<NoticeEntity|undefined> {
+        logger.debug(
+            'called',
+            'services/notice.ts/NoticeService.get',
+            id
+        );
+        const notice = await this.noticeServiceRepository.findOne(id);
+        logger.debug('services.NoticeService.get', notice);
+        return notice;
+    }
+
     async list(option: INoticeListOption): Promise<NoticeEntity[]> {
         logger.debug(
             'called',
