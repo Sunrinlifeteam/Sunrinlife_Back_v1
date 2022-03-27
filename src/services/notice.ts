@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@decorators/di';
 import logger from '../modules/logger';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Like, Repository } from 'typeorm';
 import { NoticeEntity } from '../entities/Notice';
 import { IWriteNoticeBody, INoticeListOption } from '../types/notice'
 
@@ -28,13 +28,14 @@ export class NoticeService {
             'services/notice.ts/NoticeService.list',
             option
         );
-        const { type, page, count, sort } = option
+        const { type, page, count, sort, search } = option
         const noticeList = await this.noticeServiceRepository.find({
             skip:(page-1)*count,
             take:count,
-            where: type!=='all' ? {
-                type: type
-            } : undefined
+            where: {
+                type: type!=='all' ? type : Like('%%'),
+                title: Like(`%${search}%`)
+            }
         });
         noticeList.sort(()=> sort==='old' ? 1 : -1)
         logger.debug('services.NoticeService.list', noticeList);

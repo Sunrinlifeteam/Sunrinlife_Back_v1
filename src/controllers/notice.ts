@@ -16,6 +16,8 @@ import logger from '../modules/logger';
 import { NoticeService } from '../services/notice';
 import { IWriteNoticeBody } from '../types/notice';
 import HttpStatusCode from '../constants/HttpStatusCode';
+import { celebrate } from 'celebrate';
+import { noticeWriteValidator } from '../validators/notice';
 
 @Controller('/notice')
 @Injectable()
