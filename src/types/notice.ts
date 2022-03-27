@@ -9,4 +9,5 @@ export interface INoticeListOption {
     page: number;
     count: number;
     sort: 'old' | 'new';
+    search: string;
 }

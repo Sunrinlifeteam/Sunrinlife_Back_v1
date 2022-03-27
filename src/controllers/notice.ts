@@ -31,13 +31,15 @@ export class NoticeController {
         @Query('type') type: 'school' | 'intranet' | 'all' = 'all',
         @Query('page') page: number = 1,
         @Query('count') count: number = 5,
-        @Query('sort') sort: 'old' | 'new' = 'new'
+        @Query('sort') sort: 'old' | 'new' = 'new',
+        @Query('search') search: string = ''
     ) {
         const result = await this.service.list({
             type: type,
             page: page,
             count: count,
             sort: sort,
+            search: search
         });
         return res.status(HttpStatusCode.OK).json(result);
     }
