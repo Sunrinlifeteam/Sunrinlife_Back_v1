@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@decorators/di';
 import logger from '../modules/logger';
 import { DeleteResult, Like, Repository } from 'typeorm';
 import { NoticeEntity } from '../entities/Notice';
-import { IWriteNoticeBody, INoticeListOption } from '../types/notice'
+import { IWriteNoticeBody, INoticeListOption } from '../types/notice';
 
 @Injectable()
 export class NoticeService {
@@ -11,35 +11,27 @@ export class NoticeService {
         private readonly noticeServiceRepository: Repository<NoticeEntity>
     ) {}
 
-    async get(id: number): Promise<NoticeEntity|undefined> {
-        logger.debug(
-            'called',
-            'services/notice.ts/NoticeService.get',
-            id
-        );
+    async get(id: number): Promise<NoticeEntity | undefined> {
+        logger.debug('called', 'services/notice.ts/NoticeService.get', id);
         const notice = await this.noticeServiceRepository.findOne(id);
         logger.debug('services.NoticeService.get', notice);
         return notice;
     }
 
     async list(option: INoticeListOption): Promise<NoticeEntity[]> {
-        logger.debug(
-            'called',
-            'services/notice.ts/NoticeService.list',
-            option
-        );
-        const { type, page, count, sort, search } = option
+        logger.debug('called', 'services/notice.ts/NoticeService.list', option);
+        const { type, page, count, sort, search } = option;
         const noticeList = await this.noticeServiceRepository.find({
-            skip:(page-1)*count,
-            take:count,
+            skip: (page - 1) * count,
+            take: count,
             where: {
-                type: type!=='all' ? type : Like('%%'),
-                title: Like(`%${search}%`)
-            }
+                type: type !== 'all' ? type : Like('%%'),
+                title: Like(`%${search}%`),
+            },
         });
-        noticeList.sort(()=> sort==='old' ? 1 : -1)
+        noticeList.sort(() => (sort === 'old' ? 1 : -1));
         logger.debug('services.NoticeService.list', noticeList);
-        return noticeList
+        return noticeList;
     }
 
     async write(body: IWriteNoticeBody): Promise<NoticeEntity> {
@@ -57,7 +49,7 @@ export class NoticeService {
             {
                 ...body,
             }
-        )
+        );
     }
 
     async delete(id: number): Promise<DeleteResult> {

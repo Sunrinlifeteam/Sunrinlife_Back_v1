@@ -85,6 +85,7 @@ export async function googleOAuthHandler(
             class: userClass,
             number: +givenName.substring(3, 5),
             accountType: ACCOUNT_TYPE.STUDENT,
+            role: 0,
         };
         return done(null, user);
     }

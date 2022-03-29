@@ -10,6 +10,7 @@ export interface User {
     class: number;
     number: number;
     accountType: number;
+    role: number;
     accessToken?: string;
 }
 

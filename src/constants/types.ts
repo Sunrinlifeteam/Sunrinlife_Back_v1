@@ -1,7 +1,6 @@
 export const ACCOUNT_TYPE = {
     STUDENT: 0,
-    CLUB: 1,
-    TEACHER: 2,
+    TEACHER: 1,
 } as const;
 
 export const CLUB_TYPE = {
@@ -15,4 +14,8 @@ export const DEPARTMENT = {
     SW: 1,
     IM: 2,
     CD: 3,
+} as const;
+
+export const ROLE_FLAG = {
+    admin: 1 << 0,
 } as const;
