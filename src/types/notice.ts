@@ -4,6 +4,11 @@ export interface IWriteNoticeBody {
     content: string;
 }
 
+export interface INoticeCountOption {
+    type: 'school' | 'intranet' | 'all';
+    search: string;
+}
+
 export interface INoticeListOption {
     type: 'school' | 'intranet' | 'all';
     page: number;
