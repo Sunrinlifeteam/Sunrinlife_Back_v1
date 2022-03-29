@@ -18,6 +18,9 @@ import { IWriteNoticeBody } from '../types/notice';
 import HttpStatusCode from '../constants/HttpStatusCode';
 import { celebrate } from 'celebrate';
 import { noticeWriteValidator } from '../validators/notice';
+import { accessTokenGuard } from '../modules/passport';
+import { ErrorHandler } from '../modules/ErrorHandler';
+import { ACCOUNT_TYPE, ROLE_FLAG } from '../constants';
 
 @Controller('/notice')
 @Injectable()
@@ -60,33 +63,46 @@ export class NoticeController {
         return res.status(HttpStatusCode.OK).json(result);
     }
 
-    @Post('/')
+    @Post('/', [accessTokenGuard])
     async write(
         @Request() req: IRequest,
         @Response() res: IResponse,
         @Body() body: IWriteNoticeBody
     ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        if (req.user.role & ROLE_FLAG.admin)
+            return res.status(HttpStatusCode.UNAUTHORIZED);
         const result = await this.service.write(body);
         return res.status(HttpStatusCode.OK).json(result);
     }
 
-    @Put('/:id')
+    @Put('/:id', [accessTokenGuard])
     async update(
         @Request() req: IRequest,
         @Response() res: IResponse,
         @Params('id') id: number,
         @Body() body: IWriteNoticeBody
     ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        if (req.user.role & ROLE_FLAG.admin)
+            return res.status(HttpStatusCode.UNAUTHORIZED);
         const result = await this.service.update(id, body);
         return res.status(HttpStatusCode.OK).json(result);
     }
 
-    @Delete('/:id')
+    @Delete('/:id', [accessTokenGuard])
     async delete(
         @Request() req: IRequest,
         @Response() res: IResponse,
         @Params('id') id: number
     ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        if (req.user.role & ROLE_FLAG.admin) {
+            return res.status(HttpStatusCode.UNAUTHORIZED);
+        }
         const result = await this.service.delete(id);
         return res.status(HttpStatusCode.OK).json(result);
     }
