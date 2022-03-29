@@ -13,7 +13,7 @@ import {
 import { Injectable } from '@decorators/di';
 import { UserScheduleService } from '../services/userSchedule';
 import logger from '../modules/logger';
-import { writeValidator } from '../validators/mySchedule';
+import { writeValidator } from '../validators/userSchedule';
 import { celebrate } from 'celebrate';
 import { User as IUser } from '../types/user';
 import { accessTokenGuard } from '../modules/passport';
