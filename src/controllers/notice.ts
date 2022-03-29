@@ -9,7 +9,7 @@ import {
     Delete,
     Params,
     Put,
-    Query
+    Query,
 } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import logger from '../modules/logger';
@@ -41,7 +41,7 @@ export class NoticeController {
             page: page,
             count: count,
             sort: sort,
-            search: search
+            search: search,
         });
         return res.status(HttpStatusCode.OK).json(result);
     }
@@ -53,7 +53,10 @@ export class NoticeController {
         @Params() id: number
     ) {
         const result = await this.service.get(id);
-        if(!result) return res.status(HttpStatusCode.BAD_REQUEST).send('result not found');
+        if (!result)
+            return res
+                .status(HttpStatusCode.BAD_REQUEST)
+                .send('result not found');
         return res.status(HttpStatusCode.OK).json(result);
     }
 
@@ -70,11 +73,11 @@ export class NoticeController {
     @Put('/:id')
     async update(
         @Request() req: IRequest,
-        @Response() res : IResponse,
+        @Response() res: IResponse,
         @Params('id') id: number,
         @Body() body: IWriteNoticeBody
     ) {
-        const result = await this.service.update(id,body);
+        const result = await this.service.update(id, body);
         return res.status(HttpStatusCode.OK).json(result);
     }
 
