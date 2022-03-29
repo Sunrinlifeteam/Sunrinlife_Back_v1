@@ -58,7 +58,8 @@ export class UserScheduleController {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service.update(req.user, id, body);
-        return res.status(HttpStatusCode.NO_CONTENT).json(result);
+        logger.debug('controllers/userSchedule.ts', 'update', req.user, result);
+        return res.sendStatus(HttpStatusCode.NO_CONTENT);
     }
 
     @Delete('/:id', [accessTokenGuard])
@@ -70,6 +71,7 @@ export class UserScheduleController {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service.delete(req.user, id);
-        return res.status(HttpStatusCode.NO_CONTENT).json(result);
+        logger.debug('controllers/userSchedule.ts', 'delete', req.user, result);
+        return res.sendStatus(HttpStatusCode.NO_CONTENT);
     }
 }
