@@ -76,7 +76,7 @@ export class NoticeController {
         return res.status(HttpStatusCode.OK).json(result);
     }
 
-    @Post('/', [accessTokenGuard])
+    @Post('/', [accessTokenGuard, celebrate(noticeWriteValidator)])
     async write(
         @Request() req: IRequest,
         @Response() res: IResponse,
@@ -90,7 +90,7 @@ export class NoticeController {
         return res.status(HttpStatusCode.OK).json(result);
     }
 
-    @Put('/:id', [accessTokenGuard])
+    @Put('/:id', [accessTokenGuard, celebrate(noticeWriteValidator)])
     async update(
         @Request() req: IRequest,
         @Response() res: IResponse,
