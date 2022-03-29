@@ -8,6 +8,6 @@ export interface INoticeListOption {
     type: 'school' | 'intranet' | 'all';
     page: number;
     count: number;
-    sort: 'old' | 'new';
+    sort: 'ASC' | 'DESC';
     search: string;
 }

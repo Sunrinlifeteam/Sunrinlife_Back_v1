@@ -36,7 +36,7 @@ export class NoticeController {
         @Query('type') type: 'school' | 'intranet' | 'all' = 'all',
         @Query('page') page: number = 1,
         @Query('count') count: number = 5,
-        @Query('sort') sort: 'old' | 'new' = 'new',
+        @Query('sort') sort: 'ASC' | 'DESC' = 'DESC',
         @Query('search') search: string = ''
     ) {
         const result = await this.service.list({
@@ -103,6 +103,13 @@ export class NoticeController {
         if (req.user.role & ROLE_FLAG.admin) {
             return res.status(HttpStatusCode.UNAUTHORIZED);
         }
+        logger.info(
+            'Notice with id "',
+            id,
+            '"has been deleted by "',
+            req.user.username,
+            '".'
+        );
         const result = await this.service.delete(id);
         return res.status(HttpStatusCode.OK).json(result);
     }
