@@ -93,13 +93,18 @@ export class AuthController {
             await this.authService.createAndGetRefreshTokenByUserId(
                 savedUser!.id
             );
-        res.cookie(
-            REFRESH_TOKEN_COOKIE_KEY,
-            refreshToken,
-            REFRESH_TOKEN_COOKIE_OPTION
-        );
+        // res.cookie(
+        //     REFRESH_TOKEN_COOKIE_KEY,
+        //     refreshToken,
+        //     REFRESH_TOKEN_COOKIE_OPTION
+        // );
+        // return res.redirect(
+        //     process.env.FRONTEND_URL! + (isNewUser ? '/register' : '')
+        // );
         return res.redirect(
-            process.env.FRONTEND_URL! + (isNewUser ? '/register' : '')
+            process.env.FRONTEND_URL! +
+                (isNewUser ? '/register' : '/login/token') +
+                `?refresh=${refreshToken}`
         );
     }
 
