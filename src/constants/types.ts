@@ -17,5 +17,5 @@ export const DEPARTMENT = {
 } as const;
 
 export const ROLE_FLAG = {
-    admin: 1 << 0,
+    ADMIN: 1 << 0,
 } as const;
