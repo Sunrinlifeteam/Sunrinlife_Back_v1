@@ -2,7 +2,11 @@ import { Inject, Injectable } from '@decorators/di';
 import logger from '../modules/logger';
 import { DeleteResult, Like, Repository } from 'typeorm';
 import { NoticeEntity } from '../entities/Notice';
-import { IWriteNoticeBody, INoticeListOption } from '../types/notice';
+import {
+    IWriteNoticeBody,
+    INoticeListOption,
+    INoticeCountOption,
+} from '../types/notice';
 
 @Injectable()
 export class NoticeService {
@@ -16,6 +20,16 @@ export class NoticeService {
         const notice = await this.noticeServiceRepository.findOne(id);
         logger.debug('services.NoticeService.get', notice);
         return notice;
+    }
+
+    async count(option: INoticeCountOption): Promise<number> {
+        const { type, search } = option;
+        return await this.noticeServiceRepository.count({
+            where: {
+                type: type !== 'all' ? type : Like('%%'),
+                title: Like(`%${search}%`),
+            },
+        });
     }
 
     async list(option: INoticeListOption): Promise<NoticeEntity[]> {

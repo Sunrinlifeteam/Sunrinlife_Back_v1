@@ -49,6 +49,19 @@ export class NoticeController {
         return res.status(HttpStatusCode.OK).json(result);
     }
 
+    @Get('/count')
+    async count(
+        @Response() res: IResponse,
+        @Query('type') type: 'school' | 'intranet' | 'all' = 'all',
+        @Query('search') search: string = ''
+    ) {
+        const result = await this.service.count({
+            type,
+            search,
+        });
+        return res.status(HttpStatusCode.OK).json(result);
+    }
+
     @Get('/:id')
     async get(
         @Request() req: IRequest,
@@ -71,7 +84,7 @@ export class NoticeController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        if (req.user.role & ROLE_FLAG.admin)
+        if (req.user.role & ROLE_FLAG.ADMIN)
             return res.status(HttpStatusCode.UNAUTHORIZED);
         const result = await this.service.write(body);
         return res.status(HttpStatusCode.OK).json(result);
@@ -86,7 +99,7 @@ export class NoticeController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        if (req.user.role & ROLE_FLAG.admin)
+        if (req.user.role & ROLE_FLAG.ADMIN)
             return res.status(HttpStatusCode.UNAUTHORIZED);
         const result = await this.service.update(id, body);
         return res.status(HttpStatusCode.OK).json(result);
@@ -100,7 +113,7 @@ export class NoticeController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        if (req.user.role & ROLE_FLAG.admin) {
+        if (req.user.role & ROLE_FLAG.ADMIN) {
             return res.status(HttpStatusCode.UNAUTHORIZED);
         }
         logger.info(
