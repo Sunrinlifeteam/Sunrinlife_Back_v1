@@ -22,14 +22,16 @@ export class NoticeService {
         logger.debug('called', 'services/notice.ts/NoticeService.list', option);
         const { type, page, count, sort, search } = option;
         const noticeList = await this.noticeServiceRepository.find({
-            skip: (page - 1) * count,
-            take: count,
+            order: {
+                created: sort,
+            },
             where: {
                 type: type !== 'all' ? type : Like('%%'),
                 title: Like(`%${search}%`),
             },
+            skip: (page - 1) * count,
+            take: count,
         });
-        noticeList.sort(() => (sort === 'old' ? 1 : -1));
         logger.debug('services.NoticeService.list', noticeList);
         return noticeList;
     }
