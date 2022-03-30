@@ -52,6 +52,9 @@ export class UserEntity {
     @Column({ type: 'int', default: 0, nullable: false })
     accountType: number;
 
+    @Column({ type: 'bigint', default: 0, nullable: false })
+    role: number;
+
     @Column({ length: 200, nullable: true, select: false })
     refreshToken: string;
 

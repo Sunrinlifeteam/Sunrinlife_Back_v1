@@ -14,7 +14,7 @@ export class NeisOpenAPI {
     static async SchoolSchedule(start: DateTime, end: DateTime) {
         const scheduleRepository =
             Container.get<Repository<ScheduleEntity>>(ScheduleEntity);
-        const result = await this.parser.fetchByMonthRange(
+        const result = await this.parser.fetchByRange(
             DefaultParameterPreset,
             {
                 SD_SCHUL_CODE: '',
