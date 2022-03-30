@@ -143,6 +143,18 @@ export class SchoolSchedule {
         reqParams.AA_TO_YMD = end.toFormat('yyyyMM');
         return await this.fetchJSON(defParams, reqParams);
     }
+    async fetchByMonthFullRange(
+        defParams: DefaultParameter,
+        reqParams: SchoolScheduleParameter,
+        start: DateTime | Date,
+        end: DateTime | Date
+    ) {
+        if (start instanceof Date) start = DateTime.fromJSDate(start);
+        if (end instanceof Date) end = DateTime.fromJSDate(end);
+        reqParams.AA_FROM_YMD = start.startOf('month').toFormat('yyyyMMdd');
+        reqParams.AA_TO_YMD = end.endOf('month').toFormat('yyyyMMdd');
+        return await this.fetchJSON(defParams, reqParams);
+    }
     async fetchByRange(
         defParams: DefaultParameter,
         reqParams: SchoolScheduleParameter,
