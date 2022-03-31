@@ -21,6 +21,7 @@ import { noticeWriteValidator } from '../validators/notice';
 import { accessTokenGuard } from '../modules/passport';
 import { ErrorHandler } from '../modules/ErrorHandler';
 import { ACCOUNT_TYPE, ROLE_FLAG } from '../constants';
+import permission from '../modules/permission';
 
 @Controller('/notice')
 @Injectable()
@@ -76,7 +77,11 @@ export class NoticeController {
         return res.status(HttpStatusCode.OK).json(result);
     }
 
-    @Post('/', [accessTokenGuard, celebrate(noticeWriteValidator)])
+    @Post('/', [
+        accessTokenGuard,
+        celebrate(noticeWriteValidator),
+        permission([ROLE_FLAG.ADMIN]),
+    ])
     async write(
         @Request() req: IRequest,
         @Response() res: IResponse,
@@ -84,13 +89,15 @@ export class NoticeController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        if (!(req.user.role & ROLE_FLAG.ADMIN))
-            return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
         const result = await this.service.write(body);
         return res.status(HttpStatusCode.OK).json(result);
     }
 
-    @Put('/:id', [accessTokenGuard, celebrate(noticeWriteValidator)])
+    @Put('/:id', [
+        accessTokenGuard,
+        celebrate(noticeWriteValidator),
+        permission([ROLE_FLAG.ADMIN]),
+    ])
     async update(
         @Request() req: IRequest,
         @Response() res: IResponse,
@@ -99,13 +106,11 @@ export class NoticeController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        if (!(req.user.role & ROLE_FLAG.ADMIN))
-            return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
         const result = await this.service.update(id, body);
         return res.status(HttpStatusCode.OK).json(result);
     }
 
-    @Delete('/:id', [accessTokenGuard])
+    @Delete('/:id', [accessTokenGuard, permission([ROLE_FLAG.ADMIN])])
     async delete(
         @Request() req: IRequest,
         @Response() res: IResponse,
@@ -113,8 +118,6 @@ export class NoticeController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        if (!(req.user.role & ROLE_FLAG.ADMIN))
-            return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
         logger.info(
             'Notice with id "',
             id,
