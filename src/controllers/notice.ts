@@ -99,8 +99,8 @@ export class NoticeController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        if (req.user.role & ROLE_FLAG.ADMIN)
-            return res.status(HttpStatusCode.UNAUTHORIZED);
+        if (!(req.user.role & ROLE_FLAG.ADMIN))
+            return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
         const result = await this.service.update(id, body);
         return res.status(HttpStatusCode.OK).json(result);
     }
@@ -113,9 +113,8 @@ export class NoticeController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        if (req.user.role & ROLE_FLAG.ADMIN) {
-            return res.status(HttpStatusCode.UNAUTHORIZED);
-        }
+        if (!(req.user.role & ROLE_FLAG.ADMIN))
+            return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
         logger.info(
             'Notice with id "',
             id,
