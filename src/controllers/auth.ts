@@ -63,6 +63,7 @@ export class AuthController {
         @Response() res: IResponse
     ) {
         try {
+            if (!user.clubInfo) delete user.clubInfo;
             const updatedUser = await this.authService.updateAndGetUser({
                 ...user,
                 id: req.user.id,
