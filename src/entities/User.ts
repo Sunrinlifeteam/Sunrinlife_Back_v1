@@ -19,6 +19,7 @@ export const USER_SELECT: (keyof UserEntity)[] = [
     'grade',
     'class',
     'number',
+    'role',
     'accountType',
     'description',
     'githubLink',
