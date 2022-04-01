@@ -14,6 +14,13 @@ export interface User {
     accessToken?: string;
 }
 
+export interface UserUpdateBody {
+    description?: string;
+    image?: string;
+    githubLink?: string;
+    clubInfo?: number;
+}
+
 export { User as IUser };
 
 export default User;
