@@ -43,37 +43,6 @@ export class AuthController {
         return res.status(HttpStatusCode.OK).json('valid');
     }
 
-    @Get('/user', [accessTokenGuard])
-    async getUser(@Request() req: any, @Response() res: IResponse) {
-        return res.status(HttpStatusCode.OK).json(req.user);
-    }
-
-    @Get('/user/club', [accessTokenGuard])
-    async getUserIncludeClub(@Request() req: any, @Response() res: IResponse) {
-        const user = await this.authService.getUserById(req.user.id, [
-            'clubInfo',
-        ]);
-        return res.status(HttpStatusCode.OK).json(user);
-    }
-
-    @Put('/user', [accessTokenGuard, celebrate(updateUserValidator)])
-    async updateUser(
-        @Request() req: any,
-        @Body() user: any,
-        @Response() res: IResponse
-    ) {
-        try {
-            if (!user.clubInfo) delete user.clubInfo;
-            const updatedUser = await this.authService.updateAndGetUser({
-                ...user,
-                id: req.user.id,
-            });
-            return res.status(HttpStatusCode.CREATED).json(updatedUser);
-        } catch (_err) {
-            return res.status(HttpStatusCode.CONFLICT).json('error');
-        }
-    }
-
     @Get('/google', [
         passport.authenticate('google', { scope: ['email', 'profile'] }),
     ])

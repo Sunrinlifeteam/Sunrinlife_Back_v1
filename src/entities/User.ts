@@ -26,6 +26,8 @@ export const USER_SELECT: (keyof UserEntity)[] = [
     'image',
 ];
 
+export const USER_RELATIONS: (keyof UserEntity)[] = ['clubInfo'];
+
 @Entity('user')
 @Injectable()
 export class UserEntity {
