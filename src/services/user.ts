@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@decorators/di';
 import { Repository } from 'typeorm';
-import { UserEntity, USER_RELATIONS, USER_SELECT } from '../entities';
+import { UserEntity, USER_RELATIONS } from '../entities';
 
 @Injectable()
 export class UserService {
