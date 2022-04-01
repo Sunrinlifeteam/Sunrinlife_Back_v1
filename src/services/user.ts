@@ -10,9 +10,7 @@ export class UserService {
     ) {}
 
     async fetch(id: string) {
-        return await this.userRepository.findOne({
-            where: { id },
-        });
+        return await this.userRepository.findOne(id);
     }
 
     async fetchWithRelations(
@@ -26,6 +24,6 @@ export class UserService {
     }
 
     async update(id: string, data: any) {
-        return await this.userRepository.update({ id }, data);
+        return await this.userRepository.update(id, data);
     }
 }
