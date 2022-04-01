@@ -39,6 +39,27 @@ export class UserController {
         return res.status(HttpStatusCode.OK).json(user);
     }
 
+    @Get('/full')
+    async getUserFullData(
+        @Request() req: IRequest,
+        @Response() res: IResponse
+    ) {
+        if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
+        const user = await this.userService.fetchWithRelations(req.user.id);
+        return res.status(HttpStatusCode.OK).json(user);
+    }
+
+    @Get('/:id/full')
+    async getOtherUserFullData(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Params('id') id: string
+    ) {
+        if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
+        const user = await this.userService.fetchWithRelations(id);
+        return res.status(HttpStatusCode.OK).json(user);
+    }
+
     @Get('/club')
     async getUserIncludeClub(
         @Request() req: IRequest,
