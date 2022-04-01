@@ -35,7 +35,7 @@ export class UserEntity {
     @Column({ nullable: false, unique: true })
     email: string;
 
-    @Column({ nullable: false, unique: false, length: 10 })
+    @Column({ nullable: false, length: 10 })
     username: string;
 
     @Column({ nullable: false })
