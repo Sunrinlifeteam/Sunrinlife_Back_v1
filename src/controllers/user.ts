@@ -28,14 +28,15 @@ export class UserController {
         return res.status(HttpStatusCode.OK).json(req.user);
     }
 
-    @Get('/:id')
-    async getOtherUser(
+    @Get('/club')
+    async getUserIncludeClub(
         @Request() req: IRequest,
-        @Response() res: IResponse,
-        @Params('id') id: string
+        @Response() res: IResponse
     ) {
         if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
-        const user = await this.userService.fetch(req.user.id);
+        const user = await this.userService.fetchWithRelations(req.user.id, [
+            'clubInfo',
+        ]);
         return res.status(HttpStatusCode.OK).json(user);
     }
 
@@ -49,26 +50,14 @@ export class UserController {
         return res.status(HttpStatusCode.OK).json(user);
     }
 
-    @Get('/:id/full')
-    async getOtherUserFullData(
+    @Get('/:id')
+    async getOtherUser(
         @Request() req: IRequest,
         @Response() res: IResponse,
         @Params('id') id: string
     ) {
         if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
-        const user = await this.userService.fetchWithRelations(id);
-        return res.status(HttpStatusCode.OK).json(user);
-    }
-
-    @Get('/club')
-    async getUserIncludeClub(
-        @Request() req: IRequest,
-        @Response() res: IResponse
-    ) {
-        if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
-        const user = await this.userService.fetchWithRelations(req.user.id, [
-            'clubInfo',
-        ]);
+        const user = await this.userService.fetch(id);
         return res.status(HttpStatusCode.OK).json(user);
     }
 
@@ -79,9 +68,20 @@ export class UserController {
         @Params('id') id: string
     ) {
         if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
-        const user = await this.userService.fetchWithRelations(req.user.id, [
+        const user = await this.userService.fetchWithRelations(id, [
             'clubInfo',
         ]);
+        return res.status(HttpStatusCode.OK).json(user);
+    }
+
+    @Get('/:id/full')
+    async getOtherUserFullData(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Params('id') id: string
+    ) {
+        if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
+        const user = await this.userService.fetchWithRelations(id);
         return res.status(HttpStatusCode.OK).json(user);
     }
 
