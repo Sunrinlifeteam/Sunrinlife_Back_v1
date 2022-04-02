@@ -7,6 +7,8 @@ import {
     UpdateDateColumn,
     ManyToOne,
     JoinColumn,
+    ManyToMany,
+    JoinTable,
 } from 'typeorm';
 import { UserDepartment } from '../types/user';
 import { ClubInfoEntity } from './ClubInfo';
@@ -26,7 +28,7 @@ export const USER_SELECT: (keyof UserEntity)[] = [
     'image',
 ];
 
-export const USER_RELATIONS: (keyof UserEntity)[] = ['clubInfo'];
+export const USER_RELATIONS: (keyof UserEntity)[] = ['clubInfo', 'subClubInfo'];
 
 @Entity('user')
 @Injectable()
@@ -79,6 +81,10 @@ export class UserEntity {
     @ManyToOne(() => ClubInfoEntity, (clubInfo) => clubInfo.users)
     @JoinColumn()
     clubInfo: ClubInfoEntity;
+
+    @ManyToMany(() => ClubInfoEntity)
+    @JoinTable()
+    subClubInfo: ClubInfoEntity[];
 
     @CreateDateColumn()
     createdDate: Date;

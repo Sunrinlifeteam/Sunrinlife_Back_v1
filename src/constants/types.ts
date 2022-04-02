@@ -1,8 +1,11 @@
+export type valueOf<T> = T[keyof T];
+
 export const ACCOUNT_TYPE = {
     STUDENT: 0,
     TEACHER: 1,
 } as const;
 
+export type CLUB_TYPE_VALUES = typeof CLUB_TYPE[keyof typeof CLUB_TYPE];
 export const CLUB_TYPE = {
     MAJOR: 0,
     MINOR: 1,

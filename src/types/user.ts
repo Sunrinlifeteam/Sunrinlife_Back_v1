@@ -19,6 +19,7 @@ export interface UserUpdateBody {
     image?: string;
     githubLink?: string;
     clubInfo?: number;
+    subClubInfo?: number[];
 }
 
 export { User as IUser };
