@@ -28,7 +28,7 @@ export class ClubInfoEntity {
     @Column({ nullable: false })
     name: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: false, type: 'varchar', length: 500 })
     description: string;
 
     @Column({ nullable: true })
