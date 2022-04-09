@@ -12,7 +12,7 @@ import { AttachmentEntity } from './Attachment';
 
 @Entity('blindboard')
 @Injectable()
-export class BlindBoard {
+export class BlindBoardEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

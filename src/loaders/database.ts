@@ -8,6 +8,8 @@ import {
     UserScheduleEntity,
     NoticeEntity,
 } from '../entities';
+import { BlindBoardEntity } from '../entities/BlindBoard';
+import { BoardEntity } from '../entities/Board';
 import { ClubInfoEntity } from '../entities/ClubInfo';
 import logger from '../modules/logger';
 
@@ -29,6 +31,8 @@ export default async () => {
             UserEntity,
             UserScheduleEntity,
             NoticeEntity,
+            BoardEntity,
+            BlindBoardEntity,
         ],
         migrations: [],
         subscribers: [],

@@ -15,7 +15,7 @@ import { UserEntity } from './User';
 
 @Entity('board')
 @Injectable()
-export class Board {
+export class BoardEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
