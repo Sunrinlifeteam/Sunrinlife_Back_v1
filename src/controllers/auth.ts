@@ -5,6 +5,8 @@ import {
     Controller,
     Get,
     Delete,
+    Put,
+    Body,
 } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import passport from 'passport';
@@ -16,6 +18,8 @@ import {
     REFRESH_TOKEN_COOKIE_KEY,
     REFRESH_TOKEN_COOKIE_OPTION,
 } from '../constants';
+import { celebrate } from 'celebrate';
+import { updateUserValidator } from '../validators/user';
 
 @Controller('/auth')
 @Injectable()
@@ -29,18 +33,14 @@ export class AuthController {
         const { id } = req.user;
         if (!id)
             return res.status(HttpStatusCode.UNAUTHORIZED).json('Unauthorized');
-        const accessToken = this.authService.createAccessTokenByUserId(id);
+        const accessToken =
+            this.authService.createAndGetAccessTokenByUserId(id);
         return res.status(HttpStatusCode.OK).json({ accessToken });
     }
 
     @Get('/valid', [accessTokenGuard])
     async checkAccessTokenIsValid(@Response() res: IResponse) {
         return res.status(HttpStatusCode.OK).json('valid');
-    }
-
-    @Get('/user', [accessTokenGuard])
-    async getUser(@Request() req: any, @Response() res: IResponse) {
-        return res.status(HttpStatusCode.OK).json(req.user);
     }
 
     @Get('/google', [
@@ -56,18 +56,21 @@ export class AuthController {
         if (!user) return res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
         const { email } = user;
         let savedUser = await this.authService.getUserByEmail(email);
-        if (!savedUser)
+        const isNewUser = !savedUser;
+        if (isNewUser)
             savedUser = await this.authService.createAndGetUser(user);
         const refreshToken =
             await this.authService.createAndGetRefreshTokenByUserId(
-                savedUser.id
+                savedUser!.id
             );
         res.cookie(
             REFRESH_TOKEN_COOKIE_KEY,
             refreshToken,
             REFRESH_TOKEN_COOKIE_OPTION
         );
-        return res.redirect(process.env.FRONTEND_URL!);
+        return res.redirect(
+            process.env.FRONTEND_URL! + (isNewUser ? '/register' : '')
+        );
     }
 
     @Delete('/', [refreshTokenGuard])

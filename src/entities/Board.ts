@@ -1,18 +1,21 @@
 import { Injectable } from '@decorators/di';
 import {
-    Entity,
     Column,
-    PrimaryGeneratedColumn,
     CreateDateColumn,
-    UpdateDateColumn,
-    ManyToMany,
+    Entity,
+    JoinColumn,
     JoinTable,
+    ManyToMany,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
 import { AttachmentEntity } from './Attachment';
+import { UserEntity } from './User';
 
-@Entity('interaction_notice')
+@Entity('board')
 @Injectable()
-export class IntranetNoticeEntity {
+export class BoardEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -27,6 +30,10 @@ export class IntranetNoticeEntity {
 
     @UpdateDateColumn()
     updated: Date;
+
+    @ManyToOne(() => UserEntity)
+    @JoinColumn()
+    author: UserEntity;
 
     @ManyToMany(() => AttachmentEntity)
     @JoinTable()

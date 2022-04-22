@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@decorators/di';
 import { Repository } from 'typeorm';
 import { ClubInfoEntity, CLUB_SELECT } from '../entities/ClubInfo';
-import { IClubInfoBody } from '../models/clubInfo';
+import { IClubInfoBody } from '../types/clubInfo';
 
 @Injectable()
 export class ClubInfoService {

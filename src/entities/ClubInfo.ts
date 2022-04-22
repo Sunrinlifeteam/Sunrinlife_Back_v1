@@ -1,5 +1,13 @@
 import { Injectable } from '@decorators/di';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    ManyToMany,
+    JoinTable,
+} from 'typeorm';
+import { CLUB_TYPE_VALUES } from '../constants';
+import { UserEntity } from './User';
 
 export const CLUB_SELECT: (keyof ClubInfoEntity)[] = [
     'name',
@@ -27,7 +35,7 @@ export class ClubInfoEntity {
     @Column({ nullable: false })
     name: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: false, type: 'varchar', length: 500 })
     description: string;
 
     @Column({ nullable: true })
@@ -61,8 +69,12 @@ export class ClubInfoEntity {
     department: number;
 
     @Column({ type: 'int', nullable: false })
-    type: number;
+    type: CLUB_TYPE_VALUES;
 
     @Column({ type: 'text', nullable: true })
     curriculum: string;
+
+    @ManyToMany(() => UserEntity)
+    @JoinTable()
+    users: UserEntity[];
 }

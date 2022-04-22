@@ -1,19 +1,23 @@
-/* eslint-disable no-unused-vars */
 import { Injectable } from '@decorators/di';
 import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
     ManyToMany,
     JoinTable,
 } from 'typeorm';
 import { AttachmentEntity } from './Attachment';
 
-@Entity('school_notice')
+@Entity('notice')
 @Injectable()
-export class SchoolNoticeEntity {
+export class NoticeEntity {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Column({ nullable: false })
+    type: 'school' | 'intranet';
 
     @Column({ nullable: false })
     title: string;
@@ -21,8 +25,11 @@ export class SchoolNoticeEntity {
     @Column({ nullable: false })
     content: string;
 
-    @Column({ nullable: false })
+    @CreateDateColumn()
     created: Date;
+
+    @UpdateDateColumn()
+    updated: Date;
 
     @ManyToMany(() => AttachmentEntity)
     @JoinTable()

@@ -10,7 +10,16 @@ export interface User {
     class: number;
     number: number;
     accountType: number;
+    role: number;
     accessToken?: string;
+}
+
+export interface UserUpdateBody {
+    description?: string;
+    image?: string;
+    githubLink?: string;
+    clubInfo?: number;
+    subClubInfo?: number[];
 }
 
 export { User as IUser };
