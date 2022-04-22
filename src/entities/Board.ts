@@ -10,6 +10,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import * as Board from '../types/board';
 import { AttachmentEntity } from './Attachment';
 import { UserEntity } from './User';
 
@@ -25,6 +26,9 @@ export class BoardEntity {
     @Column({ nullable: false })
     content: string;
 
+    @Column({ nullable: false, default: Board.Type.anonymous })
+    type: number;
+
     @CreateDateColumn()
     created: Date;
 
@@ -33,7 +37,7 @@ export class BoardEntity {
 
     @ManyToOne(() => UserEntity)
     @JoinColumn()
-    author: UserEntity;
+    author?: UserEntity;
 
     @ManyToMany(() => AttachmentEntity)
     @JoinTable()

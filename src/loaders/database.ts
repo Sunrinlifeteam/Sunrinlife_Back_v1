@@ -7,10 +7,9 @@ import {
     UserEntity,
     UserScheduleEntity,
     NoticeEntity,
+    ClubInfoEntity,
+    BoardEntity,
 } from '../entities';
-import { BlindBoardEntity } from '../entities/BlindBoard';
-import { BoardEntity } from '../entities/Board';
-import { ClubInfoEntity } from '../entities/ClubInfo';
 import logger from '../modules/logger';
 
 export default async () => {
@@ -32,7 +31,6 @@ export default async () => {
             UserScheduleEntity,
             NoticeEntity,
             BoardEntity,
-            BlindBoardEntity,
         ],
         migrations: [],
         subscribers: [],

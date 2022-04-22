@@ -9,10 +9,8 @@ export interface INoticeCountOption {
     search: string;
 }
 
-export interface INoticeListOption {
-    type: 'school' | 'intranet' | 'all';
+export interface INoticeListOption extends INoticeCountOption {
     page: number;
     count: number;
     sort: 'ASC' | 'DESC';
-    search: string;
 }
