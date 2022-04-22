@@ -21,7 +21,6 @@ import * as Board from '../types/board';
 import { updateValidator, writeValidator } from '../validators/board';
 
 @Controller('/board')
-@Controller('/community')
 @Injectable()
 export class BoardController {
     constructor(private readonly service: BoardService) {}
