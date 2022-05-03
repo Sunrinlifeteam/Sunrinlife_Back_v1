@@ -10,7 +10,7 @@ import {
 } from '@decorators/express';
 import { celebrate } from 'celebrate';
 import { Request as IRequest, Response as IResponse } from 'express';
-import { ROLE_FLAG } from '../constants';
+import { CLUB_TYPE, ROLE_FLAG } from '../constants';
 import HttpStatusCode from '../constants/HttpStatusCode';
 import { accessTokenGuard } from '../modules/passport';
 import permission from '../modules/permission';
@@ -93,10 +93,24 @@ export class UserController {
     ) {
         try {
             if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
-            if (!user.clubInfo) delete user.clubInfo;
+            if (user.clubInfo == 0) user.clubInfo = undefined;
+            if (user.clubInfo) {
+                const type = await this.userService.getClubType(user.clubInfo);
+                if (type == undefined || type == CLUB_TYPE.AUTONOMY)
+                    user.clubInfo = undefined;
+            }
+            if (user.subClubInfo) {
+                await this.userService.updateSubClub(
+                    req.user.id,
+                    user.subClubInfo
+                );
+                delete user.subClubInfo;
+            }
+            console.log(user);
             await this.userService.update(req.user.id, user);
             return res.sendStatus(HttpStatusCode.NO_CONTENT);
         } catch (_err) {
+            console.log(_err);
             return res.status(HttpStatusCode.CONFLICT).json('error');
         }
     }

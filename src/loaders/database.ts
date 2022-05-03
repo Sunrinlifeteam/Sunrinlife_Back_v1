@@ -7,8 +7,9 @@ import {
     UserEntity,
     UserScheduleEntity,
     NoticeEntity,
+    ClubInfoEntity,
+    BoardEntity,
 } from '../entities';
-import { ClubInfoEntity } from '../entities/ClubInfo';
 import logger from '../modules/logger';
 
 export default async () => {
@@ -29,6 +30,7 @@ export default async () => {
             UserEntity,
             UserScheduleEntity,
             NoticeEntity,
+            BoardEntity,
         ],
         migrations: [],
         subscribers: [],
