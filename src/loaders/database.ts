@@ -65,6 +65,10 @@ export default async () => {
                     provide: MealEntity,
                     useValue: connection.getRepository(MealEntity),
                 },
+                {
+                    provide: BoardEntity,
+                    useValue: connection.getRepository(BoardEntity),
+                },
             ]);
             logger.log('Database Connected!');
         })

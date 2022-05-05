@@ -51,7 +51,31 @@ export class BoardController {
                 content,
                 type,
             })
-            .catch(() => res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR));
+            .catch(
+                (err) => (
+                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
+                    console.log(err)
+                )
+            );
+        return res.status(HttpStatusCode.OK).json(result);
+    }
+
+    @Get('/:id', [accessTokenGuard])
+    async getOne(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        const result = await this.service
+            .findById(id)
+            .catch(
+                () => (err: any) => (
+                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
+                    console.log(err)
+                )
+            );
         return res.status(HttpStatusCode.OK).json(result);
     }
 
@@ -65,7 +89,12 @@ export class BoardController {
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service
             .write(req.user, body)
-            .catch(() => res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR));
+            .catch(
+                () => (err: any) => (
+                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
+                    console.log(err)
+                )
+            );
         return res.status(HttpStatusCode.CREATED).json(result);
     }
 
@@ -80,7 +109,12 @@ export class BoardController {
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service
             .update(req.user, id, body)
-            .catch(() => res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR));
+            .catch(
+                () => (err: any) => (
+                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
+                    console.log(err)
+                )
+            );
         return res.sendStatus(HttpStatusCode.NO_CONTENT);
     }
 
@@ -94,7 +128,12 @@ export class BoardController {
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service
             .delete(req.user, id)
-            .catch(() => res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR));
+            .catch(
+                () => (err: any) => (
+                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
+                    console.log(err)
+                )
+            );
         return res.sendStatus(HttpStatusCode.NO_CONTENT);
     }
 }
