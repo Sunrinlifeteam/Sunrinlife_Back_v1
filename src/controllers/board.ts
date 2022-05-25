@@ -51,7 +51,9 @@ export class BoardController {
                 content,
                 type,
             })
-            .catch(() => res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR));
+            .catch(() => {
+                return res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
+            });
         return res.status(HttpStatusCode.OK).json(result);
     }
 
