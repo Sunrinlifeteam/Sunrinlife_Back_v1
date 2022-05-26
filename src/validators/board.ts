@@ -5,7 +5,7 @@ export const writeValidator = {
         title: Joi.string().required(),
         content: Joi.string().required(),
         type: Joi.number().required(),
-        attachments: Joi.array().items(Joi.number()).required(),
+        attachments: Joi.array().items(Joi.number()).optional(),
     }),
 };
 
