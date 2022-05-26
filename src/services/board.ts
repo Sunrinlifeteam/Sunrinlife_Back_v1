@@ -81,8 +81,12 @@ export class BoardService {
     async update(userData: IUser, id: number, body: Partial<Board.Body>) {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
+        const previousArticleData = await this.boardRepository.findOne(id);
+        if (!previousArticleData) throw new Error('Article not found');
         const attachments = await this.attachmentRepository.findByIds(
-            body.attachments || []
+            body.attachments === undefined
+                ? previousArticleData.attachment
+                : body.attachments
         );
         return await this.boardRepository.update(
             {
@@ -90,9 +94,18 @@ export class BoardService {
                 author: user,
             },
             {
-                title: body.title,
-                content: body.content,
-                type: body.type,
+                title:
+                    body.title === undefined
+                        ? previousArticleData.title
+                        : body.title,
+                content:
+                    body.content === undefined
+                        ? previousArticleData.content
+                        : body.content,
+                type:
+                    body.type === undefined
+                        ? previousArticleData.type
+                        : body.type,
                 attachment: attachments,
                 author: user,
             }
