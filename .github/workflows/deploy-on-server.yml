@@ -27,7 +27,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Deploy
+      - name: pulling & publishing
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.REMOTE_IP }}
@@ -37,5 +37,5 @@ jobs:
           passphrase: ${{ secrets.REMOTE_SSH_PASSPHRASE }}
           script: |
             cd Sunrinlife_Docker/
-            docker-compose pull backend
-            docker-compose up -d ${{ inputs.docker-name }}
+            docker-compose pull ${{ github.event.inputs.docker-name }}
+            docker-compose up -d ${{ github.event.inputs.docker-name }}
