@@ -34,6 +34,7 @@ jobs:
           username: ${{ secrets.REMOTE_SSH_ID }}
           key: ${{ secrets.REMOTE_SSH_KEY }}
           port: ${{ secrets.REMOTE_SSH_PORT }}
+          passphrase: ${{ secrets.REMOTE_SSH_PASSPHRASE }}
           script: |
             cd Sunrinlife_Docker/
             docker-compose pull backend
