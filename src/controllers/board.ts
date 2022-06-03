@@ -115,7 +115,7 @@ export class BoardController {
                     console.log(err)
                 )
             );
-        return res.sendStatus(HttpStatusCode.OK).json(result);
+        return res.sendStatus(HttpStatusCode.NO_CONTENT);
     }
 
     @Delete('/:id', [accessTokenGuard])

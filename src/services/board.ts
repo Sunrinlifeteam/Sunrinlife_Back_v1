@@ -73,7 +73,7 @@ export class BoardService {
             content: body.content,
             type: body.type,
             attachment: attachments,
-            authorId: user,
+            author: user,
         });
         return await this.boardRepository.save(board);
     }
@@ -91,7 +91,7 @@ export class BoardService {
         return await this.boardRepository.update(
             {
                 id,
-                authorId: user,
+                author: user,
             },
             {
                 title:
@@ -107,7 +107,7 @@ export class BoardService {
                         ? previousArticleData.type
                         : body.type,
                 attachment: attachments,
-                authorId: user,
+                author: user,
             }
         );
     }
@@ -117,7 +117,7 @@ export class BoardService {
         if (!user) throw new Error('Unauthorization');
         return await this.boardRepository.delete({
             id,
-            authorId: user,
+            author: user,
         });
     }
 }
