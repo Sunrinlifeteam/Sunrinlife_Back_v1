@@ -21,7 +21,7 @@ export default async () => {
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         synchronize: true,
-        logging: false,
+        logging: process.env.DB_LOGGING === 'true',
         entities: [
             AttachmentEntity,
             ClubInfoEntity,
