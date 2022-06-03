@@ -31,7 +31,7 @@ export class AttachmentEntity {
     mimetype: string;
 
     @ManyToOne(() => UserEntity, (user) => user.id)
-    author: UserEntity;
+    authorId: UserEntity;
 
     getPath(): string {
         return path.resolve(process.cwd(), this.path, this.sha1hash);

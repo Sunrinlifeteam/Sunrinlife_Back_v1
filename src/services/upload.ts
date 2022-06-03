@@ -36,7 +36,7 @@ export class UploadService {
     async delete(userData: IUser, id: number) {
         const user = await this.userRepository.findOne(userData);
         const record = await this.attachmentRepository.findOne({ id });
-        if (record && user && record?.author.id == user?.id)
+        if (record && user && record?.authorId.id == user?.id)
             return await this.attachmentRepository.remove(record);
         return new Error();
     }
@@ -59,7 +59,7 @@ export class UploadService {
                         let user = await this.userRepository.findOne(userData);
                         if (!user) return reject();
                         let record = this.attachmentRepository.create();
-                        record.author = user;
+                        record.authorId = user;
                         record.filename = file.originalname;
                         record.path = UPLOAD_PATH;
                         record.mimetype = body.mimetype;

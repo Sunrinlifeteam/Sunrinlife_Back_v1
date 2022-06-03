@@ -37,7 +37,7 @@ export class BoardEntity {
 
     @ManyToOne(() => UserEntity)
     @JoinColumn()
-    author?: UserEntity;
+    authorId?: UserEntity;
 
     @ManyToMany(() => AttachmentEntity)
     @JoinTable()
