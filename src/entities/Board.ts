@@ -35,7 +35,10 @@ export class BoardEntity {
     @UpdateDateColumn()
     updated: Date;
 
-    @ManyToOne(() => UserEntity)
+    // @Column({ nullable: false })
+    // authorId: string;
+
+    @ManyToOne((type) => UserEntity, { eager: true })
     @JoinColumn()
     author?: UserEntity;
 
