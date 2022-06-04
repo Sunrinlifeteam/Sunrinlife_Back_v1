@@ -29,24 +29,14 @@ export class BoardController {
     async count(
         @Request() req: _Request,
         @Response() res: _Response,
-        @Query('offset') offset: number = 0,
-        @Query('count') count: number = 25,
         @Query('type') type?: Board.Type,
-        @Query('sort') sort: 'ASC' | 'DESC' = 'DESC',
         @Query('title') title?: string,
-        @Query('content') content?: string,
-        @Query('order') orderType: 'created' | 'updated' = 'created'
+        @Query('content') content?: string
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service
             .count({
-                range: {
-                    offset,
-                    count,
-                },
-                sort,
-                orderType,
                 title,
                 content,
                 type,
