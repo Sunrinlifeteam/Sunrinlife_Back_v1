@@ -30,19 +30,27 @@ export class BoardService {
         return count;
     }
 
-    async recommend(userId: string, id: number) {
+    async recommend(userData: IUser, id: number) {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) throw new Error('Unauthorization');
         const board = await this.boardRepository.findOne(id, {
             relations: ['likedUsers'],
         });
-        if (!board) throw new Error('Article not found');
-        if (board.likedUsers?.some((user: UserEntity) => user.id === userId))
-            throw new Error('Already recommended');
+        if (!board) return { success: false, message: 'Article not found' };
+
+        let likedUsers = board.likedUsers || [];
+        let likes = board.likes;
+
+        if (board.likedUsers?.some((x: UserEntity) => x.id === user.id))
+            likedUsers = likedUsers.filter((x: UserEntity) => x.id !== user.id);
+        else likedUsers.push(user);
         return await this.boardRepository.update(
             {
                 id,
             },
             {
-                likes: board.likes + 1,
+                likes,
+                likedUsers,
             }
         );
     }
