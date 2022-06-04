@@ -30,6 +30,36 @@ export class BoardService {
         return count;
     }
 
+    async recommend(userId: string, id: number) {
+        const board = await this.boardRepository.findOne(id, {
+            relations: ['likedUsers'],
+        });
+        if (!board) throw new Error('Article not found');
+        if (board.likedUsers?.some((user: UserEntity) => user.id === userId))
+            throw new Error('Already recommended');
+        return await this.boardRepository.update(
+            {
+                id,
+            },
+            {
+                likes: board.likes + 1,
+            }
+        );
+    }
+
+    async hotsunrin(type: Board.Type, count: number = 4) {
+        const data = await this.boardRepository.find({
+            order: {
+                likes: 'DESC',
+            },
+            where: {
+                type,
+            },
+            take: count,
+        });
+        return data;
+    }
+
     async find(option: Partial<Board.Body> & Board.SearchOption) {
         const data = await this.boardRepository.find({
             order: {
