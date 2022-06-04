@@ -27,6 +27,7 @@ export class BoardService {
                 ...(option.type ? { type: option.type } : null),
             },
         });
+        return count;
     }
 
     async find(option: Partial<Board.Body> & Board.SearchOption) {

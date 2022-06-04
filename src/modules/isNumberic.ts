@@ -1,3 +1,3 @@
-export function isNumberic(string: any): boolean {
-    return !isNaN(string) && !isNaN(parseInt(string));
+export function isNumberic(value: any): boolean {
+    return !isNaN(value) && !isNaN(parseInt(value));
 }

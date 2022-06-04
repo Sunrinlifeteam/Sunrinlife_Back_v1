@@ -25,6 +25,31 @@ import { updateValidator, writeValidator } from '../validators/board';
 export class BoardController {
     constructor(private readonly service: BoardService) {}
 
+    @Get('/count', [accessTokenGuard])
+    async count(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Query('type') type?: Board.Type,
+        @Query('title') title?: string,
+        @Query('content') content?: string
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        const result = await this.service
+            .count({
+                title,
+                content,
+                type,
+            })
+            .catch(
+                (err) => (
+                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
+                    console.log(err)
+                )
+            );
+        return res.status(HttpStatusCode.OK).json(result);
+    }
+
     @Get('/', [accessTokenGuard])
     async list(
         @Request() req: _Request,
