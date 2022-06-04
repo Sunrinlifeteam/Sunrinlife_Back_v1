@@ -20,7 +20,7 @@ export class BoardService {
         return board;
     }
 
-    async count(option: Board.DataOption) {
+    async count(option: Partial<Board.Body> & Board.SearchOption) {
         const count = await this.boardRepository.count({
             where: {
                 ...(option.title ? { title: Like(`%${option.title}%`) } : null),
