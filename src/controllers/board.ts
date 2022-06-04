@@ -47,7 +47,7 @@ export class BoardController {
                     console.log(err)
                 )
             );
-        return res.status(HttpStatusCode.OK).json(result);
+        if (result) return res.status(HttpStatusCode.OK).json(result);
     }
 
     @Get('/:id/like', [accessTokenGuard])
@@ -58,15 +58,8 @@ export class BoardController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        const result = await this.service
-            .recommend(req.user.id, id)
-            .catch(
-                () => (err: any) => (
-                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
-                    console.log(err)
-                )
-            );
-        return res.sendStatus(HttpStatusCode.NO_CONTENT);
+        const result = await this.service.recommend(req.user, id);
+        if (result) return res.sendStatus(HttpStatusCode.NO_CONTENT);
     }
 
     @Get('/top', [accessTokenGuard])
@@ -79,7 +72,7 @@ export class BoardController {
             res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
             console.log(err);
         });
-        return res.status(HttpStatusCode.OK).json(result);
+        if (result) return res.status(HttpStatusCode.OK).json(result);
     }
 
     @Get('/', [accessTokenGuard])
@@ -96,24 +89,17 @@ export class BoardController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        const result = await this.service
-            .find({
-                range: {
-                    offset,
-                    count,
-                },
-                sort,
-                orderType,
-                title,
-                content,
-                type,
-            })
-            .catch(
-                (err) => (
-                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
-                    console.log(err)
-                )
-            );
+        const result = await this.service.find({
+            range: {
+                offset,
+                count,
+            },
+            sort,
+            orderType,
+            title,
+            content,
+            type,
+        });
         return res.status(HttpStatusCode.OK).json(result);
     }
 
@@ -125,14 +111,7 @@ export class BoardController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        const result = await this.service
-            .findById(id)
-            .catch(
-                () => (err: any) => (
-                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
-                    console.log(err)
-                )
-            );
+        const result = await this.service.findById(id);
         return res.status(HttpStatusCode.OK).json(result);
     }
 
@@ -144,14 +123,7 @@ export class BoardController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        const result = await this.service
-            .write(req.user, body)
-            .catch(
-                () => (err: any) => (
-                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
-                    console.log(err)
-                )
-            );
+        const result = await this.service.write(req.user, body);
         return res.status(HttpStatusCode.CREATED).json(result);
     }
 
@@ -164,15 +136,8 @@ export class BoardController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        const result = await this.service
-            .update(req.user, id, body)
-            .catch(
-                () => (err: any) => (
-                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
-                    console.log(err)
-                )
-            );
-        return res.sendStatus(HttpStatusCode.NO_CONTENT);
+        const result = await this.service.update(req.user, id, body);
+        return res.status(HttpStatusCode.OK).json(result);
     }
 
     @Delete('/:id', [accessTokenGuard])
@@ -183,14 +148,7 @@ export class BoardController {
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        const result = await this.service
-            .delete(req.user, id)
-            .catch(
-                () => (err: any) => (
-                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
-                    console.log(err)
-                )
-            );
+        const result = await this.service.delete(req.user, id);
         return res.sendStatus(HttpStatusCode.NO_CONTENT);
     }
 }
