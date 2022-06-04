@@ -26,6 +26,12 @@ export class BoardEntity {
     @Column({ nullable: false })
     content: string;
 
+    @Column({ default: 0 })
+    views: number;
+
+    @Column({ default: 0 })
+    likes: number;
+
     @Column({ nullable: false, default: Board.Type.anonymous })
     type: number;
 
@@ -41,6 +47,10 @@ export class BoardEntity {
     @ManyToOne((type) => UserEntity, { eager: true })
     @JoinColumn()
     author?: UserEntity;
+
+    @ManyToMany(() => UserEntity, (user) => user.likedBoards)
+    @JoinTable()
+    likedUsers?: UserEntity[];
 
     @ManyToMany(() => AttachmentEntity)
     @JoinTable()

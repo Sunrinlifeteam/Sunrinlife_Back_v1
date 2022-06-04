@@ -11,6 +11,7 @@ import {
     JoinTable,
 } from 'typeorm';
 import { UserDepartment } from '../types/user';
+import { BoardEntity } from './Board';
 import { ClubInfoEntity } from './ClubInfo';
 
 export const USER_SELECT: (keyof UserEntity)[] = [
@@ -85,6 +86,10 @@ export class UserEntity {
     @ManyToMany(() => ClubInfoEntity)
     @JoinTable()
     subClubInfo: ClubInfoEntity[];
+
+    @ManyToMany(() => BoardEntity)
+    @JoinTable()
+    likedBoards: any;
 
     @CreateDateColumn()
     createdDate: Date;

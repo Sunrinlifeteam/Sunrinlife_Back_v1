@@ -50,6 +50,38 @@ export class BoardController {
         return res.status(HttpStatusCode.OK).json(result);
     }
 
+    @Get('/:id/like', [accessTokenGuard])
+    async recommend(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        const result = await this.service
+            .recommend(req.user.id, id)
+            .catch(
+                () => (err: any) => (
+                    res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
+                    console.log(err)
+                )
+            );
+        return res.sendStatus(HttpStatusCode.NO_CONTENT);
+    }
+
+    @Get('/top', [accessTokenGuard])
+    async hotsunrin(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Query('type') type: Board.Type
+    ) {
+        const result = await this.service.hotsunrin(type).catch((err: any) => {
+            res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
+            console.log(err);
+        });
+        return res.status(HttpStatusCode.OK).json(result);
+    }
+
     @Get('/', [accessTokenGuard])
     async list(
         @Request() req: _Request,
