@@ -112,6 +112,7 @@ export class BoardController {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service.findById(id);
+        if (result?.type === Board.Type.anonymous) result.author = undefined;
         return res.status(HttpStatusCode.OK).json(result);
     }
 

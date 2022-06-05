@@ -44,9 +44,13 @@ export class BoardEntity {
     // @Column({ nullable: false })
     // authorId: string;
 
-    @ManyToOne((type) => UserEntity, { eager: true })
+    @ManyToOne((type) => UserEntity, { eager: true, nullable: true })
     @JoinColumn()
     author?: UserEntity;
+
+    // TODO
+    // @Column({ nullable: true })
+    // encryptedAuthor?: string;
 
     @ManyToMany(() => UserEntity, (user) => user.likedBoards)
     @JoinTable()
