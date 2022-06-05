@@ -17,6 +17,30 @@ export class UserScheduleService {
         private readonly userRepository: Repository<UserEntity>
     ) {}
 
+    async delete(userData: IUser, id: number): Promise<DeleteResult> {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) throw new Error('Unauthorization');
+        return await this.userScheduleRepository.delete({
+            id,
+            owner: user,
+        });
+    }
+
+    async update(userData: IUser, id: number, body: IWriteUserScheduleBody) {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) throw new Error('Unauthorization');
+        return await this.userScheduleRepository.update(
+            {
+                id,
+                owner: user,
+            },
+            {
+                ...body,
+                owner: user,
+            }
+        );
+    }
+
     async week(user: IUser): Promise<UserScheduleEntity[]> {
         logger.debug(
             'called',
@@ -46,29 +70,5 @@ export class UserScheduleService {
             owner: user,
         });
         return await this.userScheduleRepository.save(newSchedule);
-    }
-
-    async update(userData: IUser, id: number, body: IWriteUserScheduleBody) {
-        const user = await this.userRepository.findOne(userData);
-        if (!user) throw new Error('Unauthorization');
-        return await this.userScheduleRepository.update(
-            {
-                id,
-                owner: user,
-            },
-            {
-                ...body,
-                owner: user,
-            }
-        );
-    }
-
-    async delete(userData: IUser, id: number): Promise<DeleteResult> {
-        const user = await this.userRepository.findOne(userData);
-        if (!user) throw new Error('Unauthorization');
-        return await this.userScheduleRepository.delete({
-            id,
-            owner: user,
-        });
     }
 }

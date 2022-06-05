@@ -32,6 +32,10 @@ export class UserService {
         return club?.type;
     }
 
+    async update(id: string, data: any) {
+        return await this.userRepository.update(id, data);
+    }
+
     async updateSubClub(id: string, subClubIds: number[]) {
         let userRow = await this.userRepository.findOne(id);
         if (!userRow) return;
@@ -39,9 +43,5 @@ export class UserService {
             await this.clubRepository.findByIds(subClubIds)
         ).filter((x) => x.type == CLUB_TYPE.AUTONOMY);
         return await this.userRepository.save(userRow);
-    }
-
-    async update(id: string, data: any) {
-        return await this.userRepository.update(id, data);
     }
 }

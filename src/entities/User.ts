@@ -87,10 +87,6 @@ export class UserEntity {
     @JoinTable()
     subClubInfo: ClubInfoEntity[];
 
-    @ManyToMany(() => BoardEntity)
-    @JoinTable()
-    likedBoards: any;
-
     @CreateDateColumn()
     createdDate: Date;
 

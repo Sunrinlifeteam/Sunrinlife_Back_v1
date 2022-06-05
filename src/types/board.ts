@@ -1,19 +1,12 @@
-export enum Type {
-    default = 0,
-    anonymous = 1,
-}
-
 export interface Body {
     title: string;
     content: string;
-    type: Type;
     attachments: number[];
 }
 
 export interface DataOption {
     title?: string;
     content?: string;
-    type?: Type;
 }
 
 export interface SearchOption {
@@ -25,4 +18,9 @@ export interface SearchOption {
 export interface Range {
     offset: number;
     count: number;
+}
+
+export interface WorkResult {
+    status: number;
+    data?: any;
 }

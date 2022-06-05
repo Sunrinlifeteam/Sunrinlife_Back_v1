@@ -1,42 +1,127 @@
 import { Inject, Injectable } from '@decorators/di';
 import { Like, Repository } from 'typeorm';
-import { AttachmentEntity, BoardEntity, UserEntity } from '../entities';
+import HttpStatusCode from '../constants/HttpStatusCode';
+import {
+    AnonymousBoardEntity,
+    AttachmentEntity,
+    NamedBoardEntity,
+    UserEntity,
+} from '../entities';
 import * as Board from '../types/board';
 import { IUser } from '../types/user';
 
 @Injectable()
-export class BoardService {
+export class NamedBoardService {
     constructor(
-        @Inject(BoardEntity)
-        private readonly boardRepository: Repository<BoardEntity>,
+        @Inject(NamedBoardEntity)
+        private readonly boardRepository: Repository<NamedBoardEntity>,
         @Inject(UserEntity)
         private readonly userRepository: Repository<UserEntity>,
         @Inject(AttachmentEntity)
         private readonly attachmentRepository: Repository<AttachmentEntity>
     ) {}
 
-    async findById(id: number) {
-        const board = await this.boardRepository.findOne(id);
-        return board;
-    }
-
-    async count(option: Board.DataOption) {
+    async count(option: Board.DataOption): Promise<Board.WorkResult> {
+        const { title } = option;
         const count = await this.boardRepository.count({
             where: {
-                ...(option.title ? { title: Like(`%${option.title}%`) } : null),
-                ...(option.type ? { type: option.type } : null),
+                ...(title && { title: Like(`%${option.title}%`) }),
             },
         });
-        return count;
+        return {
+            status: HttpStatusCode.OK,
+            data: count,
+        };
     }
 
-    async recommend(userData: IUser, id: number) {
+    async delete(userData: IUser, id: number): Promise<Board.WorkResult> {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) throw new Error('Unauthorization');
+        const result = await this.boardRepository.delete({
+            id,
+            author: user,
+        });
+        return {
+            status: HttpStatusCode.NO_CONTENT,
+        };
+    }
+
+    async find(
+        option: Partial<Board.Body> & Board.SearchOption
+    ): Promise<Board.WorkResult> {
+        const { orderType, sort, title, content, range } = option;
+        const data = await this.boardRepository.find({
+            order: {
+                [orderType]: sort,
+            },
+            where: {
+                ...(title && { title: Like(`%${title}%`) }),
+                ...(content && { title: Like(`%${content}%`) }),
+            },
+            skip: (range.count - 1) * range.offset,
+            take: range.count,
+        });
+        return {
+            status: HttpStatusCode.OK,
+            data,
+        };
+    }
+
+    async findAndCount(
+        option: Board.SearchOption & Board.DataOption
+    ): Promise<Board.WorkResult> {
+        const { orderType, sort, title, content, range } = option;
+        const dataAndCount = await this.boardRepository.findAndCount({
+            order: {
+                [orderType]: sort,
+            },
+            where: {
+                ...(title && { title: Like(`%${title}%`) }),
+                ...(content && { title: Like(`%${content}%`) }),
+            },
+            skip: (range.count - 1) * range.offset,
+            take: range.count,
+        });
+        return {
+            status: HttpStatusCode.OK,
+            data: dataAndCount,
+        };
+    }
+
+    async findById(id: number): Promise<Board.WorkResult> {
+        const board = await this.boardRepository.findOne(id, {
+            relations: ['attachments'],
+        });
+        return {
+            status: HttpStatusCode.OK,
+            data: board,
+        };
+    }
+
+    async hotsunrin(count: number = 4): Promise<Board.WorkResult> {
+        const data = await this.boardRepository.find({
+            order: {
+                likes: 'DESC',
+            },
+            take: count,
+        });
+        return {
+            status: HttpStatusCode.OK,
+            data,
+        };
+    }
+
+    async recommend(userData: IUser, id: number): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
         const board = await this.boardRepository.findOne(id, {
             relations: ['likedUsers'],
         });
-        if (!board) return { success: false, message: 'Article not found' };
+        if (!board)
+            return {
+                status: HttpStatusCode.NOT_FOUND,
+                data: { success: false, message: 'Article not found' },
+            };
 
         let likedUsers = board.likedUsers || [];
         let likes = board.likes;
@@ -44,119 +129,237 @@ export class BoardService {
         if (board.likedUsers?.some((x: UserEntity) => x.id === user.id))
             likedUsers = likedUsers.filter((x: UserEntity) => x.id !== user.id);
         else likedUsers.push(user);
-        return await this.boardRepository.update(
-            {
-                id,
-            },
-            {
-                likes,
-                likedUsers,
-            }
-        );
-    }
-
-    async hotsunrin(type: Board.Type, count: number = 4) {
-        const data = await this.boardRepository.find({
-            order: {
-                likes: 'DESC',
-            },
-            where: {
-                type,
-            },
-            take: count,
+        await this.boardRepository.update(id, {
+            likes,
+            likedUsers,
         });
-        return data;
+        return {
+            status: HttpStatusCode.NO_CONTENT,
+        };
     }
 
-    async find(option: Partial<Board.Body> & Board.SearchOption) {
-        const data = await this.boardRepository.find({
-            order: {
-                [option.orderType]: option.sort,
-            },
-            where: {
-                ...(option.title ? { title: Like(`%${option.title}%`) } : null),
-                ...(option.type ? { type: option.type } : null),
-            },
-            skip: option.range.offset,
-            take: option.range.count,
-        });
-        return data;
-    }
-
-    async findAndCount(option: Board.SearchOption & Board.DataOption) {
-        const dataAndCount = await this.boardRepository.findAndCount({
-            order: {
-                [option.orderType]: option.sort,
-            },
-            where: {
-                ...(option.title ? { title: Like(`%${option.title}%`) } : null),
-                ...(option.content
-                    ? { title: Like(`%${option.content}%`) }
-                    : null),
-                ...(option.type ? { type: option.type } : null),
-            },
-            skip: option.range.offset,
-            take: option.range.count,
-        });
-        return dataAndCount;
-    }
-
-    async write(userData: IUser, body: Board.Body) {
+    async update(
+        userData: IUser,
+        id: number,
+        body: Partial<Board.Body>
+    ): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
+        const { title, content } = body;
+        const attachments = body.attachments
+            ? await this.attachmentRepository.findByIds(body.attachments)
+            : [];
+        const result = await this.boardRepository.update(
+            {
+                id,
+                author: user,
+            },
+            {
+                title,
+                content,
+                attachments,
+                author: user,
+            }
+        );
+        return {
+            status: HttpStatusCode.OK,
+            data: result,
+        };
+    }
+
+    async write(userData: IUser, body: Board.Body): Promise<Board.WorkResult> {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) throw new Error('Unauthorization');
+        const { title, content } = body;
         const attachments = await this.attachmentRepository.findByIds(
             body.attachments
         );
         const board = this.boardRepository.create({
-            title: body.title,
-            content: body.content,
-            type: body.type,
-            attachment: attachments,
+            title,
+            content,
+            attachments,
             author: user,
         });
-        return await this.boardRepository.save(board);
+        const result = await this.boardRepository.save(board);
+        return {
+            status: HttpStatusCode.CREATED,
+            data: result,
+        };
+    }
+}
+
+@Injectable()
+export class AnonymousBoardService {
+    constructor(
+        @Inject(AnonymousBoardEntity)
+        private readonly boardRepository: Repository<AnonymousBoardEntity>,
+        @Inject(UserEntity)
+        private readonly userRepository: Repository<UserEntity>,
+        @Inject(AttachmentEntity)
+        private readonly attachmentRepository: Repository<AttachmentEntity>
+    ) {}
+
+    async count(option: Board.DataOption): Promise<Board.WorkResult> {
+        const { title } = option;
+        const count = await this.boardRepository.count({
+            where: {
+                ...(title && { title: Like(`%${option.title}%`) }),
+            },
+        });
+        return {
+            status: HttpStatusCode.OK,
+            data: count,
+        };
     }
 
-    async update(userData: IUser, id: number, body: Partial<Board.Body>) {
+    async delete(userData: IUser, id: number): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
-        const previousArticleData = await this.boardRepository.findOne(id);
-        if (!previousArticleData) throw new Error('Article not found');
-        const attachments = await this.attachmentRepository.findByIds(
-            body.attachments === undefined
-                ? previousArticleData.attachment
-                : body.attachments
-        );
-        return await this.boardRepository.update(
+        const result = await this.boardRepository.delete({
+            id,
+            author: user,
+        });
+        return {
+            status: HttpStatusCode.NO_CONTENT,
+        };
+    }
+
+    async find(
+        option: Partial<Board.Body> & Board.SearchOption
+    ): Promise<Board.WorkResult> {
+        const { orderType, sort, title, content, range } = option;
+        const data = await this.boardRepository.find({
+            order: {
+                [orderType]: sort,
+            },
+            where: {
+                ...(title && { title: Like(`%${title}%`) }),
+                ...(content && { title: Like(`%${content}%`) }),
+            },
+            skip: (range.count - 1) * range.offset,
+            take: range.count,
+        });
+        return {
+            status: HttpStatusCode.OK,
+            data,
+        };
+    }
+
+    async findAndCount(
+        option: Board.SearchOption & Board.DataOption
+    ): Promise<Board.WorkResult> {
+        const { orderType, sort, title, content, range } = option;
+        const dataAndCount = await this.boardRepository.findAndCount({
+            order: {
+                [orderType]: sort,
+            },
+            where: {
+                ...(title && { title: Like(`%${title}%`) }),
+                ...(content && { title: Like(`%${content}%`) }),
+            },
+            skip: (range.count - 1) * range.offset,
+            take: range.count,
+        });
+        return {
+            status: HttpStatusCode.OK,
+            data: dataAndCount,
+        };
+    }
+
+    async findById(id: number): Promise<Board.WorkResult> {
+        const board = await this.boardRepository.findOne(id);
+        return {
+            status: HttpStatusCode.OK,
+            data: board,
+        };
+    }
+
+    async hotsunrin(count: number = 4): Promise<Board.WorkResult> {
+        const data = await this.boardRepository.find({
+            order: {
+                likes: 'DESC',
+            },
+            take: count,
+        });
+        return {
+            status: HttpStatusCode.OK,
+            data,
+        };
+    }
+
+    async recommend(userData: IUser, id: number): Promise<Board.WorkResult> {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) throw new Error('Unauthorization');
+        const board = await this.boardRepository.findOne(id, {
+            relations: ['likedUsers'],
+        });
+        if (!board)
+            return {
+                status: HttpStatusCode.NOT_FOUND,
+                data: { success: false, message: 'Article not found' },
+            };
+
+        let likedUsers = board.likedUsers || [];
+        let likes = board.likes;
+
+        if (board.likedUsers?.some((x: UserEntity) => x.id === user.id))
+            likedUsers = likedUsers.filter((x: UserEntity) => x.id !== user.id);
+        else likedUsers.push(user);
+        await this.boardRepository.update(id, {
+            likes,
+            likedUsers,
+        });
+        return {
+            status: HttpStatusCode.NO_CONTENT,
+        };
+    }
+
+    async update(
+        userData: IUser,
+        id: number,
+        body: Partial<Board.Body>
+    ): Promise<Board.WorkResult> {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) throw new Error('Unauthorization');
+        const { title, content } = body;
+        const attachments = body.attachments
+            ? await this.attachmentRepository.findByIds(body.attachments)
+            : [];
+        const result = await this.boardRepository.update(
             {
                 id,
                 author: user,
             },
             {
-                title:
-                    body.title === undefined
-                        ? previousArticleData.title
-                        : body.title,
-                content:
-                    body.content === undefined
-                        ? previousArticleData.content
-                        : body.content,
-                type:
-                    body.type === undefined
-                        ? previousArticleData.type
-                        : body.type,
-                attachment: attachments,
+                title,
+                content,
+                attachments,
                 author: user,
             }
         );
+        return {
+            status: HttpStatusCode.OK,
+            data: result,
+        };
     }
 
-    async delete(userData: IUser, id: number) {
+    async write(userData: IUser, body: Board.Body): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
-        return await this.boardRepository.delete({
-            id,
+        const { title, content } = body;
+        const attachments = await this.attachmentRepository.findByIds(
+            body.attachments
+        );
+        const board = this.boardRepository.create({
+            title,
+            content,
+            attachments,
             author: user,
         });
+        const result = await this.boardRepository.save(board);
+        return {
+            status: HttpStatusCode.CREATED,
+            data: result,
+        };
     }
 }

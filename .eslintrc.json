@@ -1,6 +1,7 @@
 {
     "plugins": [
-        "prettier"
+        "prettier",
+        "sort-class-members"
     ],
     "extends": [
         "eslint:recommended",
@@ -29,6 +30,25 @@
                 "endOfLine": "auto"
             }
         ],
-        "no-unused-vars": "off"
+        "no-unused-vars": "warn",
+        "lines-between-class-members": ["error", "always"],
+        "sort-class-members/sort-class-members": [
+			"error",
+			{
+				"order": [
+					"[static-properties]",
+					"[static-methods]",
+					"[properties]",
+					"[conventional-private-properties]",
+					"constructor",
+					"[methods]",
+					"[conventional-private-methods]"
+				],
+                "groups": {
+                    "methods": [{ "type": "method", "sort": "alphabetical" }]
+                },
+				"accessorPairPositioning": "getThenSet"
+			}
+		]
     }
 }

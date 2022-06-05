@@ -17,6 +17,19 @@ export class UploadService {
         private readonly userRepository: Repository<UserEntity>
     ) {}
 
+    async delete(userData: IUser, id: number) {
+        const user = await this.userRepository.findOne(userData);
+        const record = await this.attachmentRepository.findOne({ id });
+        if (record && user && record?.author.id == user?.id)
+            return await this.attachmentRepository.remove(record);
+        return new Error();
+    }
+
+    async info(id: number) {
+        const record = await this.attachmentRepository.findOne({ id });
+        return record;
+    }
+
     async list(offset: number = 0, limit: number = 25) {
         const records = await this.attachmentRepository.find({
             order: {
@@ -26,19 +39,6 @@ export class UploadService {
             take: limit,
         });
         return records;
-    }
-
-    async info(id: number) {
-        const record = await this.attachmentRepository.findOne({ id });
-        return record;
-    }
-
-    async delete(userData: IUser, id: number) {
-        const user = await this.userRepository.findOne(userData);
-        const record = await this.attachmentRepository.findOne({ id });
-        if (record && user && record?.author.id == user?.id)
-            return await this.attachmentRepository.remove(record);
-        return new Error();
     }
 
     async upload(

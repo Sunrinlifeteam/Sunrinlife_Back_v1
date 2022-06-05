@@ -14,8 +14,6 @@ import * as Board from '../types/board';
 import { AttachmentEntity } from './Attachment';
 import { UserEntity } from './User';
 
-@Entity('board')
-@Injectable()
 export class BoardEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -32,8 +30,8 @@ export class BoardEntity {
     @Column({ default: 0 })
     likes: number;
 
-    @Column({ nullable: false, default: Board.Type.anonymous })
-    type: number;
+    // @Column({ nullable: false, default: Board.Type.anonymous })
+    // type: number;
 
     @CreateDateColumn()
     created: Date;
@@ -41,22 +39,28 @@ export class BoardEntity {
     @UpdateDateColumn()
     updated: Date;
 
-    // @Column({ nullable: false })
-    // authorId: string;
-
-    @ManyToOne((type) => UserEntity, { eager: true, nullable: true })
+    @ManyToMany(() => UserEntity)
     @JoinColumn()
-    author?: UserEntity;
-
-    // TODO
-    // @Column({ nullable: true })
-    // encryptedAuthor?: string;
-
-    @ManyToMany(() => UserEntity, (user) => user.likedBoards)
-    @JoinTable()
     likedUsers?: UserEntity[];
 
     @ManyToMany(() => AttachmentEntity)
     @JoinTable()
-    attachment: AttachmentEntity[];
+    attachments: AttachmentEntity[];
+}
+
+@Entity('named_board')
+@Injectable()
+export class NamedBoardEntity extends BoardEntity {
+    @ManyToOne((type) => UserEntity, { eager: true, nullable: true })
+    @JoinColumn()
+    author?: UserEntity;
+}
+
+@Entity('anonymous_board')
+@Injectable()
+export class AnonymousBoardEntity extends BoardEntity {
+    // TODO: author column change to encrypted user id
+    @ManyToOne((type) => UserEntity, { nullable: true })
+    @JoinColumn()
+    author?: UserEntity;
 }

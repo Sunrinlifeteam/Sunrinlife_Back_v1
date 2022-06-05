@@ -11,6 +11,7 @@ import { SchoolSchedule } from './neis';
 
 export class NeisOpenAPI {
     static readonly parser = new SchoolSchedule();
+
     static async SchoolSchedule(start: DateTime, end: DateTime) {
         const scheduleRepository =
             Container.get<Repository<ScheduleEntity>>(ScheduleEntity);

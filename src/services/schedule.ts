@@ -13,6 +13,19 @@ export class ScheduleService {
         private readonly scheduleRepository: Repository<ScheduleEntity>
     ) {}
 
+    async getByDay(date: DateTimeBody) {
+        logger.debug(
+            'ScheduleService.getByDay',
+            'date: ',
+            DateTime.fromObject(date).toString()
+        );
+        return await this.scheduleRepository.find({
+            where: {
+                date: Format(DateTime.fromObject(date)),
+            },
+        });
+    }
+
     async getByMonth(date: DateTimeBody) {
         logger.debug(
             'ScheduleService.getByMonth',
@@ -35,19 +48,6 @@ export class ScheduleService {
         return await this.scheduleRepository.find({
             where: {
                 date: Week(DateTime.fromObject(date)),
-            },
-        });
-    }
-
-    async getByDay(date: DateTimeBody) {
-        logger.debug(
-            'ScheduleService.getByDay',
-            'date: ',
-            DateTime.fromObject(date).toString()
-        );
-        return await this.scheduleRepository.find({
-            where: {
-                date: Format(DateTime.fromObject(date)),
             },
         });
     }

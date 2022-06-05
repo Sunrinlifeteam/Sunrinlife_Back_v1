@@ -9,6 +9,8 @@ import {
     NoticeEntity,
     ClubInfoEntity,
     BoardEntity,
+    NamedBoardEntity,
+    AnonymousBoardEntity,
 } from '../entities';
 import logger from '../modules/logger';
 
@@ -30,7 +32,8 @@ export default async () => {
             UserEntity,
             UserScheduleEntity,
             NoticeEntity,
-            BoardEntity,
+            NamedBoardEntity,
+            AnonymousBoardEntity,
         ],
         migrations: [],
         subscribers: [],
@@ -66,8 +69,12 @@ export default async () => {
                     useValue: connection.getRepository(MealEntity),
                 },
                 {
-                    provide: BoardEntity,
-                    useValue: connection.getRepository(BoardEntity),
+                    provide: NamedBoardEntity,
+                    useValue: connection.getRepository(NamedBoardEntity),
+                },
+                {
+                    provide: AnonymousBoardEntity,
+                    useValue: connection.getRepository(AnonymousBoardEntity),
                 },
             ]);
             logger.log('Database Connected!');
