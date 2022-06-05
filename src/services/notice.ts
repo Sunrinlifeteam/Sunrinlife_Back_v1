@@ -40,7 +40,7 @@ export class NoticeService {
                 created: sort,
             },
             where: {
-                type: type !== 'all' ? type : Like('%%'),
+                ...(type !== 'all' && { type }),
                 title: Like(`%${search}%`),
             },
             skip: (page - 1) * count,
