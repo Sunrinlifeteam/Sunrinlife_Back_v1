@@ -30,16 +30,26 @@ export class UploadController {
         logger.log('UploadController Attached!');
     }
 
-    private LogError(functionName: string, errorMessage: string) {
-        logger.error(
-            'Error on\n',
-            '\tcontrollers.upload.ts\n',
-            `\tUploadController.${functionName}\n`,
-            errorMessage
-                .split('\n')
-                .map((x) => `-${x}`)
-                .join('\n')
-        );
+    @Delete('/:id', [accessTokenGuard])
+    async DeleteById(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Params('id') id: number
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        const result = await this.uploadService.delete(req.user, id);
+        if (result == undefined)
+            return res.sendStatus(HttpStatusCode.NOT_FOUND);
+        return res.status(HttpStatusCode.NO_CONTENT);
+    }
+
+    @Get('/download/:id')
+    async DownloadById(@Response() res: IResponse, @Params('id') id: number) {
+        const result = await this.uploadService.info(id);
+        if (result == undefined)
+            return res.sendStatus(HttpStatusCode.NOT_FOUND);
+        return res.status(HttpStatusCode.OK).download(result.getPath());
     }
 
     @Get('/')
@@ -56,35 +66,16 @@ export class UploadController {
         return res.status(HttpStatusCode.OK).json(result);
     }
 
-    @Get('/download/:id')
-    async DownloadById(@Response() res: IResponse, @Params('id') id: number) {
-        const result = await this.uploadService.info(id);
-        if (result == undefined)
-            return res.sendStatus(HttpStatusCode.NOT_FOUND);
-        return res.status(HttpStatusCode.OK).download(result.getPath());
-    }
-
-    @Get('/view/:id')
-    async ViewById(@Response() res: IResponse, @Params('id') id: number) {
-        const result = await this.uploadService.info(id);
-        if (result == undefined)
-            return res.sendStatus(HttpStatusCode.NOT_FOUND);
-        res.status(HttpStatusCode.OK).header('Content-Type', result.mimetype);
-        return createReadStream(result.getPath()).pipe(res);
-    }
-
-    @Delete('/:id', [accessTokenGuard])
-    async DeleteById(
-        @Request() req: IRequest,
-        @Response() res: IResponse,
-        @Params('id') id: number
-    ) {
-        if (!req.user)
-            return ErrorHandler(new TypeError('req.user is undefined'), res);
-        const result = await this.uploadService.delete(req.user, id);
-        if (result == undefined)
-            return res.sendStatus(HttpStatusCode.NOT_FOUND);
-        return res.status(HttpStatusCode.NO_CONTENT);
+    private LogError(functionName: string, errorMessage: string) {
+        logger.error(
+            'Error on\n',
+            '\tcontrollers.upload.ts\n',
+            `\tUploadController.${functionName}\n`,
+            errorMessage
+                .split('\n')
+                .map((x) => `-${x}`)
+                .join('\n')
+        );
     }
 
     @Post('/', [
@@ -109,5 +100,14 @@ export class UploadController {
             body
         );
         return res.status(HttpStatusCode.CREATED).json(result);
+    }
+
+    @Get('/view/:id')
+    async ViewById(@Response() res: IResponse, @Params('id') id: number) {
+        const result = await this.uploadService.info(id);
+        if (result == undefined)
+            return res.sendStatus(HttpStatusCode.NOT_FOUND);
+        res.status(HttpStatusCode.OK).header('Content-Type', result.mimetype);
+        return createReadStream(result.getPath()).pipe(res);
     }
 }

@@ -21,15 +21,15 @@ export class ScheduleController {
         return res.status(200).json(result);
     }
 
-    @Get('/week', [celebrate(DateValidator)] as any[])
-    async GetWeek(@Response() res: IResponse, @Body() body: DateTimeBody) {
-        const result = await this.service.getByWeek(body);
-        return res.status(200).json(result);
-    }
-
     @Get('/month', [celebrate(DateValidator)] as any[])
     async GetMonth(@Response() res: IResponse, @Body() body: DateTimeBody) {
         const result = await this.service.getByMonth(body);
+        return res.status(200).json(result);
+    }
+
+    @Get('/week', [celebrate(DateValidator)] as any[])
+    async GetWeek(@Response() res: IResponse, @Body() body: DateTimeBody) {
+        const result = await this.service.getByWeek(body);
         return res.status(200).json(result);
     }
 }

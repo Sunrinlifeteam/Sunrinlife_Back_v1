@@ -28,14 +28,6 @@ export class ClubInfoController {
         return res.status(200).json(result);
     }
 
-    @Get('/type/:typ')
-    async getClubsByType(@Request() req: IRequest, @Response() res: IResponse) {
-        const result = await this.clubInfoService.getClubsByType(
-            parseInt(req.params.typ)
-        );
-        return res.status(200).json(result);
-    }
-
     @Get('/department/:dep/type/:typ')
     async getClubsByDepartmentAndType(
         @Request() req: IRequest,
@@ -43,6 +35,14 @@ export class ClubInfoController {
     ) {
         const result = await this.clubInfoService.getClubsByDepartmentAndType(
             parseInt(req.params.dep),
+            parseInt(req.params.typ)
+        );
+        return res.status(200).json(result);
+    }
+
+    @Get('/type/:typ')
+    async getClubsByType(@Request() req: IRequest, @Response() res: IResponse) {
+        const result = await this.clubInfoService.getClubsByType(
             parseInt(req.params.typ)
         );
         return res.status(200).json(result);

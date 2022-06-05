@@ -47,8 +47,8 @@ export class NamedBoardController {
         }
     }
 
-    @Get('/:id/like', [accessTokenGuard])
-    async recommend(
+    @Delete('/:id', [accessTokenGuard])
+    async delete(
         @Request() req: _Request,
         @Response() res: _Response,
         @Params('id') id: number
@@ -56,7 +56,24 @@ export class NamedBoardController {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
-            const result = await this.service.recommend(req.user, id);
+            const result = await this.service.delete(req.user, id);
+            return res.status(result.status).json(result.data).end();
+        } catch (err) {
+            logger.error(err);
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
+        }
+    }
+
+    @Get('/:id', [accessTokenGuard])
+    async getOne(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        try {
+            const result = await this.service.findById(id);
             return res.status(result.status).json(result.data).end();
         } catch (err) {
             logger.error(err);
@@ -108,8 +125,8 @@ export class NamedBoardController {
         }
     }
 
-    @Get('/:id', [accessTokenGuard])
-    async getOne(
+    @Get('/:id/like', [accessTokenGuard])
+    async recommend(
         @Request() req: _Request,
         @Response() res: _Response,
         @Params('id') id: number
@@ -117,24 +134,7 @@ export class NamedBoardController {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
-            const result = await this.service.findById(id);
-            return res.status(result.status).json(result.data).end();
-        } catch (err) {
-            logger.error(err);
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
-        }
-    }
-
-    @Post('/', [accessTokenGuard, celebrate(writeValidator)])
-    async write(
-        @Request() req: _Request,
-        @Response() res: _Response,
-        @Body() body: Board.Body
-    ) {
-        if (!req.user)
-            return ErrorHandler(new TypeError('req.user is undefined'), res);
-        try {
-            const result = await this.service.write(req.user, body);
+            const result = await this.service.recommend(req.user, id);
             return res.status(result.status).json(result.data).end();
         } catch (err) {
             logger.error(err);
@@ -160,16 +160,16 @@ export class NamedBoardController {
         }
     }
 
-    @Delete('/:id', [accessTokenGuard])
-    async delete(
+    @Post('/', [accessTokenGuard, celebrate(writeValidator)])
+    async write(
         @Request() req: _Request,
         @Response() res: _Response,
-        @Params('id') id: number
+        @Body() body: Board.Body
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
-            const result = await this.service.delete(req.user, id);
+            const result = await this.service.write(req.user, body);
             return res.status(result.status).json(result.data).end();
         } catch (err) {
             logger.error(err);
@@ -204,8 +204,8 @@ export class AnonymousBoardController {
         }
     }
 
-    @Get('/:id/like', [accessTokenGuard])
-    async recommend(
+    @Delete('/:id', [accessTokenGuard])
+    async delete(
         @Request() req: _Request,
         @Response() res: _Response,
         @Params('id') id: number
@@ -213,7 +213,24 @@ export class AnonymousBoardController {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
-            const result = await this.service.recommend(req.user, id);
+            const result = await this.service.delete(req.user, id);
+            return res.status(result.status).json(result.data).end();
+        } catch (err) {
+            logger.error(err);
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
+        }
+    }
+
+    @Get('/:id', [accessTokenGuard])
+    async getOne(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        try {
+            const result = await this.service.findById(id);
             return res.status(result.status).json(result.data).end();
         } catch (err) {
             logger.error(err);
@@ -265,8 +282,8 @@ export class AnonymousBoardController {
         }
     }
 
-    @Get('/:id', [accessTokenGuard])
-    async getOne(
+    @Get('/:id/like', [accessTokenGuard])
+    async recommend(
         @Request() req: _Request,
         @Response() res: _Response,
         @Params('id') id: number
@@ -274,24 +291,7 @@ export class AnonymousBoardController {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
-            const result = await this.service.findById(id);
-            return res.status(result.status).json(result.data).end();
-        } catch (err) {
-            logger.error(err);
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
-        }
-    }
-
-    @Post('/', [accessTokenGuard, celebrate(writeValidator)])
-    async write(
-        @Request() req: _Request,
-        @Response() res: _Response,
-        @Body() body: Board.Body
-    ) {
-        if (!req.user)
-            return ErrorHandler(new TypeError('req.user is undefined'), res);
-        try {
-            const result = await this.service.write(req.user, body);
+            const result = await this.service.recommend(req.user, id);
             return res.status(result.status).json(result.data).end();
         } catch (err) {
             logger.error(err);
@@ -317,16 +317,16 @@ export class AnonymousBoardController {
         }
     }
 
-    @Delete('/:id', [accessTokenGuard])
-    async delete(
+    @Post('/', [accessTokenGuard, celebrate(writeValidator)])
+    async write(
         @Request() req: _Request,
         @Response() res: _Response,
-        @Params('id') id: number
+        @Body() body: Board.Body
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
-            const result = await this.service.delete(req.user, id);
+            const result = await this.service.write(req.user, body);
             return res.status(result.status).json(result.data).end();
         } catch (err) {
             logger.error(err);

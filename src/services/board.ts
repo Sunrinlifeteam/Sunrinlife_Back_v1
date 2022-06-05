@@ -21,16 +21,6 @@ export class NamedBoardService {
         private readonly attachmentRepository: Repository<AttachmentEntity>
     ) {}
 
-    async findById(id: number): Promise<Board.WorkResult> {
-        const board = await this.boardRepository.findOne(id, {
-            relations: ['attachments'],
-        });
-        return {
-            status: HttpStatusCode.OK,
-            data: board,
-        };
-    }
-
     async count(option: Board.DataOption): Promise<Board.WorkResult> {
         const { title } = option;
         const count = await this.boardRepository.count({
@@ -44,43 +34,15 @@ export class NamedBoardService {
         };
     }
 
-    async recommend(userData: IUser, id: number): Promise<Board.WorkResult> {
+    async delete(userData: IUser, id: number): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
-        const board = await this.boardRepository.findOne(id, {
-            relations: ['likedUsers'],
-        });
-        if (!board)
-            return {
-                status: HttpStatusCode.NOT_FOUND,
-                data: { success: false, message: 'Article not found' },
-            };
-
-        let likedUsers = board.likedUsers || [];
-        let likes = board.likes;
-
-        if (board.likedUsers?.some((x: UserEntity) => x.id === user.id))
-            likedUsers = likedUsers.filter((x: UserEntity) => x.id !== user.id);
-        else likedUsers.push(user);
-        await this.boardRepository.update(id, {
-            likes,
-            likedUsers,
+        const result = await this.boardRepository.delete({
+            id,
+            author: user,
         });
         return {
             status: HttpStatusCode.NO_CONTENT,
-        };
-    }
-
-    async hotsunrin(count: number = 4): Promise<Board.WorkResult> {
-        const data = await this.boardRepository.find({
-            order: {
-                likes: 'DESC',
-            },
-            take: count,
-        });
-        return {
-            status: HttpStatusCode.OK,
-            data,
         };
     }
 
@@ -126,23 +88,53 @@ export class NamedBoardService {
         };
     }
 
-    async write(userData: IUser, body: Board.Body): Promise<Board.WorkResult> {
+    async findById(id: number): Promise<Board.WorkResult> {
+        const board = await this.boardRepository.findOne(id, {
+            relations: ['attachments'],
+        });
+        return {
+            status: HttpStatusCode.OK,
+            data: board,
+        };
+    }
+
+    async hotsunrin(count: number = 4): Promise<Board.WorkResult> {
+        const data = await this.boardRepository.find({
+            order: {
+                likes: 'DESC',
+            },
+            take: count,
+        });
+        return {
+            status: HttpStatusCode.OK,
+            data,
+        };
+    }
+
+    async recommend(userData: IUser, id: number): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
-        const { title, content } = body;
-        const attachments = await this.attachmentRepository.findByIds(
-            body.attachments
-        );
-        const board = this.boardRepository.create({
-            title,
-            content,
-            attachments,
-            author: user,
+        const board = await this.boardRepository.findOne(id, {
+            relations: ['likedUsers'],
         });
-        const result = await this.boardRepository.save(board);
+        if (!board)
+            return {
+                status: HttpStatusCode.NOT_FOUND,
+                data: { success: false, message: 'Article not found' },
+            };
+
+        let likedUsers = board.likedUsers || [];
+        let likes = board.likes;
+
+        if (board.likedUsers?.some((x: UserEntity) => x.id === user.id))
+            likedUsers = likedUsers.filter((x: UserEntity) => x.id !== user.id);
+        else likedUsers.push(user);
+        await this.boardRepository.update(id, {
+            likes,
+            likedUsers,
+        });
         return {
-            status: HttpStatusCode.CREATED,
-            data: result,
+            status: HttpStatusCode.NO_CONTENT,
         };
     }
 
@@ -175,15 +167,23 @@ export class NamedBoardService {
         };
     }
 
-    async delete(userData: IUser, id: number): Promise<Board.WorkResult> {
+    async write(userData: IUser, body: Board.Body): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
-        const result = await this.boardRepository.delete({
-            id,
+        const { title, content } = body;
+        const attachments = await this.attachmentRepository.findByIds(
+            body.attachments
+        );
+        const board = this.boardRepository.create({
+            title,
+            content,
+            attachments,
             author: user,
         });
+        const result = await this.boardRepository.save(board);
         return {
-            status: HttpStatusCode.NO_CONTENT,
+            status: HttpStatusCode.CREATED,
+            data: result,
         };
     }
 }
@@ -199,14 +199,6 @@ export class AnonymousBoardService {
         private readonly attachmentRepository: Repository<AttachmentEntity>
     ) {}
 
-    async findById(id: number): Promise<Board.WorkResult> {
-        const board = await this.boardRepository.findOne(id);
-        return {
-            status: HttpStatusCode.OK,
-            data: board,
-        };
-    }
-
     async count(option: Board.DataOption): Promise<Board.WorkResult> {
         const { title } = option;
         const count = await this.boardRepository.count({
@@ -220,43 +212,15 @@ export class AnonymousBoardService {
         };
     }
 
-    async recommend(userData: IUser, id: number): Promise<Board.WorkResult> {
+    async delete(userData: IUser, id: number): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
-        const board = await this.boardRepository.findOne(id, {
-            relations: ['likedUsers'],
-        });
-        if (!board)
-            return {
-                status: HttpStatusCode.NOT_FOUND,
-                data: { success: false, message: 'Article not found' },
-            };
-
-        let likedUsers = board.likedUsers || [];
-        let likes = board.likes;
-
-        if (board.likedUsers?.some((x: UserEntity) => x.id === user.id))
-            likedUsers = likedUsers.filter((x: UserEntity) => x.id !== user.id);
-        else likedUsers.push(user);
-        await this.boardRepository.update(id, {
-            likes,
-            likedUsers,
+        const result = await this.boardRepository.delete({
+            id,
+            author: user,
         });
         return {
             status: HttpStatusCode.NO_CONTENT,
-        };
-    }
-
-    async hotsunrin(count: number = 4): Promise<Board.WorkResult> {
-        const data = await this.boardRepository.find({
-            order: {
-                likes: 'DESC',
-            },
-            take: count,
-        });
-        return {
-            status: HttpStatusCode.OK,
-            data,
         };
     }
 
@@ -302,23 +266,51 @@ export class AnonymousBoardService {
         };
     }
 
-    async write(userData: IUser, body: Board.Body): Promise<Board.WorkResult> {
+    async findById(id: number): Promise<Board.WorkResult> {
+        const board = await this.boardRepository.findOne(id);
+        return {
+            status: HttpStatusCode.OK,
+            data: board,
+        };
+    }
+
+    async hotsunrin(count: number = 4): Promise<Board.WorkResult> {
+        const data = await this.boardRepository.find({
+            order: {
+                likes: 'DESC',
+            },
+            take: count,
+        });
+        return {
+            status: HttpStatusCode.OK,
+            data,
+        };
+    }
+
+    async recommend(userData: IUser, id: number): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
-        const { title, content } = body;
-        const attachments = await this.attachmentRepository.findByIds(
-            body.attachments
-        );
-        const board = this.boardRepository.create({
-            title,
-            content,
-            attachments,
-            author: user,
+        const board = await this.boardRepository.findOne(id, {
+            relations: ['likedUsers'],
         });
-        const result = await this.boardRepository.save(board);
+        if (!board)
+            return {
+                status: HttpStatusCode.NOT_FOUND,
+                data: { success: false, message: 'Article not found' },
+            };
+
+        let likedUsers = board.likedUsers || [];
+        let likes = board.likes;
+
+        if (board.likedUsers?.some((x: UserEntity) => x.id === user.id))
+            likedUsers = likedUsers.filter((x: UserEntity) => x.id !== user.id);
+        else likedUsers.push(user);
+        await this.boardRepository.update(id, {
+            likes,
+            likedUsers,
+        });
         return {
-            status: HttpStatusCode.CREATED,
-            data: result,
+            status: HttpStatusCode.NO_CONTENT,
         };
     }
 
@@ -351,15 +343,23 @@ export class AnonymousBoardService {
         };
     }
 
-    async delete(userData: IUser, id: number): Promise<Board.WorkResult> {
+    async write(userData: IUser, body: Board.Body): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
-        const result = await this.boardRepository.delete({
-            id,
+        const { title, content } = body;
+        const attachments = await this.attachmentRepository.findByIds(
+            body.attachments
+        );
+        const board = this.boardRepository.create({
+            title,
+            content,
+            attachments,
             author: user,
         });
+        const result = await this.boardRepository.save(board);
         return {
-            status: HttpStatusCode.NO_CONTENT,
+            status: HttpStatusCode.CREATED,
+            data: result,
         };
     }
 }

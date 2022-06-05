@@ -28,16 +28,6 @@ export class AuthController {
         logger.log('AuthController Attached!');
     }
 
-    @Get('/refresh', [refreshTokenGuard])
-    async refreshAccessToken(@Request() req: any, @Response() res: IResponse) {
-        const { id } = req.user;
-        if (!id)
-            return res.status(HttpStatusCode.UNAUTHORIZED).json('Unauthorized');
-        const accessToken =
-            this.authService.createAndGetAccessTokenByUserId(id);
-        return res.status(HttpStatusCode.OK).json({ accessToken });
-    }
-
     @Get('/valid', [accessTokenGuard])
     async checkAccessTokenIsValid(@Response() res: IResponse) {
         return res.status(HttpStatusCode.OK).json('valid');
@@ -78,5 +68,15 @@ export class AuthController {
         await this.authService.removeRefreshTokenByUserId(req.user.id);
         res.clearCookie(REFRESH_TOKEN_COOKIE_KEY, REFRESH_TOKEN_COOKIE_OPTION);
         return res.status(HttpStatusCode.OK).json('success');
+    }
+
+    @Get('/refresh', [refreshTokenGuard])
+    async refreshAccessToken(@Request() req: any, @Response() res: IResponse) {
+        const { id } = req.user;
+        if (!id)
+            return res.status(HttpStatusCode.UNAUTHORIZED).json('Unauthorized');
+        const accessToken =
+            this.authService.createAndGetAccessTokenByUserId(id);
+        return res.status(HttpStatusCode.OK).json({ accessToken });
     }
 }
