@@ -28,33 +28,6 @@ export class UserScheduleController {
         logger.log('UserScheduleController Attached!');
     }
 
-    @Delete('/:id', [accessTokenGuard])
-    async delete(
-        @Request() req: IRequest,
-        @Response() res: IResponse,
-        @Params('id') id: number
-    ) {
-        if (!req.user)
-            return ErrorHandler(new TypeError('req.user is undefined'), res);
-        const result = await this.service.delete(req.user, id);
-        logger.debug('controllers/userSchedule.ts', 'delete', req.user, result);
-        return res.sendStatus(HttpStatusCode.NO_CONTENT);
-    }
-
-    @Put('/:id', [accessTokenGuard, celebrate(writeValidator)])
-    async update(
-        @Request() req: IRequest,
-        @Response() res: IResponse,
-        @Params('id') id: number,
-        @Body() body: IWriteUserScheduleBody
-    ) {
-        if (!req.user)
-            return ErrorHandler(new TypeError('req.user is undefined'), res);
-        const result = await this.service.update(req.user, id, body);
-        logger.debug('controllers/userSchedule.ts', 'update', req.user, result);
-        return res.sendStatus(HttpStatusCode.NO_CONTENT);
-    }
-
     @Get('/', [accessTokenGuard])
     async week(@Request() req: IRequest, @Response() res: IResponse) {
         if (!req.user)
@@ -73,5 +46,32 @@ export class UserScheduleController {
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         const result = await this.service.write(req.user, body);
         return res.status(HttpStatusCode.CREATED).json(result);
+    }
+
+    @Put('/:id', [accessTokenGuard, celebrate(writeValidator)])
+    async update(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Params('id') id: number,
+        @Body() body: IWriteUserScheduleBody
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        const result = await this.service.update(req.user, id, body);
+        logger.debug('controllers/userSchedule.ts', 'update', req.user, result);
+        return res.sendStatus(HttpStatusCode.NO_CONTENT);
+    }
+
+    @Delete('/:id', [accessTokenGuard])
+    async delete(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Params('id') id: number
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        const result = await this.service.delete(req.user, id);
+        logger.debug('controllers/userSchedule.ts', 'delete', req.user, result);
+        return res.sendStatus(HttpStatusCode.NO_CONTENT);
     }
 }

@@ -15,6 +15,13 @@ export class NoticeService {
         private readonly noticeServiceRepository: Repository<NoticeEntity>
     ) {}
 
+    async get(id: number): Promise<NoticeEntity | undefined> {
+        logger.debug('called', 'services/notice.ts/NoticeService.get', id);
+        const notice = await this.noticeServiceRepository.findOne(id);
+        logger.debug('services.NoticeService.get', notice);
+        return notice;
+    }
+
     async count(option: INoticeCountOption): Promise<number> {
         const { type, search } = option;
         return await this.noticeServiceRepository.count({
@@ -23,19 +30,6 @@ export class NoticeService {
                 title: Like(`%${search}%`),
             },
         });
-    }
-
-    async delete(id: number): Promise<DeleteResult> {
-        return await this.noticeServiceRepository.delete({
-            id,
-        });
-    }
-
-    async get(id: number): Promise<NoticeEntity | undefined> {
-        logger.debug('called', 'services/notice.ts/NoticeService.get', id);
-        const notice = await this.noticeServiceRepository.findOne(id);
-        logger.debug('services.NoticeService.get', notice);
-        return notice;
     }
 
     async list(option: INoticeListOption): Promise<NoticeEntity[]> {
@@ -56,6 +50,13 @@ export class NoticeService {
         return noticeList;
     }
 
+    async write(body: IWriteNoticeBody): Promise<NoticeEntity> {
+        const newNotice = this.noticeServiceRepository.create({
+            ...body,
+        });
+        return await this.noticeServiceRepository.save(newNotice);
+    }
+
     async update(id: number, body: IWriteNoticeBody) {
         return await this.noticeServiceRepository.update(
             {
@@ -67,10 +68,9 @@ export class NoticeService {
         );
     }
 
-    async write(body: IWriteNoticeBody): Promise<NoticeEntity> {
-        const newNotice = this.noticeServiceRepository.create({
-            ...body,
+    async delete(id: number): Promise<DeleteResult> {
+        return await this.noticeServiceRepository.delete({
+            id,
         });
-        return await this.noticeServiceRepository.save(newNotice);
     }
 }

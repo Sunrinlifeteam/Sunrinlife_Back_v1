@@ -11,6 +11,32 @@ export class AuthService {
         private readonly userRepository: Repository<UserEntity>
     ) {}
 
+    async createAndGetUser(user: IUser): Promise<UserEntity> {
+        const newUser = this.userRepository.create(user);
+        return await this.userRepository.save(newUser);
+    }
+
+    async updateAndGetUser(user: UserEntity): Promise<UserEntity | undefined> {
+        await this.userRepository.update(user.id, user);
+        return await this.getUserById(user.id);
+    }
+
+    async getUserById(id: string, relations: string[] = []) {
+        return await this.userRepository.findOne({
+            where: { id },
+            select: USER_SELECT,
+            relations,
+        });
+    }
+
+    async getUserByEmail(email: string, relations: string[] = []) {
+        return await this.userRepository.findOne({
+            where: { email },
+            select: USER_SELECT,
+            relations,
+        });
+    }
+
     createAndGetAccessTokenByUserId(id: string): string {
         return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET!, {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN!,
@@ -29,33 +55,7 @@ export class AuthService {
         return refreshToken;
     }
 
-    async createAndGetUser(user: IUser): Promise<UserEntity> {
-        const newUser = this.userRepository.create(user);
-        return await this.userRepository.save(newUser);
-    }
-
-    async getUserByEmail(email: string, relations: string[] = []) {
-        return await this.userRepository.findOne({
-            where: { email },
-            select: USER_SELECT,
-            relations,
-        });
-    }
-
-    async getUserById(id: string, relations: string[] = []) {
-        return await this.userRepository.findOne({
-            where: { id },
-            select: USER_SELECT,
-            relations,
-        });
-    }
-
     async removeRefreshTokenByUserId(id: string): Promise<void> {
         await this.userRepository.update(id, { refreshToken: null as any });
-    }
-
-    async updateAndGetUser(user: UserEntity): Promise<UserEntity | undefined> {
-        await this.userRepository.update(user.id, user);
-        return await this.getUserById(user.id);
     }
 }

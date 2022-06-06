@@ -64,7 +64,6 @@
       "eslint-plugin-node": "^11.1.0",
       "eslint-plugin-prettier": "^4.0.0",
       "eslint-plugin-promise": "^5.2.0",
-      "eslint-plugin-sort-class-members": "^1.14.1",
       "husky": "^7.0.4",
       "jest": "^27.4.7",
       "lint-staged": "^12.3.3",

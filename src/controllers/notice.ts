@@ -30,52 +30,6 @@ export class NoticeController {
         logger.log('NoticeController Attached!');
     }
 
-    @Get('/count')
-    async count(
-        @Response() res: IResponse,
-        @Query('type') type: 'school' | 'intranet' | 'all' = 'all',
-        @Query('search') search: string = ''
-    ) {
-        const result = await this.service.count({
-            type,
-            search,
-        });
-        return res.status(HttpStatusCode.OK).json(result);
-    }
-
-    @Delete('/:id', [accessTokenGuard, permission([ROLE_FLAG.ADMIN])])
-    async delete(
-        @Request() req: IRequest,
-        @Response() res: IResponse,
-        @Params('id') id: number
-    ) {
-        if (!req.user)
-            return ErrorHandler(new TypeError('req.user is undefined'), res);
-        logger.info(
-            'Notice with id "',
-            id,
-            '"has been deleted by "',
-            req.user.username,
-            '".'
-        );
-        const result = await this.service.delete(id);
-        return res.status(HttpStatusCode.OK).json(result);
-    }
-
-    @Get('/:id')
-    async get(
-        @Request() req: IRequest,
-        @Response() res: IResponse,
-        @Params() id: number
-    ) {
-        const result = await this.service.get(id);
-        if (!result)
-            return res
-                .status(HttpStatusCode.BAD_REQUEST)
-                .send('result not found');
-        return res.status(HttpStatusCode.OK).json(result);
-    }
-
     @Get('/')
     async list(
         @Request() req: IRequest,
@@ -96,6 +50,49 @@ export class NoticeController {
         return res.status(HttpStatusCode.OK).json(result);
     }
 
+    @Get('/count')
+    async count(
+        @Response() res: IResponse,
+        @Query('type') type: 'school' | 'intranet' | 'all' = 'all',
+        @Query('search') search: string = ''
+    ) {
+        const result = await this.service.count({
+            type,
+            search,
+        });
+        return res.status(HttpStatusCode.OK).json(result);
+    }
+
+    @Get('/:id')
+    async get(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Params() id: number
+    ) {
+        const result = await this.service.get(id);
+        if (!result)
+            return res
+                .status(HttpStatusCode.BAD_REQUEST)
+                .send('result not found');
+        return res.status(HttpStatusCode.OK).json(result);
+    }
+
+    @Post('/', [
+        accessTokenGuard,
+        celebrate(noticeWriteValidator),
+        permission([ROLE_FLAG.ADMIN]),
+    ])
+    async write(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Body() body: IWriteNoticeBody
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        const result = await this.service.write(body);
+        return res.status(HttpStatusCode.OK).json(result);
+    }
+
     @Put('/:id', [
         accessTokenGuard,
         celebrate(noticeWriteValidator),
@@ -113,19 +110,22 @@ export class NoticeController {
         return res.status(HttpStatusCode.OK).json(result);
     }
 
-    @Post('/', [
-        accessTokenGuard,
-        celebrate(noticeWriteValidator),
-        permission([ROLE_FLAG.ADMIN]),
-    ])
-    async write(
+    @Delete('/:id', [accessTokenGuard, permission([ROLE_FLAG.ADMIN])])
+    async delete(
         @Request() req: IRequest,
         @Response() res: IResponse,
-        @Body() body: IWriteNoticeBody
+        @Params('id') id: number
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
-        const result = await this.service.write(body);
+        logger.info(
+            'Notice with id "',
+            id,
+            '"has been deleted by "',
+            req.user.username,
+            '".'
+        );
+        const result = await this.service.delete(id);
         return res.status(HttpStatusCode.OK).json(result);
     }
 }
