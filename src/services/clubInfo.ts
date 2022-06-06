@@ -10,11 +10,6 @@ export class ClubInfoService {
         private readonly clubInfoRepository: Repository<ClubInfoEntity>
     ) {}
 
-    async createAndGetClub(club: IClubInfoBody): Promise<ClubInfoEntity> {
-        const newClub = this.clubInfoRepository.create(club);
-        return await this.clubInfoRepository.save(newClub);
-    }
-
     async getAllClubs() {
         return await this.clubInfoRepository.find({
             select: CLUB_SELECT,
@@ -28,6 +23,13 @@ export class ClubInfoService {
         });
     }
 
+    async getClubsByType(type: number) {
+        return await this.clubInfoRepository.find({
+            where: { type },
+            select: CLUB_SELECT,
+        });
+    }
+
     async getClubsByDepartmentAndType(department: number, type: number) {
         return await this.clubInfoRepository.find({
             where: { department, type },
@@ -35,10 +37,8 @@ export class ClubInfoService {
         });
     }
 
-    async getClubsByType(type: number) {
-        return await this.clubInfoRepository.find({
-            where: { type },
-            select: CLUB_SELECT,
-        });
+    async createAndGetClub(club: IClubInfoBody): Promise<ClubInfoEntity> {
+        const newClub = this.clubInfoRepository.create(club);
+        return await this.clubInfoRepository.save(newClub);
     }
 }

@@ -23,6 +23,33 @@ import { updateUserValidator } from '../validators/user';
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+    @Get('/')
+    async getUser(@Request() req: IRequest, @Response() res: IResponse) {
+        return res.status(HttpStatusCode.OK).json(req.user);
+    }
+
+    @Get('/club')
+    async getUserIncludeClub(
+        @Request() req: IRequest,
+        @Response() res: IResponse
+    ) {
+        if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
+        const user = await this.userService.fetchWithRelations(req.user.id, [
+            'clubInfo',
+        ]);
+        return res.status(HttpStatusCode.OK).json(user);
+    }
+
+    @Get('/full')
+    async getUserFullData(
+        @Request() req: IRequest,
+        @Response() res: IResponse
+    ) {
+        if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
+        const user = await this.userService.fetchWithRelations(req.user.id);
+        return res.status(HttpStatusCode.OK).json(user);
+    }
+
     @Get('/:id')
     async getOtherUser(
         @Request() req: IRequest,
@@ -31,17 +58,6 @@ export class UserController {
     ) {
         if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
         const user = await this.userService.fetch(id);
-        return res.status(HttpStatusCode.OK).json(user);
-    }
-
-    @Get('/:id/full')
-    async getOtherUserFullData(
-        @Request() req: IRequest,
-        @Response() res: IResponse,
-        @Params('id') id: string
-    ) {
-        if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
-        const user = await this.userService.fetchWithRelations(id);
         return res.status(HttpStatusCode.OK).json(user);
     }
 
@@ -58,30 +74,14 @@ export class UserController {
         return res.status(HttpStatusCode.OK).json(user);
     }
 
-    @Get('/')
-    async getUser(@Request() req: IRequest, @Response() res: IResponse) {
-        return res.status(HttpStatusCode.OK).json(req.user);
-    }
-
-    @Get('/full')
-    async getUserFullData(
+    @Get('/:id/full')
+    async getOtherUserFullData(
         @Request() req: IRequest,
-        @Response() res: IResponse
+        @Response() res: IResponse,
+        @Params('id') id: string
     ) {
         if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
-        const user = await this.userService.fetchWithRelations(req.user.id);
-        return res.status(HttpStatusCode.OK).json(user);
-    }
-
-    @Get('/club')
-    async getUserIncludeClub(
-        @Request() req: IRequest,
-        @Response() res: IResponse
-    ) {
-        if (!req.user) return res.sendStatus(HttpStatusCode.UNAUTHORIZED);
-        const user = await this.userService.fetchWithRelations(req.user.id, [
-            'clubInfo',
-        ]);
+        const user = await this.userService.fetchWithRelations(id);
         return res.status(HttpStatusCode.OK).json(user);
     }
 
