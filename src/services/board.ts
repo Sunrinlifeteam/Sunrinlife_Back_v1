@@ -96,7 +96,7 @@ export class NamedBoardService {
                 ...(title && { title: Like(`%${title}%`) }),
                 ...(content && { title: Like(`%${content}%`) }),
             },
-            skip: (range.count - 1) * range.offset,
+            skip: range.offset,
             take: range.count,
         });
         return {
@@ -117,7 +117,7 @@ export class NamedBoardService {
                 ...(title && { title: Like(`%${title}%`) }),
                 ...(content && { title: Like(`%${content}%`) }),
             },
-            skip: (range.count - 1) * range.offset,
+            skip: range.offset,
             take: range.count,
         });
         return {
@@ -272,7 +272,7 @@ export class AnonymousBoardService {
                 ...(title && { title: Like(`%${title}%`) }),
                 ...(content && { title: Like(`%${content}%`) }),
             },
-            skip: (range.count - 1) * range.offset,
+            skip: range.offset,
             take: range.count,
         });
         return {
@@ -293,7 +293,7 @@ export class AnonymousBoardService {
                 ...(title && { title: Like(`%${title}%`) }),
                 ...(content && { title: Like(`%${content}%`) }),
             },
-            skip: (range.count - 1) * range.offset,
+            skip: range.offset,
             take: range.count,
         });
         return {
