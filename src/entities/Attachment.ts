@@ -12,8 +12,8 @@ import { Injectable } from '@decorators/di';
 @Entity('attachment')
 @Injectable()
 export class AttachmentEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column({ nullable: false })
     filename: string;
@@ -21,10 +21,10 @@ export class AttachmentEntity {
     @Column({ nullable: false })
     path: string;
 
-    @PrimaryColumn({ nullable: false, unique: true })
+    @Column({ nullable: false, unique: true })
     sha1hash: string;
 
-    @PrimaryColumn({ nullable: false, unique: true })
+    @Column({ nullable: false, unique: true })
     md5hash: string;
 
     @Column({ nullable: false })

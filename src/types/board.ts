@@ -1,7 +1,7 @@
 export interface Body {
     title: string;
     content: string;
-    attachments: number[];
+    attachments: string[];
 }
 
 export interface DataOption {
