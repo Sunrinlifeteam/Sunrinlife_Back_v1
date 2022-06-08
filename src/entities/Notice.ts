@@ -33,5 +33,5 @@ export class NoticeEntity {
 
     @ManyToMany(() => AttachmentEntity)
     @JoinTable()
-    attachment: AttachmentEntity[];
+    attachments: AttachmentEntity[];
 }
