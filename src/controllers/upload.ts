@@ -49,7 +49,7 @@ export class UploadController {
     }
 
     @Get('/:id')
-    async GetById(@Response() res: IResponse, @Params('id') id: number) {
+    async GetById(@Response() res: IResponse, @Params('id') id: string) {
         const result = await this.uploadService.info(id);
         if (result == undefined)
             return res.sendStatus(HttpStatusCode.NOT_FOUND);
@@ -57,7 +57,7 @@ export class UploadController {
     }
 
     @Get('/download/:id')
-    async DownloadById(@Response() res: IResponse, @Params('id') id: number) {
+    async DownloadById(@Response() res: IResponse, @Params('id') id: string) {
         const result = await this.uploadService.info(id);
         if (result == undefined)
             return res.sendStatus(HttpStatusCode.NOT_FOUND);
@@ -65,7 +65,7 @@ export class UploadController {
     }
 
     @Get('/view/:id')
-    async ViewById(@Response() res: IResponse, @Params('id') id: number) {
+    async ViewById(@Response() res: IResponse, @Params('id') id: string) {
         const result = await this.uploadService.info(id);
         if (result == undefined)
             return res.sendStatus(HttpStatusCode.NOT_FOUND);
@@ -77,7 +77,7 @@ export class UploadController {
     async DeleteById(
         @Request() req: IRequest,
         @Response() res: IResponse,
-        @Params('id') id: number
+        @Params('id') id: string
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);

@@ -28,12 +28,12 @@ export class UploadService {
         return records;
     }
 
-    async info(id: number) {
+    async info(id: string) {
         const record = await this.attachmentRepository.findOne({ id });
         return record;
     }
 
-    async delete(userData: IUser, id: number) {
+    async delete(userData: IUser, id: string) {
         const user = await this.userRepository.findOne(userData);
         const record = await this.attachmentRepository.findOne({ id });
         if (record && user && record?.author.id == user?.id)
@@ -56,6 +56,13 @@ export class UploadService {
                     path.resolve(UPLOAD_PATH, SHA1(data)),
                     async (err) => {
                         if (err) return reject(err);
+                        let prev = await this.attachmentRepository.findOne({
+                            where: {
+                                sha1hash: SHA1(data),
+                                md5hash: MD5(data),
+                            },
+                        });
+                        if (prev) return resolve(prev);
                         let user = await this.userRepository.findOne(userData);
                         if (!user) return reject();
                         let record = this.attachmentRepository.create();
