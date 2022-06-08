@@ -306,9 +306,8 @@ export class AnonymousBoardService {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
         const { title, content } = body;
-        const attachments = await this.attachmentRepository.findByIds(
-            body.attachments
-        );
+        const attachments =
+            (await this.attachmentRepository.findByIds(body.attachments)) || [];
         const board = this.boardRepository.create({
             title,
             content,
