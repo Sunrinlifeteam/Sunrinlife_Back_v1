@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@decorators/di';
 import { UploadBody } from '../types/upload';
 import { AttachmentEntity } from '../entities/Attachment';
-import { readFile, rename } from 'fs';
+import { copyFile, readFile, unlink } from 'fs';
 import path from 'path';
 import { MD5, SHA1 } from '../modules/hash';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/User';
 import { IUser } from '../types/user';
+import logger from '../modules/logger';
 
 @Injectable()
 export class UploadService {
@@ -51,10 +52,11 @@ export class UploadService {
         return new Promise((resolve, reject) =>
             readFile(path.resolve(process.cwd(), file.path), (err, data) => {
                 if (err) return reject(err);
-                rename(
+                copyFile(
                     file.path,
                     path.resolve(UPLOAD_PATH, SHA1(data)),
                     async (err) => {
+                        unlink(file.path, (err) => err && logger.error(err));
                         if (err) return reject(err);
                         let prev = await this.attachmentRepository.findOne({
                             where: {
