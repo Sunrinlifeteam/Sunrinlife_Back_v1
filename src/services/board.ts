@@ -84,7 +84,7 @@ export class NamedBoardService {
         await this.boardRepository.save(board);
         return {
             status: HttpStatusCode.OK,
-            data: board,
+            data: { ...board, liked: !liked },
         };
     }
 
