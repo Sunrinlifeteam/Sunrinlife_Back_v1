@@ -15,6 +15,11 @@ on:
   pull_request:
     branches: [ develop, release ]
   workflow_dispatch:
+    inputs:
+      docker-name:
+          description: 'Service name for pulling & publishing'     
+          required: true
+          default: 'backend'
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -25,7 +30,69 @@ env:
 
 jobs:
   build:
-
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x, 18.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - name: Archive npm failure logs
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: npm-logs
+        path: ~/.npm/_logs
+  jest:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x, 18.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm test
+    - name: Archive npm failure logs
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: npm-logs
+        path: ~/.npm/_logs
+  lint:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x, 18.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run lint
+    - name: Archive npm failure logs
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: npm-logs
+        path: ~/.npm/_logs
+  build-docker:
+    needs: [ jest, lint ]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -97,3 +164,20 @@ jobs:
           content="${content//$'\r'/''}"
           echo "cosign sign $content"
           echo "cosign sign $content" | /bin/bash
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: pulling & publishing
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_SSH_ID }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          passphrase: ${{ secrets.REMOTE_SSH_PASSPHRASE }}
+          script: |
+            cd Sunrinlife_Docker/
+            docker-compose pull ${{ github.event.inputs.docker-name }}
+            docker-compose up -d ${{ github.event.inputs.docker-name }}
