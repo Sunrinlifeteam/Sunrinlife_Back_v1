@@ -62,7 +62,7 @@ export class UploadController {
         if (result == undefined)
             return res.sendStatus(HttpStatusCode.NOT_FOUND);
         if (!existsSync(result.getPath()))
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR);
+            return res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
         return res.status(HttpStatusCode.OK).download(result.getPath());
     }
 
@@ -72,7 +72,7 @@ export class UploadController {
         if (result == undefined)
             return res.sendStatus(HttpStatusCode.NOT_FOUND);
         if (!existsSync(result.getPath()))
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR);
+            return res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
         res.status(HttpStatusCode.OK).header('Content-Type', result.mimetype);
         return createReadStream(result.getPath()).pipe(res);
     }
