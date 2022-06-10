@@ -1,5 +1,6 @@
 import { Injectable } from '@decorators/di';
 import {
+    AfterLoad,
     Column,
     CreateDateColumn,
     Entity,
@@ -44,6 +45,7 @@ export class BoardEntity {
     })
     @JoinTable()
     likedUsers: UserEntity[];
+
     @ManyToMany(() => AttachmentEntity)
     @JoinTable()
     attachments: AttachmentEntity[];

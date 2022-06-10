@@ -44,6 +44,20 @@ export class NamedBoardService {
         };
     }
 
+    async isLiked(userData: IUser, id: number): Promise<Board.WorkResult> {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) return { status: HttpStatusCode.UNAUTHORIZED };
+        const board = await this.boardRepository.findOne(id, {
+            relations: ['likedUsers'],
+        });
+        if (!board) return { status: HttpStatusCode.NOT_FOUND };
+        const isLiked = board.likedUsers.some((x) => x.id === user.id);
+        return {
+            status: HttpStatusCode.OK,
+            data: isLiked,
+        };
+    }
+
     async recommend(userData: IUser, id: number): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) return { status: HttpStatusCode.UNAUTHORIZED };
@@ -57,7 +71,10 @@ export class NamedBoardService {
             };
 
         board.likedUsers = board.likedUsers || [];
-        if (board.likedUsers.some((x: UserEntity) => x.id === user.id))
+        const liked = board.likedUsers.some(
+            (x: UserEntity) => x.id === user.id
+        );
+        if (liked)
             board.likedUsers = board.likedUsers.filter(
                 (x: UserEntity) => x.id !== user.id
             );
