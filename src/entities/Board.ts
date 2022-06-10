@@ -1,5 +1,6 @@
 import { Injectable } from '@decorators/di';
 import {
+    AfterLoad,
     Column,
     CreateDateColumn,
     Entity,
@@ -39,9 +40,11 @@ export class BoardEntity {
     @UpdateDateColumn()
     updated: Date;
 
-    @ManyToMany(() => UserEntity)
-    @JoinColumn()
-    likedUsers?: UserEntity[];
+    @ManyToMany((type) => UserEntity, {
+        cascade: true,
+    })
+    @JoinTable()
+    likedUsers: UserEntity[];
 
     @ManyToMany(() => AttachmentEntity)
     @JoinTable()
@@ -51,16 +54,16 @@ export class BoardEntity {
 @Entity('named_board')
 @Injectable()
 export class NamedBoardEntity extends BoardEntity {
-    @ManyToOne((type) => UserEntity, { eager: true, nullable: true })
+    @ManyToOne((type) => UserEntity, { eager: true })
     @JoinColumn()
-    author?: UserEntity;
+    author: UserEntity;
 }
 
 @Entity('anonymous_board')
 @Injectable()
 export class AnonymousBoardEntity extends BoardEntity {
     // TODO: author column change to encrypted user id
-    @ManyToOne((type) => UserEntity, { nullable: true })
+    @ManyToOne((type) => UserEntity)
     @JoinColumn()
-    author?: UserEntity;
+    author: UserEntity;
 }

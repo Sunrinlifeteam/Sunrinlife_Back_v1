@@ -44,9 +44,23 @@ export class NamedBoardService {
         };
     }
 
+    async isLiked(userData: IUser, id: number): Promise<Board.WorkResult> {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) return { status: HttpStatusCode.UNAUTHORIZED };
+        const board = await this.boardRepository.findOne(id, {
+            relations: ['likedUsers'],
+        });
+        if (!board) return { status: HttpStatusCode.NOT_FOUND };
+        const isLiked = board.likedUsers.some((x) => x.id === user.id);
+        return {
+            status: HttpStatusCode.OK,
+            data: isLiked,
+        };
+    }
+
     async recommend(userData: IUser, id: number): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
-        if (!user) throw new Error('Unauthorization');
+        if (!user) return { status: HttpStatusCode.UNAUTHORIZED };
         const board = await this.boardRepository.findOne(id, {
             relations: ['likedUsers'],
         });
@@ -56,18 +70,21 @@ export class NamedBoardService {
                 data: { success: false, message: 'Article not found' },
             };
 
-        let likedUsers = board.likedUsers || [];
-        let likes = board.likes;
+        board.likedUsers = board.likedUsers || [];
+        const liked = board.likedUsers.some(
+            (x: UserEntity) => x.id === user.id
+        );
+        if (liked)
+            board.likedUsers = board.likedUsers.filter(
+                (x: UserEntity) => x.id !== user.id
+            );
+        else board.likedUsers.push(user);
+        board.likes = board.likedUsers.length;
 
-        if (board.likedUsers?.some((x: UserEntity) => x.id === user.id))
-            likedUsers = likedUsers.filter((x: UserEntity) => x.id !== user.id);
-        else likedUsers.push(user);
-        await this.boardRepository.update(id, {
-            likes,
-            likedUsers,
-        });
+        await this.boardRepository.save(board);
         return {
-            status: HttpStatusCode.NO_CONTENT,
+            status: HttpStatusCode.OK,
+            data: { ...board, liked: !liked },
         };
     }
 
