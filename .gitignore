@@ -10,3 +10,11 @@ data/
 *.env
 env/*
 data.json
+
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
