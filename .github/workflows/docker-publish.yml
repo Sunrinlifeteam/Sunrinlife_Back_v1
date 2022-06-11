@@ -103,6 +103,7 @@ jobs:
     - run: yarn
     - run: yarn docs
     - name: deploy
+      if: github.event_name != 'pull_request'
       uses: JamesIves/github-pages-deploy-action@v4.3.3
       with:
         branch: document
