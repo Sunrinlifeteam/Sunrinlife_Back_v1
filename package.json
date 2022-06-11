@@ -2,7 +2,7 @@
    "name": "sunrinlife_back",
    "version": "0.0.1",
    "description": "REST API for SunrinLife",
-   "main": "index.js",
+   "main": "src/index.ts",
    "scripts": {
       "test": "jest --passWithNoTests",
       "lint": "eslint --ext .ts src",
@@ -13,6 +13,7 @@
       "fix:format": "npm run fix:prettier",
       "fix:prettier": "prettier --write \"src/**/*.ts\"",
       "fix:lint": "eslint \"src/**/*.ts\" --fix",
+      "docs": "typedoc --entryPointStrategy expand ./src",
       "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
    },
    "lint-staged": {
@@ -71,6 +72,7 @@
       "nodemon": "^2.0.15",
       "prettier": "^2.5.1",
       "ts-node": "^3.3.0",
+      "typedoc": "^0.22.17",
       "typescript": ">=3.8"
    },
    "dependencies": {

@@ -6,6 +6,7 @@ build/
 tmp/
 temp/
 data/
+docs/
 
 *.env
 env/*
