@@ -24,9 +24,7 @@ export class TimeTableController {
         }
         try {
             const result = await this.timeTableService.getCurrentTimeTable();
-            return res.status(HttpStatusCode.OK).json({
-                data: result,
-            });
+            return res.status(HttpStatusCode.OK).json(result);
         } catch (err) {
             logger.error(err);
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
