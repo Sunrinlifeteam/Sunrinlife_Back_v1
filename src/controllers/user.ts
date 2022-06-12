@@ -12,6 +12,7 @@ import { celebrate } from 'celebrate';
 import { Request as IRequest, Response as IResponse } from 'express';
 import { CLUB_TYPE, ROLE_FLAG } from '../constants';
 import HttpStatusCode from '../constants/HttpStatusCode';
+import logger from '../modules/logger';
 import { accessTokenGuard } from '../modules/passport';
 import permission from '../modules/permission';
 import { UserService } from '../services/user';
@@ -106,11 +107,10 @@ export class UserController {
                 );
                 delete user.subClubInfo;
             }
-            console.log(user);
             await this.userService.update(req.user.id, user);
             return res.sendStatus(HttpStatusCode.NO_CONTENT);
         } catch (_err) {
-            console.log(_err);
+            logger.error(_err);
             return res.status(HttpStatusCode.CONFLICT).json('error');
         }
     }
