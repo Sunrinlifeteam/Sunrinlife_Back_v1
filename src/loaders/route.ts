@@ -7,11 +7,11 @@ import { ScheduleController } from '../controllers/schedule';
 import { ClubInfoController } from '../controllers/clubInfo';
 import { NoticeController } from '../controllers/notice';
 import { UserController } from '../controllers/user';
-import { TimeTableController } from '../controllers/timeTable';
 import {
     AnonymousBoardController,
     NamedBoardController,
 } from '../controllers/board';
+import { TimeTableController } from '../controllers/timeTable';
 
 export default async (app: express.Application) => {
     attachControllers(app, [UploadController]);
