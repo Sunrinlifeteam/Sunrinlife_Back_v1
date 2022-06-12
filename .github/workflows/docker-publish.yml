@@ -101,7 +101,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn
-    - run: yarn docs
+    - run: yarn typedoc
     - name: deploy
       if: github.event_name != 'pull_request'
       uses: JamesIves/github-pages-deploy-action@v4.3.3
