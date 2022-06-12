@@ -1,5 +1,6 @@
 {
     "entryPoints": ["./src"],
     "entryPointStrategy": "expand",
-    "theme": "hierarchy"
+    "theme": "hierarchy",
+    "out": "docs"
 }
