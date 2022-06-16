@@ -19,13 +19,13 @@ import logger from '../modules/logger';
 import { accessTokenGuard } from '../modules/passport';
 import {
     AnonymousBoardService,
-    BoardService,
+    AbstractBoardService,
     NamedBoardService,
 } from '../services/board';
 import * as Board from '../types/board';
 import { updateValidator, writeValidator } from '../validators/board';
 
-export class BoardController<Service extends BoardService> {
+export class BoardController<Service extends AbstractBoardService> {
     constructor(private readonly service: Service) {}
 
     @Get('/count', [accessTokenGuard])

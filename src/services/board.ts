@@ -10,7 +10,8 @@ import {
 import * as Board from '../types/board';
 import { IUser } from '../types/user';
 
-export abstract class BoardService {
+export abstract class AbstractBoardService {
+    abstract isLiked(userData: IUser, id: number): Promise<Board.WorkResult>;
     abstract findById(id: number): Promise<Board.WorkResult>;
     abstract count(option: Board.DataOption): Promise<Board.WorkResult>;
     abstract recommend(userData: IUser, id: number): Promise<Board.WorkResult>;
@@ -34,7 +35,7 @@ export abstract class BoardService {
 }
 
 @Injectable()
-export class NamedBoardService extends BoardService {
+export class NamedBoardService extends AbstractBoardService {
     constructor(
         @Inject(NamedBoardEntity)
         private readonly boardRepository: Repository<NamedBoardEntity>,
@@ -231,7 +232,7 @@ export class NamedBoardService extends BoardService {
 }
 
 @Injectable()
-export class AnonymousBoardService extends BoardService {
+export class AnonymousBoardService extends AbstractBoardService {
     constructor(
         @Inject(AnonymousBoardEntity)
         private readonly boardRepository: Repository<AnonymousBoardEntity>,
@@ -244,7 +245,9 @@ export class AnonymousBoardService extends BoardService {
     }
 
     async findById(id: number): Promise<Board.WorkResult> {
-        const board = await this.boardRepository.findOne(id);
+        const board = await this.boardRepository.findOne(id, {
+            relations: ['attachments'],
+        });
         return {
             status: HttpStatusCode.OK,
             data: board,
@@ -261,6 +264,20 @@ export class AnonymousBoardService extends BoardService {
         return {
             status: HttpStatusCode.OK,
             data: count,
+        };
+    }
+
+    async isLiked(userData: IUser, id: number): Promise<Board.WorkResult> {
+        const user = await this.userRepository.findOne(userData);
+        if (!user) return { status: HttpStatusCode.UNAUTHORIZED };
+        const board = await this.boardRepository.findOne(id, {
+            relations: ['likedUsers'],
+        });
+        if (!board) return { status: HttpStatusCode.NOT_FOUND };
+        const isLiked = board.likedUsers.some((x) => x.id === user.id);
+        return {
+            status: HttpStatusCode.OK,
+            data: isLiked,
         };
     }
 
@@ -353,8 +370,9 @@ export class AnonymousBoardService extends BoardService {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
         const { title, content } = body;
-        const attachments =
-            (await this.attachmentRepository.findByIds(body.attachments)) || [];
+        const attachments = await this.attachmentRepository.findByIds(
+            body.attachments
+        );
         const board = this.boardRepository.create({
             title,
             content,
