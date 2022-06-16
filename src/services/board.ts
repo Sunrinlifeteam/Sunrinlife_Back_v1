@@ -10,8 +10,31 @@ import {
 import * as Board from '../types/board';
 import { IUser } from '../types/user';
 
+export abstract class BoardService {
+    abstract findById(id: number): Promise<Board.WorkResult>;
+    abstract count(option: Board.DataOption): Promise<Board.WorkResult>;
+    abstract recommend(userData: IUser, id: number): Promise<Board.WorkResult>;
+    abstract hotsunrin(count?: number): Promise<Board.WorkResult>;
+    abstract find(
+        option: Partial<Board.Body> & Board.SearchOption
+    ): Promise<Board.WorkResult>;
+    abstract findAndCount(
+        option: Board.SearchOption & Board.DataOption
+    ): Promise<Board.WorkResult>;
+    abstract write(
+        userData: IUser,
+        body: Board.Body
+    ): Promise<Board.WorkResult>;
+    abstract update(
+        userData: IUser,
+        id: number,
+        body: Partial<Board.Body>
+    ): Promise<Board.WorkResult>;
+    abstract delete(userData: IUser, id: number): Promise<Board.WorkResult>;
+}
+
 @Injectable()
-export class NamedBoardService {
+export class NamedBoardService extends BoardService {
     constructor(
         @Inject(NamedBoardEntity)
         private readonly boardRepository: Repository<NamedBoardEntity>,
@@ -19,7 +42,9 @@ export class NamedBoardService {
         private readonly userRepository: Repository<UserEntity>,
         @Inject(AttachmentEntity)
         private readonly attachmentRepository: Repository<AttachmentEntity>
-    ) {}
+    ) {
+        super();
+    }
 
     async findById(id: number): Promise<Board.WorkResult> {
         const board = await this.boardRepository.findOne(id, {
@@ -189,7 +214,7 @@ export class NamedBoardService {
 }
 
 @Injectable()
-export class AnonymousBoardService {
+export class AnonymousBoardService extends BoardService {
     constructor(
         @Inject(AnonymousBoardEntity)
         private readonly boardRepository: Repository<AnonymousBoardEntity>,
@@ -197,7 +222,9 @@ export class AnonymousBoardService {
         private readonly userRepository: Repository<UserEntity>,
         @Inject(AttachmentEntity)
         private readonly attachmentRepository: Repository<AttachmentEntity>
-    ) {}
+    ) {
+        super();
+    }
 
     async findById(id: number): Promise<Board.WorkResult> {
         const board = await this.boardRepository.findOne(id);
