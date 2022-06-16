@@ -11,6 +11,7 @@ import {
     AnonymousBoardController,
     NamedBoardController,
 } from '../controllers/board';
+import { TimeTableController } from '../controllers/timeTable';
 
 export default async (app: express.Application) => {
     attachControllers(app, [UploadController]);
@@ -20,4 +21,5 @@ export default async (app: express.Application) => {
     attachControllers(app, [NoticeController]);
     attachControllers(app, [ClubInfoController]);
     attachControllers(app, [NamedBoardController, AnonymousBoardController]);
+    attachControllers(app, [TimeTableController]);
 };
