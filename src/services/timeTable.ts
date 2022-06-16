@@ -5,13 +5,24 @@ import { ITimeTableBody } from '../types/timeTable';
 import HttpStatusCode from '../constants/HttpStatusCode';
 import { update } from 'cheerio/lib/parse';
 import { options } from 'joi';
+import { WeekTimeTableEntity, WEEK_TIMETABLE_SELECT } from '../entities/WeekTimeTable';
 
 @Injectable()
 export class TimeTableService {
     constructor(
         @Inject(TimeTableEntity)
-        private readonly timeTableRepository: Repository<TimeTableEntity>
+        private readonly timeTableRepository: Repository<TimeTableEntity>,
+        @Inject(WeekTimeTableEntity)
+        private readonly weekTimeTableRepository: Repository<WeekTimeTableEntity>
     ) {}
+
+    async getTodayTimeTable() {
+        const date = WEEK_TIMETABLE_SELECT[new Date().getDate()];
+        return await this.weekTimeTableRepository.findOne({
+            select: [date],
+        });
+    }
+
 
     async getCurrentTimeTable() {
         return await this.timeTableRepository.findOne({

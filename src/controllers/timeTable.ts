@@ -14,6 +14,23 @@ export class TimeTableController {
         logger.log('TimeTableController Attached!');
     }
 
+    @Get('/today')
+    async getTodayTimeTable(
+        @Request() req: IRequest,
+        @Response() res: IResponse
+    ) {
+        try {
+            const result = await this.timeTableService.getTodayTimeTable();
+            return res.status(HttpStatusCode.OK).json({
+                data: result
+            });
+        } catch (err) {
+            logger.error(err);
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
+        }
+    }
+
+    //non-used
     @Get('/current', [accessTokenGuard])
     async getCurrentTimeTable(
         @Request() req: IRequest,
