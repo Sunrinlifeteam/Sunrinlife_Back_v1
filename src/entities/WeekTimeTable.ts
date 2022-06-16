@@ -1,8 +1,13 @@
 import { Injectable } from '@decorators/di';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinTable } from 'typeorm';
-import { TimeTableEntity } from './TimeTable';
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    ManyToOne,
+    JoinTable,
+} from 'typeorm';
 
-export const WEEK_TIMETABLE_SELECT: (keyof WeekTimeTableEntity)[] = [
+export const WEEK_TIMETABLE_SELECT = [
     'sun',
     'mon',
     'tue',
@@ -18,31 +23,24 @@ export class WeekTimeTableEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne( () => TimeTableEntity )
-    @JoinTable()
-    sun: TimeTableEntity;
+    @Column({ nullable: false })
+    sun: number;
 
-    @ManyToOne( () => TimeTableEntity )
-    @JoinTable()
-    mon: TimeTableEntity;
+    @Column({ nullable: false })
+    mon: number;
 
-    @ManyToOne( () => TimeTableEntity )
-    @JoinTable()
-    tue: TimeTableEntity;
+    @Column({ nullable: false })
+    tue: number;
 
-    @ManyToOne( () => TimeTableEntity )
-    @JoinTable()
-    wed: TimeTableEntity;
+    @Column({ nullable: false })
+    wed: number;
 
-    @ManyToOne( () => TimeTableEntity )
-    @JoinTable()
-    thu: TimeTableEntity;
+    @Column({ nullable: false })
+    thu: number;
 
-    @ManyToOne( () => TimeTableEntity )
-    @JoinTable()
-    fri: TimeTableEntity;
+    @Column({ nullable: false })
+    fri: number;
 
-    @ManyToOne( () => TimeTableEntity )
-    @JoinTable()
-    sat: TimeTableEntity;
+    @Column({ nullable: false })
+    sat: number;
 }

@@ -22,7 +22,7 @@ export class TimeTableController {
         try {
             const result = await this.timeTableService.getTodayTimeTable();
             return res.status(HttpStatusCode.OK).json({
-                data: result
+                data: result,
             });
         } catch (err) {
             logger.error(err);

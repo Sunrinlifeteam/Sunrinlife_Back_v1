@@ -6,3 +6,5 @@ export * from './Notice';
 export * from './User';
 export * from './Board';
 export * from './ClubInfo';
+export * from './TimeTable';
+export * from './WeekTimeTable';

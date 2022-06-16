@@ -11,6 +11,8 @@ import {
     BoardEntity,
     NamedBoardEntity,
     AnonymousBoardEntity,
+    TimeTableEntity,
+    WeekTimeTableEntity,
 } from '../entities';
 import logger from '../modules/logger';
 
@@ -75,6 +77,14 @@ export default async () => {
                 {
                     provide: AnonymousBoardEntity,
                     useValue: connection.getRepository(AnonymousBoardEntity),
+                },
+                {
+                    provide: TimeTableEntity,
+                    useValue: connection.getRepository(TimeTableEntity),
+                },
+                {
+                    provide: WeekTimeTableEntity,
+                    useValue: connection.getRepository(WeekTimeTableEntity),
                 },
             ]);
             logger.log('Database Connected!');
