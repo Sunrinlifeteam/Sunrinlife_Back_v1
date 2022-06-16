@@ -1,12 +1,15 @@
-import { Request as IRequest, Response as IResponse } from 'express';
+import {
+    NextFunction,
+    Request as IRequest,
+    Response as IResponse,
+} from 'express';
 import {
     Response,
     Request,
     Controller,
     Get,
     Delete,
-    Put,
-    Body,
+    Query,
 } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import passport from 'passport';
@@ -18,8 +21,6 @@ import {
     REFRESH_TOKEN_COOKIE_KEY,
     REFRESH_TOKEN_COOKIE_OPTION,
 } from '../constants';
-import { celebrate } from 'celebrate';
-import { updateUserValidator } from '../validators/user';
 
 @Controller('/auth')
 @Injectable()
@@ -44,14 +45,27 @@ export class AuthController {
     }
 
     @Get('/google', [
-        passport.authenticate('google', { scope: ['email', 'profile'] }),
+        function (req: IRequest, res: IResponse, next: NextFunction) {
+            passport.authenticate('google', {
+                scope: ['email', 'profile'],
+                state:
+                    req.query.redirect &&
+                    encodeURI(req.query.redirect as string),
+            })(req, res, next);
+        } as any,
     ])
     googleLogin() {}
 
     @Get('/google/callback', [
-        passport.authenticate('google', { failureRedirect: '/auth/google' }),
+        passport.authenticate('google', {
+            failureRedirect: '/auth/google',
+        }),
     ])
-    async googleRedirect(@Request() req: IRequest, @Response() res: IResponse) {
+    async googleRedirect(
+        @Request() req: IRequest,
+        @Response() res: IResponse,
+        @Query('state') state: string
+    ) {
         let { user } = req;
         if (!user) return res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
         const { email } = user;
@@ -69,7 +83,8 @@ export class AuthController {
             REFRESH_TOKEN_COOKIE_OPTION
         );
         return res.redirect(
-            process.env.FRONTEND_URL! + (isNewUser ? '/register' : '')
+            (state || process.env.FRONTEND_URL)! +
+                (isNewUser ? '/register' : '')
         );
     }
 

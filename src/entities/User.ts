@@ -11,7 +11,6 @@ import {
     JoinTable,
 } from 'typeorm';
 import { UserDepartment } from '../types/user';
-import { BoardEntity } from './Board';
 import { ClubInfoEntity } from './ClubInfo';
 
 export const USER_SELECT: (keyof UserEntity)[] = [

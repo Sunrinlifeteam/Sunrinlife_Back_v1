@@ -13,6 +13,7 @@ import {
     REFRESH_TOKEN_COOKIE_KEY,
     SUNRIN_STUDENT_EMAIL_PATTERN,
 } from '../constants';
+import logger from './logger';
 
 export const jwtConfig: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromHeader('authorization'),
@@ -30,7 +31,7 @@ export const jwtVerify: VerifyCallback = async ({ id }, done) => {
         if (user) return done(null, user);
         return done(null, false, { reason: 'Unauthorized' });
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         return done(err);
     }
 };
@@ -57,7 +58,7 @@ export const jwtRefreshVerify: VerifyCallback = async (req: Request, done) => {
         }
         return done(null, false, { reason: 'Unauthorized' });
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         return done(err);
     }
 };

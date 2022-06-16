@@ -2,7 +2,7 @@
    "name": "sunrinlife_back",
    "version": "0.0.1",
    "description": "REST API for SunrinLife",
-   "main": "index.js",
+   "main": "src/index.ts",
    "scripts": {
       "test": "jest --passWithNoTests",
       "lint": "eslint --ext .ts src",
@@ -47,6 +47,7 @@
       "@types/express-session": "^1.17.4",
       "@types/helmet": "^4.0.0",
       "@types/jest": "^27.4.0",
+      "@types/joi": "^17.2.3",
       "@types/luxon": "^2.0.9",
       "@types/morgan": "^1.9.3",
       "@types/multer": "^1.4.7",
@@ -71,6 +72,8 @@
       "nodemon": "^2.0.15",
       "prettier": "^2.5.1",
       "ts-node": "^3.3.0",
+      "typedoc": "^0.22.17",
+      "typedoc-theme-hierarchy": "^1.2.1",
       "typescript": ">=3.8"
    },
    "dependencies": {

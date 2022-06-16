@@ -50,6 +50,23 @@ export class BoardController<Service extends BoardService> {
     }
 
     @Get('/:id/like', [accessTokenGuard])
+    async isLiked(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        if (!req.user)
+            return ErrorHandler(new TypeError('req.user is undefined'), res);
+        try {
+            const result = await this.service.isLiked(req.user, id);
+            return res.status(result.status).json(result.data).end();
+        } catch (err) {
+            logger.error(err);
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
+        }
+    }
+
+    @Post('/:id/like', [accessTokenGuard])
     async recommend(
         @Request() req: _Request,
         @Response() res: _Response,
