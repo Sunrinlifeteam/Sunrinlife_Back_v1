@@ -36,6 +36,8 @@ export default async () => {
             NoticeEntity,
             NamedBoardEntity,
             AnonymousBoardEntity,
+            TimeTableEntity,
+            WeekTimeTableEntity,
         ],
         migrations: [],
         subscribers: [],
