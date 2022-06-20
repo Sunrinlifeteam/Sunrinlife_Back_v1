@@ -17,7 +17,6 @@ import * as Board from '../types/board';
 import { AttachmentEntity } from './Attachment';
 import { UserEntity } from './User';
 
-@Injectable()
 export class BoardEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -35,7 +34,7 @@ export class BoardEntity {
     @BeforeInsert()
     @BeforeUpdate()
     updateLikes() {
-        this.likes = this.likedUsers.length;
+        this.likes = this.likedUsers?.length || 0;
     }
 
     @Column({ default: 0 })
@@ -61,8 +60,6 @@ export class BoardEntity {
     @JoinTable()
     attachments: AttachmentEntity[];
 
-    author: UserEntity;
-
     /**
      * Override toString() method
      * @override
@@ -75,7 +72,6 @@ export class BoardEntity {
             content: this.content,
             views: this.views,
             likes: this.likes,
-            author: this.author,
             created: this.created,
             updated: this.updated,
             attachments: this.attachments,
@@ -88,7 +84,7 @@ export class BoardEntity {
 export class NamedBoardEntity extends BoardEntity {
     @ManyToOne((type) => UserEntity, { eager: true })
     @JoinColumn()
-    override author: UserEntity;
+    author: UserEntity;
 
     override toString() {
         console.log(this.author);
@@ -105,7 +101,7 @@ export class AnonymousBoardEntity extends BoardEntity {
     // TODO: author column change to encrypted user id
     @ManyToOne((type) => UserEntity)
     @JoinColumn()
-    override author: UserEntity;
+    author: UserEntity;
 
     override toString() {
         return JSON.stringify({
