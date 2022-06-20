@@ -47,7 +47,7 @@ export class NamedBoardService extends AbstractBoardService {
         super();
     }
 
-    async findById(id: number): Promise<Board.WorkResult> {
+    override async findById(id: number): Promise<Board.WorkResult> {
         const board = await this.boardRepository.findOne(id, {
             relations: ['attachments'],
         });
@@ -57,7 +57,7 @@ export class NamedBoardService extends AbstractBoardService {
         };
     }
 
-    async count(option: Board.DataOption): Promise<Board.WorkResult> {
+    override async count(option: Board.DataOption): Promise<Board.WorkResult> {
         const { title } = option;
         const count = await this.boardRepository.count({
             where: {
@@ -70,7 +70,10 @@ export class NamedBoardService extends AbstractBoardService {
         };
     }
 
-    async isLiked(userData: IUser, id: number): Promise<Board.WorkResult> {
+    override async isLiked(
+        userData: IUser,
+        id: number
+    ): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) return { status: HttpStatusCode.UNAUTHORIZED };
         const board = await this.boardRepository.findOne(id, {
@@ -84,7 +87,10 @@ export class NamedBoardService extends AbstractBoardService {
         };
     }
 
-    async recommend(userData: IUser, id: number): Promise<Board.WorkResult> {
+    override async recommend(
+        userData: IUser,
+        id: number
+    ): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) return { status: HttpStatusCode.UNAUTHORIZED };
         const board = await this.boardRepository.findOne(id, {
@@ -114,7 +120,7 @@ export class NamedBoardService extends AbstractBoardService {
         };
     }
 
-    async hotsunrin(count: number = 4): Promise<Board.WorkResult> {
+    override async hotsunrin(count: number = 4): Promise<Board.WorkResult> {
         const data = await this.boardRepository.find({
             order: {
                 likes: 'DESC',
@@ -127,7 +133,7 @@ export class NamedBoardService extends AbstractBoardService {
         };
     }
 
-    async find(
+    override async find(
         option: Partial<Board.Body> & Board.SearchOption
     ): Promise<Board.WorkResult> {
         const { orderType, sort, title, content, range } = option;
@@ -142,13 +148,14 @@ export class NamedBoardService extends AbstractBoardService {
             skip: range.offset,
             take: range.count,
         });
+        console.log(data);
         return {
             status: HttpStatusCode.OK,
             data,
         };
     }
 
-    async findAndCount(
+    override async findAndCount(
         option: Board.SearchOption & Board.DataOption
     ): Promise<Board.WorkResult> {
         const { orderType, sort, title, content, range } = option;
@@ -169,7 +176,10 @@ export class NamedBoardService extends AbstractBoardService {
         };
     }
 
-    async write(userData: IUser, body: Board.Body): Promise<Board.WorkResult> {
+    override async write(
+        userData: IUser,
+        body: Board.Body
+    ): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
         const { title, content } = body;
@@ -189,7 +199,7 @@ export class NamedBoardService extends AbstractBoardService {
         };
     }
 
-    async update(
+    override async update(
         userData: IUser,
         id: number,
         body: Partial<Board.Body>
@@ -218,7 +228,10 @@ export class NamedBoardService extends AbstractBoardService {
         };
     }
 
-    async delete(userData: IUser, id: number): Promise<Board.WorkResult> {
+    override async delete(
+        userData: IUser,
+        id: number
+    ): Promise<Board.WorkResult> {
         const user = await this.userRepository.findOne(userData);
         if (!user) throw new Error('Unauthorization');
         const result = await this.boardRepository.delete({

@@ -75,6 +75,7 @@ export class BoardEntity {
             content: this.content,
             views: this.views,
             likes: this.likes,
+            author: this.author,
             created: this.created,
             updated: this.updated,
             attachments: this.attachments,
@@ -87,7 +88,15 @@ export class BoardEntity {
 export class NamedBoardEntity extends BoardEntity {
     @ManyToOne((type) => UserEntity, { eager: true })
     @JoinColumn()
-    author: UserEntity;
+    override author: UserEntity;
+
+    override toString() {
+        console.log(this.author);
+        return JSON.stringify({
+            ...JSON.parse(super.toString()),
+            author: this.author,
+        });
+    }
 }
 
 @Entity('anonymous_board')
@@ -96,5 +105,12 @@ export class AnonymousBoardEntity extends BoardEntity {
     // TODO: author column change to encrypted user id
     @ManyToOne((type) => UserEntity)
     @JoinColumn()
-    author: UserEntity;
+    override author: UserEntity;
+
+    override toString() {
+        return JSON.stringify({
+            ...JSON.parse(super.toString()),
+            author: this.author,
+        });
+    }
 }

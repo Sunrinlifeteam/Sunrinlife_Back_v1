@@ -1,4 +1,4 @@
-import { Injectable } from '@decorators/di';
+import { Inject, Injectable } from '@decorators/di';
 import {
     Body,
     Controller,
@@ -28,12 +28,11 @@ import { updateValidator, writeValidator } from '../validators/board';
 export class BoardController<Service extends AbstractBoardService> {
     constructor(private readonly service: Service) {}
 
-    @Get('/count', [accessTokenGuard])
     async count(
-        @Request() req: _Request,
-        @Response() res: _Response,
-        @Query('title') title?: string,
-        @Query('content') content?: string
+        req: _Request,
+        res: _Response,
+        title?: string,
+        content?: string
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
@@ -49,12 +48,7 @@ export class BoardController<Service extends AbstractBoardService> {
         }
     }
 
-    @Get('/:id/like', [accessTokenGuard])
-    async isLiked(
-        @Request() req: _Request,
-        @Response() res: _Response,
-        @Params('id') id: number
-    ) {
+    async isLiked(req: _Request, res: _Response, id: number) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
@@ -66,12 +60,7 @@ export class BoardController<Service extends AbstractBoardService> {
         }
     }
 
-    @Post('/:id/like', [accessTokenGuard])
-    async recommend(
-        @Request() req: _Request,
-        @Response() res: _Response,
-        @Params('id') id: number
-    ) {
+    async recommend(req: _Request, res: _Response, id: number) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
@@ -83,8 +72,7 @@ export class BoardController<Service extends AbstractBoardService> {
         }
     }
 
-    @Get('/top', [accessTokenGuard])
-    async hotsunrin(@Request() req: _Request, @Response() res: _Response) {
+    async hotsunrin(req: _Request, res: _Response) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
@@ -96,20 +84,20 @@ export class BoardController<Service extends AbstractBoardService> {
         }
     }
 
-    @Get('/', [accessTokenGuard])
     async list(
-        @Request() req: _Request,
-        @Response() res: _Response,
-        @Query('offset') offset: number = 0,
-        @Query('count') count: number = 25,
-        @Query('sort') sort: 'ASC' | 'DESC' = 'DESC',
-        @Query('title') title?: string,
-        @Query('content') content?: string,
-        @Query('order') orderType: 'created' | 'updated' = 'created'
+        req: _Request,
+        res: _Response,
+        offset: number = 0,
+        count: number = 25,
+        sort: 'ASC' | 'DESC' = 'DESC',
+        title?: string,
+        content?: string,
+        orderType: 'created' | 'updated' = 'created'
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
+            console.log(req.user);
             const result = await this.service.find({
                 range: {
                     offset,
@@ -127,12 +115,7 @@ export class BoardController<Service extends AbstractBoardService> {
         }
     }
 
-    @Get('/:id', [accessTokenGuard])
-    async getOne(
-        @Request() req: _Request,
-        @Response() res: _Response,
-        @Params('id') id: number
-    ) {
+    async getOne(req: _Request, res: _Response, id: number) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
@@ -144,12 +127,7 @@ export class BoardController<Service extends AbstractBoardService> {
         }
     }
 
-    @Post('/', [accessTokenGuard, celebrate(writeValidator)])
-    async write(
-        @Request() req: _Request,
-        @Response() res: _Response,
-        @Body() body: Board.Body
-    ) {
+    async write(req: _Request, res: _Response, body: Board.Body) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
@@ -161,12 +139,11 @@ export class BoardController<Service extends AbstractBoardService> {
         }
     }
 
-    @Put('/:id', [accessTokenGuard, celebrate(updateValidator)])
     async update(
-        @Request() req: _Request,
-        @Response() res: _Response,
-        @Params('id') id: number,
-        @Body() body: Partial<Board.Body>
+        req: _Request,
+        res: _Response,
+        id: number,
+        body: Partial<Board.Body>
     ) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
@@ -179,12 +156,7 @@ export class BoardController<Service extends AbstractBoardService> {
         }
     }
 
-    @Delete('/:id', [accessTokenGuard])
-    async delete(
-        @Request() req: _Request,
-        @Response() res: _Response,
-        @Params('id') id: number
-    ) {
+    async delete(req: _Request, res: _Response, id: number) {
         if (!req.user)
             return ErrorHandler(new TypeError('req.user is undefined'), res);
         try {
@@ -199,6 +171,190 @@ export class BoardController<Service extends AbstractBoardService> {
 
 @Controller('/board/named')
 @Injectable()
-export class NamedBoardController extends BoardController<NamedBoardService> {}
+export class NamedBoardController extends BoardController<NamedBoardService> {
+    constructor(@Inject(NamedBoardService) service: NamedBoardService) {
+        super(service);
+    }
 
-export class AnonymousBoardController extends BoardController<AnonymousBoardService> {}
+    @Get('/count', [accessTokenGuard])
+    override async count(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Query('title') title?: string,
+        @Query('content') content?: string
+    ) {
+        super.count(req, res, title, content);
+    }
+
+    @Get('/:id/like', [accessTokenGuard])
+    override async isLiked(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        super.isLiked(req, res, id);
+    }
+
+    @Post('/:id/like', [accessTokenGuard])
+    override async recommend(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        super.recommend(req, res, id);
+    }
+
+    @Get('/top', [accessTokenGuard])
+    override async hotsunrin(
+        @Request() req: _Request,
+        @Response() res: _Response
+    ) {
+        super.hotsunrin(req, res);
+    }
+
+    @Get('/', [accessTokenGuard])
+    override async list(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Query('offset') offset: number = 0,
+        @Query('count') count: number = 25,
+        @Query('sort') sort: 'ASC' | 'DESC' = 'DESC',
+        @Query('title') title?: string,
+        @Query('content') content?: string,
+        @Query('order') orderType: 'created' | 'updated' = 'created'
+    ) {
+        super.list(req, res, offset, count, sort, title, content, orderType);
+    }
+
+    @Get('/:id', [accessTokenGuard])
+    override async getOne(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        super.getOne(req, res, id);
+    }
+
+    @Post('/', [accessTokenGuard, celebrate(writeValidator)])
+    override async write(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Body() body: Board.Body
+    ) {
+        super.write(req, res, body);
+    }
+
+    @Put('/:id', [accessTokenGuard, celebrate(updateValidator)])
+    override async update(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number,
+        @Body() body: Partial<Board.Body>
+    ) {
+        super.update(req, res, id, body);
+    }
+
+    @Delete('/:id', [accessTokenGuard])
+    override async delete(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        super.delete(req, res, id);
+    }
+}
+
+@Controller('/board/anonymous')
+@Injectable()
+export class AnonymousBoardController extends BoardController<AnonymousBoardService> {
+    constructor(@Inject(AnonymousBoardService) service: AnonymousBoardService) {
+        super(service);
+    }
+
+    @Get('/count', [accessTokenGuard])
+    override async count(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Query('title') title?: string,
+        @Query('content') content?: string
+    ) {
+        super.count(req, res, title, content);
+    }
+
+    @Get('/:id/like', [accessTokenGuard])
+    override async isLiked(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        super.isLiked(req, res, id);
+    }
+
+    @Post('/:id/like', [accessTokenGuard])
+    override async recommend(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        super.recommend(req, res, id);
+    }
+
+    @Get('/top', [accessTokenGuard])
+    override async hotsunrin(
+        @Request() req: _Request,
+        @Response() res: _Response
+    ) {
+        super.hotsunrin(req, res);
+    }
+
+    @Get('/', [accessTokenGuard])
+    override async list(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Query('offset') offset: number = 0,
+        @Query('count') count: number = 25,
+        @Query('sort') sort: 'ASC' | 'DESC' = 'DESC',
+        @Query('title') title?: string,
+        @Query('content') content?: string,
+        @Query('order') orderType: 'created' | 'updated' = 'created'
+    ) {
+        super.list(req, res, offset, count, sort, title, content, orderType);
+    }
+
+    @Get('/:id', [accessTokenGuard])
+    override async getOne(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        super.getOne(req, res, id);
+    }
+
+    @Post('/', [accessTokenGuard, celebrate(writeValidator)])
+    override async write(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Body() body: Board.Body
+    ) {
+        super.write(req, res, body);
+    }
+
+    @Put('/:id', [accessTokenGuard, celebrate(updateValidator)])
+    override async update(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number,
+        @Body() body: Partial<Board.Body>
+    ) {
+        super.update(req, res, id, body);
+    }
+
+    @Delete('/:id', [accessTokenGuard])
+    override async delete(
+        @Request() req: _Request,
+        @Response() res: _Response,
+        @Params('id') id: number
+    ) {
+        super.delete(req, res, id);
+    }
+}
