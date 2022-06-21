@@ -5,6 +5,7 @@ import sessionLoader from './session';
 import routeLoader from './route';
 import neisSyncer from './neisSyncer';
 import passportLoader from './passport';
+import swaggerLoader from './swagger';
 import environmentChecker from './environment';
 import filesystem from './filesystem';
 
@@ -16,5 +17,6 @@ export default async ({ app }: { app: Express }) => {
     await sessionLoader(app);
     await passportLoader(app);
     await routeLoader(app);
+    await swaggerLoader(app);
     await neisSyncer(60 * 60);
 };

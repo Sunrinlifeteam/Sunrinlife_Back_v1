@@ -1,0 +1,143 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Sunrin life API",
+        "description": "Sunrin life API docs with Swagger"
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Root",
+            "description": "root"
+        },
+        {
+            "name": "Auth",
+            "description": "user authentication, authorization, information"
+        },
+        {
+            "name": "User",
+            "description": "user information"
+        },
+        {
+            "name": "Time table",
+            "description": "time table information"
+        },
+        {
+            "name": "Club",
+            "description": "club information"
+        },
+        {
+            "name": "User schedule",
+            "description": "user schedule information"
+        },
+        {
+            "name": "Board",
+            "description": "board information"
+        },
+        {
+            "name": "Notice",
+            "description": "notice information"
+        },
+        {
+            "name": "Schedule",
+            "description": "schedule information"
+        },
+        {
+            "name": "Upload",
+            "description": "file upload action"
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "tags": [
+                    "Root"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/auth/valid": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "operationId": "AuthController_checkAccessTokenIsValid",
+                "parameters": [],
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "valid"
+                    }
+                }
+            }
+        },
+        "/board": {
+            "post": {
+                "tags": [
+                    "Board"
+                ],
+                "operationId": "BoardController_write",
+                "parameters": [],
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "applicaton/json": {
+                            "schema": {
+                                "$ref": "#/definitions/board_writeValidator"
+                            }
+                        }
+                    }
+                },
+                "response": {
+                    "201": {
+                        "description": "[BoardEntity]"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "board_writeValidator": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "attachments": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": ["title", "content", "attachments"]
+        }
+    }
+}
