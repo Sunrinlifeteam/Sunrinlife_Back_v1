@@ -118,6 +118,105 @@
                     }
                 }
             }
+        },
+        "/club/all": {
+            "get": {
+                "tags": [
+                    "Club"
+                ],
+                "parameters": [],
+                "operationId": "ClubinfoController_getAll",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/club_get"
+                        }
+                    }
+                }
+            }
+        },
+        "/club/department/{department}": {
+            "get": {
+                "tags": [
+                    "Club"
+                ],
+                "parameters": [
+                    {
+                        "name": "department",
+                        "required": true,
+                        "type": "integer",
+                        "in": "path",
+                        "description": "0: Security, 1: SW, 2: IT, 3: Design"
+                    }
+                ],
+                "operationId": "ClubinfoController_getByDepartment",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/club_get"
+                        }
+                    }
+                }
+            }
+        },
+        "/club/type/{type}": {
+            "get": {
+                "tags": [
+                    "Club"
+                ],
+                "parameters": [
+                    {
+                        "name": "type",
+                        "required": true,
+                        "type": "integer",
+                        "in": "path",
+                        "description": "0: Major Club, 1: Normal Club, 2: Autonomous club"
+                    }
+                ],
+                "operationId": "ClubinfoController_getByType",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/club_get"
+                        }
+                    }
+                }
+            }
+        },
+        "/club/department/{department}/type/{type}": {
+            "get": {
+                "tags": [
+                    "Club"
+                ],
+                "parameters": [
+                    {
+                        "name": "department",
+                        "required": true,
+                        "type": "integer",
+                        "in": "path",
+                        "description": "0: Security, 1: SW, 2: IT, 3: Design"
+                    },
+                    {
+                        "name": "type",
+                        "required": true,
+                        "type": "integer",
+                        "in": "path",
+                        "description": "0: Major Club, 1: Normal Club, 2: Autonomous club"
+                    }
+                ],
+                "operationId": "ClubinfoController_getByDepartmentAndType",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/club_get"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -138,6 +237,57 @@
                 }
             },
             "required": ["title", "content", "attachments"]
+        },
+        "club_get": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                   "name": {
+                       "type": "string"
+                   },
+                    "description": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    },
+                    "location": {
+                        "type": "string"
+                    },
+                    "logo_url": {
+                        "type": "string"
+                    },
+                    "facebook": {
+                        "type": "string"
+                    },
+                    "instagram": {
+                        "type": "string"
+                    },
+                    "leader": {
+                        "type": "string"
+                    },
+                    "viceleader": {
+                        "type": "string"
+                    },
+                    "leader_sns": {
+                        "type": "string"
+                    },
+                    "vleader_sns": {
+                        "type": "string"
+                    },
+                    "department": {
+                        "type": "integer"
+                    },
+                    "type": {
+                        "type": "integer"
+                    },
+                    "curriculum": {
+                        "type": "string"
+                    }
+
+                }
+            }
         }
     }
 }
