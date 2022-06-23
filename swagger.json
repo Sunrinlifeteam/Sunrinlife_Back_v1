@@ -217,6 +217,23 @@
                     }
                 }
             }
+        },
+        "/timetable/today": {
+            "get": {
+                "tags": [
+                    "Time table"
+                ],
+                "parameters": [],
+                "operationId": "TimeTableController_getToday",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/timetable_today"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -285,7 +302,59 @@
                     "curriculum": {
                         "type": "string"
                     }
-
+                }
+            }
+        },
+        "timetable_today": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer"
+                        },
+                        "alias": {
+                            "type": "string",
+                            "description": "name of timetable"
+                        },
+                        "current": {
+                            "type": "boolean"
+                        },
+                        "timeJson": {
+                            "type": "string",
+                            "description": "TimeTable JSON String (timetable_timeJson)"
+                        }
+                    }
+                }
+            }
+        },
+        "timetable_timeJson": {
+            "type": "object",
+            "properties": {
+                "times": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name":{
+                                "type": "string",
+                                "description": "each name of timetable"
+                            },
+                            "start": {
+                                "type": "string",
+                                "description": "start time ( format: 00:00:00 )"
+                            },
+                            "end": {
+                                "type": "string",
+                                "description": "end time ( format: 00:00:00 )"
+                            },
+                            "isStudy": {
+                                "type": "boolean",
+                                "description": "is studying time"
+                            }
+                        }
+                    }
                 }
             }
         }
