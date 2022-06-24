@@ -104,9 +104,6 @@ export class AnonymousBoardEntity extends BoardEntity {
     author: UserEntity;
 
     override toString() {
-        return JSON.stringify({
-            ...JSON.parse(super.toString()),
-            author: this.author,
-        });
+        return super.toString();
     }
 }
