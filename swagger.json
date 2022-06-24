@@ -67,7 +67,10 @@
                 "parameters": [],
                 "responses": {
                     "200": {
-                        "description": ""
+                        "description": "",
+                        "content": {
+                            "applicaton/json": {}
+                        }
                     }
                 }
             }
@@ -86,7 +89,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "valid"
+                        "description": "valid",
+                        "content": {
+                            "applicaton/json": {}
+                        }
                     }
                 }
             }
@@ -112,9 +118,16 @@
                         }
                     }
                 },
-                "response": {
+                "responses": {
                     "201": {
-                        "description": "[BoardEntity]"
+                        "description": "[BoardEntity]",
+                        "content": {
+                            "applicaton/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/BoardEntity"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -129,8 +142,12 @@
                 "responses": {
                     "200": {
                         "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/club_get"
+                        "content": {
+                            "applicaton/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/club_get"
+                                }
+                            }
                         }
                     }
                 }
@@ -154,8 +171,12 @@
                 "responses": {
                     "200": {
                         "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/club_get"
+                        "content": {
+                            "applicaton/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/club_get"
+                                }
+                            }
                         }
                     }
                 }
@@ -179,8 +200,12 @@
                 "responses": {
                     "200": {
                         "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/club_get"
+                        "content": {
+                            "applicaton/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/club_get"
+                                }
+                            }
                         }
                     }
                 }
@@ -211,8 +236,12 @@
                 "responses": {
                     "200": {
                         "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/club_get"
+                        "content": {
+                            "applicaton/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/club_get"
+                                }
+                            }
                         }
                     }
                 }
@@ -228,8 +257,12 @@
                 "responses": {
                     "200": {
                         "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/timetable_today"
+                        "content": {
+                            "applicaton/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/timetable_today"
+                                }
+                            }
                         }
                     }
                 }
@@ -237,6 +270,38 @@
         }
     },
     "definitions": {
+        "BoardEntity": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "views": {
+                    "type": "integer"
+                },
+                "likes": {
+                    "type": "integer"
+                },
+                "created": {
+                    "type": "string"
+                },
+                "updated": {
+                    "type": "string"
+                },
+                "attachments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AttachmentEntity"
+                    }
+                }
+            }
+        },
         "board_writeValidator": {
             "type": "object",
             "properties": {
@@ -253,16 +318,20 @@
                     }
                 }
             },
-            "required": ["title", "content", "attachments"]
+            "required": [
+                "title",
+                "content",
+                "attachments"
+            ]
         },
         "club_get": {
             "type": "array",
             "items": {
                 "type": "object",
                 "properties": {
-                   "name": {
-                       "type": "string"
-                   },
+                    "name": {
+                        "type": "string"
+                    },
                     "description": {
                         "type": "string"
                     },
@@ -337,7 +406,7 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "name":{
+                            "name": {
                                 "type": "string",
                                 "description": "each name of timetable"
                             },

@@ -27,22 +27,22 @@ SunrinLife's modularized design fully takes advantage of scalability, stability,
 ## 🛠️  Installation
 
 ```bash
-$ npm install
+$ yarn
 ```
 
-<br/>
+<br>
 
 ## 🚀 Running the app
 
 ```bash
 # development
-$ npm run dev
+$ yarn dev
 
 # production mode
-$ npm run start
+$ yarn start
 ```
 
-<br/>
+<br>
 
 ## 🔒 Environment configuration
 
