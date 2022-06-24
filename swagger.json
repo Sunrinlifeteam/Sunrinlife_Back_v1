@@ -270,7 +270,157 @@
         }
     },
     "definitions": {
-        "BoardEntity": {
+        "UserEntity": {
+            "id": {
+                "type": "string"
+            },
+            "email": {
+                "type": "string"
+            },
+            "username": {
+                "type": "string"
+            },
+            "department": {
+                "type": "string"
+            },
+            "grade": {
+                "type": "integer"
+            },
+            "accountType": {
+                "type": "integer"
+            },
+            "role": {
+                "type": "integer"
+            },
+            "refreshToken": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "githubLink": {
+                "type": "string"
+            },
+            "image": {
+                "type": "string"
+            },
+            "libraryId": {
+                "type": "string"
+            },
+            "teacherEmail": {
+                "type": "string"
+            },
+            "clubInfo": {
+                "$ref": "#/definitions/ClubInfoEntity"
+            },
+            "subClubInfo": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/definitions/ClubInfoEntity"
+                }
+            },
+            "createdDate": {
+                "type": "string"
+            },
+            "updatedDate": {
+                "type": "string"
+            }
+        },
+        "UserEntity_norelation": {
+            "id": {
+                "type": "string"
+            },
+            "email": {
+                "type": "string"
+            },
+            "username": {
+                "type": "string"
+            },
+            "department": {
+                "type": "string"
+            },
+            "grade": {
+                "type": "integer"
+            },
+            "accountType": {
+                "type": "integer"
+            },
+            "role": {
+                "type": "integer"
+            },
+            "refreshToken": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "githubLink": {
+                "type": "string"
+            },
+            "image": {
+                "type": "string"
+            },
+            "libraryId": {
+                "type": "string"
+            },
+            "teacherEmail": {
+                "type": "string"
+            },
+            "createdDate": {
+                "type": "string"
+            },
+            "updatedDate": {
+                "type": "string"
+            }
+        },
+        "ClubInfoEntity": {
+            "id": {
+                "type": "integer"
+            },
+            "name": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "url": {
+                "type": "string"
+            },
+            "location": {
+                "type": "string"
+            },
+            "logo_url": {
+                "type": "string"
+            },
+            "facebook": {
+                "type": "string"
+            },
+            "instagram": {
+                "type": "string"
+            },
+            "leader": {
+                "type": "string"
+            },
+            "viceleader": {
+                "type": "string"
+            },
+            "leader_sns": {
+                "type": "string"
+            },
+            "vleader_sns": {
+                "type": "string"
+            },
+            "department": {
+                "type": "integer"
+            },
+            "type": {
+                "type": "integer"
+            },
+            "curriculum": {
+                "type": "string"
+            }
+        },
+        "NamedBoardEntity": {
             "type": "object",
             "properties": {
                 "id": {
@@ -297,8 +447,92 @@
                 "attachments": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/AttachmentEntity"
+                        "$ref": "#/definitions/AttachmentEntity_norelation"
                     }
+                },
+                "author": {
+                    "$ref": "#/definitions/UserEntity_norelation"
+                }
+            }
+        },
+        "AnonymousBoardEntity": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "views": {
+                    "type": "integer"
+                },
+                "likes": {
+                    "type": "integer"
+                },
+                "created": {
+                    "type": "string"
+                },
+                "updated": {
+                    "type": "string"
+                },
+                "attachments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AttachmentEntity_norelation"
+                    }
+                }
+            }
+        },
+        "AttachmentEntity": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "sha1hash": {
+                    "type": "string"
+                },
+                "md5hash": {
+                    "type": "string"
+                },
+                "mimetype": {
+                    "type": "string"
+                },
+                "author": {
+                    "$ref": "#/definitions/UserEntity_norelation"
+                }
+            }
+        },
+        "AttachmentEntity_norelation": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "sha1hash": {
+                    "type": "string"
+                },
+                "md5hash": {
+                    "type": "string"
+                },
+                "mimetype": {
+                    "type": "string"
                 }
             }
         },
