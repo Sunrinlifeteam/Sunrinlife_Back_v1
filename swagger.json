@@ -97,12 +97,36 @@
                 }
             }
         },
-        "/board": {
+        "/board/named": {
+            "get": {
+                "tags": [
+                    "Board"
+                ],
+                "operationId": "NamedBoardController_write",
+                "parameters": [],
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "[NamedBoardEntity]",
+                        "content": {
+                            "applicaton/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/NamedBoardEntity"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "Board"
                 ],
-                "operationId": "BoardController_write",
+                "operationId": "NamedBoardController_write",
                 "parameters": [],
                 "security": [
                     {
@@ -120,11 +144,11 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "[BoardEntity]",
+                        "description": "[NamedBoardEntity]",
                         "content": {
                             "applicaton/json": {
                                 "schema": {
-                                    "$ref": "#/definitions/BoardEntity"
+                                    "$ref": "#/definitions/NamedBoardEntity"
                                 }
                             }
                         }

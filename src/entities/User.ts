@@ -72,6 +72,9 @@ export class UserEntity {
     @Column({ type: 'mediumtext', nullable: true })
     image: string;
 
+    @Column({ type: 'mediumtext', nullable: true })
+    backgroundImage: string;
+
     @Column({ nullable: true, unique: true })
     libraryId: string;
 
