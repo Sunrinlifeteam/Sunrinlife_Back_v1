@@ -1,15 +1,12 @@
-import {
-    NextFunction,
-    Request as IRequest,
-    Response as IResponse,
-} from 'express';
+import { Request as IRequest, Response as IResponse } from 'express';
 import {
     Response,
     Request,
     Controller,
     Get,
     Delete,
-    Query,
+    Put,
+    Body,
 } from '@decorators/express';
 import { Injectable } from '@decorators/di';
 import passport from 'passport';
@@ -21,6 +18,8 @@ import {
     REFRESH_TOKEN_COOKIE_KEY,
     REFRESH_TOKEN_COOKIE_OPTION,
 } from '../constants';
+import { celebrate } from 'celebrate';
+import { updateUserValidator } from '../validators/user';
 
 @Controller('/auth')
 @Injectable()
@@ -45,27 +44,14 @@ export class AuthController {
     }
 
     @Get('/google', [
-        function (req: IRequest, res: IResponse, next: NextFunction) {
-            passport.authenticate('google', {
-                scope: ['email', 'profile'],
-                state:
-                    req.query.redirect &&
-                    encodeURI(req.query.redirect as string),
-            })(req, res, next);
-        } as any,
+        passport.authenticate('google', { scope: ['email', 'profile'] }),
     ])
     googleLogin() {}
 
     @Get('/google/callback', [
-        passport.authenticate('google', {
-            failureRedirect: '/auth/google',
-        }),
+        passport.authenticate('google', { failureRedirect: '/auth/google' }),
     ])
-    async googleRedirect(
-        @Request() req: IRequest,
-        @Response() res: IResponse,
-        @Query('state') state: string
-    ) {
+    async googleRedirect(@Request() req: IRequest, @Response() res: IResponse) {
         let { user } = req;
         if (!user) return res.sendStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
         const { email } = user;
@@ -83,8 +69,7 @@ export class AuthController {
             REFRESH_TOKEN_COOKIE_OPTION
         );
         return res.redirect(
-            (state || process.env.FRONTEND_URL)! +
-                (isNewUser ? '/register' : '')
+            process.env.FRONTEND_URL! + (isNewUser ? '/register' : '')
         );
     }
 
