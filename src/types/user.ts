@@ -17,6 +17,7 @@ export interface User {
 export interface UserUpdateBody {
     description?: string;
     image?: string;
+    backgroundImage?: string;
     githubLink?: string;
     clubInfo?: number;
     subClubInfo?: number[];
